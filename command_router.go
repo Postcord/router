@@ -447,7 +447,7 @@ func (c *CommandRouter) FormulateDiscordCommands() []*objects.ApplicationCommand
 			Description:       description,
 			Options:           getOptions(v),
 			DefaultPermission: defaultPermission,
-			Type: 			   &commandType,
+			Type:              &commandType,
 		}
 
 		// Add to the index.
