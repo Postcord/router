@@ -101,7 +101,7 @@ func main() {
 
 	// Add a message target command.
 	commandRouter.NewCommandBuilder("message-target").
-		UserCommand().
+		MessageCommand().
 		Handler(func(ctx *router.CommandRouterCtx, message *objects.Message) error {
 			ctx.SetContent("The message was made by " + message.Author.Username)
 			return nil
