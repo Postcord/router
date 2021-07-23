@@ -434,7 +434,9 @@ func (c *CommandRouter) FormulateDiscordCommands() []*objects.ApplicationCommand
 		case *Command:
 			description = x.Description
 			defaultPermission = x.DefaultPermission
-			commandType = x.commandType
+			if x.commandType != 0 {
+				commandType = x.commandType
+			}
 		case *CommandGroup:
 			description = x.Description
 			defaultPermission = x.DefaultPermission

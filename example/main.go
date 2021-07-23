@@ -93,6 +93,7 @@ func main() {
 	// Add a user target command.
 	commandRouter.NewCommandBuilder("user-target").
 		UserCommand().
+		DefaultPermission().
 		Handler(func(ctx *router.CommandRouterCtx, member *objects.GuildMember) error {
 			ctx.SetContent("You clicked " + member.User.Username)
 			return nil
@@ -102,6 +103,7 @@ func main() {
 	// Add a message target command.
 	commandRouter.NewCommandBuilder("message-target").
 		MessageCommand().
+		DefaultPermission().
 		Handler(func(ctx *router.CommandRouterCtx, message *objects.Message) error {
 			ctx.SetContent("The message was made by " + message.Author.Username)
 			return nil
