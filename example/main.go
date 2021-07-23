@@ -90,6 +90,24 @@ func main() {
 		panic(err)
 	}
 
+	// Add a user target command.
+	commandRouter.NewCommandBuilder("user-target").
+		UserCommand().
+		Handler(func(ctx *router.CommandRouterCtx, member *objects.GuildMember) error {
+			ctx.SetContent("You clicked " + member.User.Username)
+			return nil
+		}).
+		MustBuild()
+
+	// Add a message target command.
+	commandRouter.NewCommandBuilder("message-target").
+		UserCommand().
+		Handler(func(ctx *router.CommandRouterCtx, message *objects.Message) error {
+			ctx.SetContent("The message was made by " + message.Author.Username)
+			return nil
+		}).
+		MustBuild()
+
 	// Create the interactions app.
 	app, err := interactions.New(&interactions.Config{
 		PublicKey: os.Getenv("PUBLIC_KEY"),
