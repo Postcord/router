@@ -169,9 +169,6 @@ type TextCommandBuilder interface {
 
 // MessageCommandBuilder is used to define a builder for a Message object where the type is a user command.
 type MessageCommandBuilder interface {
-	// Description is used to define the commands description.
-	Description(string) MessageCommandBuilder
-
 	// DefaultPermission is used to define if the command should have default permissions. Note this does nothing if the command is in a group.
 	DefaultPermission() MessageCommandBuilder
 
@@ -190,9 +187,6 @@ type MessageCommandBuilder interface {
 
 // UserCommandBuilder is used to define a builder for a Command object where the type is a user command.
 type UserCommandBuilder interface {
-	// Description is used to define the commands description.
-	Description(string) UserCommandBuilder
-
 	// DefaultPermission is used to define if the command should have default permissions. Note this does nothing if the command is in a group.
 	DefaultPermission() UserCommandBuilder
 
