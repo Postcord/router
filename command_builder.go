@@ -2,8 +2,6 @@ package router
 
 import "github.com/Postcord/objects"
 
-// --- ROOT IMPLEMENTATION ---
-
 type commandBuilder struct {
 	name string
 	map_ map[string]interface{}
@@ -48,29 +46,8 @@ func (c *commandBuilder) MustBuild() *Command {
 	return cmd
 }
 
-// --- SIGNATURE IMPLEMENTATIONS ---
-
-type textCommandBuilder struct {
-	*commandBuilder
-}
-
 func (c textCommandBuilder) Description(description string) TextCommandBuilder {
 	c.commandBuilder.Description(description)
-	return c
-}
-
-func (c textCommandBuilder) Option(option *objects.ApplicationCommandOption) TextCommandBuilder {
-	c.commandBuilder.Option(option)
-	return c
-}
-
-func (c textCommandBuilder) DefaultPermission() TextCommandBuilder {
-	c.commandBuilder.DefaultPermission()
-	return c
-}
-
-func (c textCommandBuilder) AllowedMentions(config *objects.AllowedMentions) TextCommandBuilder {
-	c.commandBuilder.AllowedMentions(config)
 	return c
 }
 
@@ -79,55 +56,8 @@ func (c textCommandBuilder) Handler(handler func(*CommandRouterCtx) error) TextC
 	return c
 }
 
-func (c *commandBuilder) TextCommand() TextCommandBuilder {
-	return textCommandBuilder{c}
-}
-
-type messageCommandBuilder struct {
-	*commandBuilder
-}
-
-func (c messageCommandBuilder) Description(description string) MessageCommandBuilder {
-	c.commandBuilder.Description(description)
-	return c
-}
-
-func (c messageCommandBuilder) DefaultPermission() MessageCommandBuilder {
-	c.commandBuilder.DefaultPermission()
-	return c
-}
-
-func (c messageCommandBuilder) AllowedMentions(config *objects.AllowedMentions) MessageCommandBuilder {
-	c.commandBuilder.AllowedMentions(config)
-	return c
-}
-
 func (c messageCommandBuilder) Handler(handler func(*CommandRouterCtx, *objects.Message) error) MessageCommandBuilder {
 	c.commandBuilder.Handler(messageTargetWrapper(handler))
-	return c
-}
-
-func (c *commandBuilder) MessageCommand() MessageCommandBuilder {
-	c.cmd.commandType = int(objects.CommandTypeMessage)
-	return messageCommandBuilder{c}
-}
-
-type userCommandBuilder struct {
-	*commandBuilder
-}
-
-func (c userCommandBuilder) Description(description string) UserCommandBuilder {
-	c.commandBuilder.Description(description)
-	return c
-}
-
-func (c userCommandBuilder) DefaultPermission() UserCommandBuilder {
-	c.commandBuilder.DefaultPermission()
-	return c
-}
-
-func (c userCommandBuilder) AllowedMentions(config *objects.AllowedMentions) UserCommandBuilder {
-	c.commandBuilder.AllowedMentions(config)
 	return c
 }
 
@@ -135,13 +65,6 @@ func (c userCommandBuilder) Handler(handler func(*CommandRouterCtx, *objects.Gui
 	c.commandBuilder.Handler(memberTargetWrapper(handler))
 	return c
 }
-
-func (c *commandBuilder) UserCommand() UserCommandBuilder {
-	c.cmd.commandType = int(objects.CommandTypeUser)
-	return userCommandBuilder{c}
-}
-
-// --- INTERFACES ---
 
 // TextCommandBuilder is used to define a builder for a Command object where the type is a text command.
 type TextCommandBuilder interface {
@@ -235,8 +158,6 @@ type CommandBuilder interface {
 	// MustBuild is used to define when a command must build or panic.
 	MustBuild() *Command
 }
-
-// --- EXTERNAL INITIALIZERS ---
 
 // NewCommandBuilder is used to create a builder for a *Command object.
 func (c CommandGroup) NewCommandBuilder(name string) TextCommandBuilder {
