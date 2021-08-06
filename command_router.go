@@ -358,7 +358,7 @@ func getOptions(cmdOrCat interface{}) []objects.ApplicationCommandOption {
 		i := 0
 		for k, v := range x.Subcommands {
 			// Create a option based on the sub-command.
-			processCommand := func(cmdName, description string, default_ bool, options []*objects.ApplicationCommandOption) objects.ApplicationCommandOption {
+			processCommand := func(cmdName, description string, options []*objects.ApplicationCommandOption) objects.ApplicationCommandOption {
 				if description == "" {
 					description = "No description provided."
 				}
@@ -369,7 +369,6 @@ func getOptions(cmdOrCat interface{}) []objects.ApplicationCommandOption {
 				return objects.ApplicationCommandOption{
 					OptionType:  objects.TypeSubCommand,
 					Name:        cmdName,
-					Default:     default_,
 					Description: description,
 					Options:     unptr,
 				}
@@ -377,7 +376,7 @@ func getOptions(cmdOrCat interface{}) []objects.ApplicationCommandOption {
 			switch y := v.(type) {
 			case *Command:
 				// Create a sub-command.
-				cmds[i] = processCommand(k, y.Description, y.DefaultPermission, y.Options)
+				cmds[i] = processCommand(k, y.Description, y.Options)
 			case *CommandGroup:
 				// Do some incredibly mind spiralling shit.
 				description := y.Description
@@ -389,7 +388,7 @@ func getOptions(cmdOrCat interface{}) []objects.ApplicationCommandOption {
 				for k, v := range y.Subcommands {
 					switch x := v.(type) {
 					case *Command:
-						children[childrenIndex] = processCommand(k, x.Description, x.DefaultPermission, x.Options)
+						children[childrenIndex] = processCommand(k, x.Description, x.Options)
 					case *CommandGroup:
 						description := x.Description
 						if description == "" {
