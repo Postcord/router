@@ -30,6 +30,25 @@ func (c *commandBuilder) TextCommand() TextCommandBuilder {
 	return textCommandBuilder{c}
 }
 
+type subcommandBuilder struct {
+	*commandBuilder
+}
+
+func (c subcommandBuilder) Option(option *objects.ApplicationCommandOption) SubCommandBuilder {
+	c.commandBuilder.Option(option)
+	return c
+}
+
+func (c subcommandBuilder) DefaultPermission() SubCommandBuilder {
+	c.commandBuilder.DefaultPermission()
+	return c
+}
+
+func (c subcommandBuilder) AllowedMentions(config *objects.AllowedMentions) SubCommandBuilder {
+	c.commandBuilder.AllowedMentions(config)
+	return c
+}
+
 type messageCommandBuilder struct {
 	*commandBuilder
 }

@@ -56,6 +56,16 @@ func (c textCommandBuilder) Handler(handler func(*CommandRouterCtx) error) TextC
 	return c
 }
 
+func (c subcommandBuilder) Description(description string) SubCommandBuilder {
+	c.commandBuilder.Description(description)
+	return c
+}
+
+func (c subcommandBuilder) Handler(handler func(*CommandRouterCtx) error) SubCommandBuilder {
+	c.commandBuilder.Handler(handler)
+	return c
+}
+
 func (c messageCommandBuilder) Handler(handler func(*CommandRouterCtx, *objects.Message) error) MessageCommandBuilder {
 	c.commandBuilder.Handler(messageTargetWrapper(handler))
 	return c
@@ -82,6 +92,27 @@ type TextCommandBuilder interface {
 
 	// Handler is used to add a command handler.
 	Handler(func(*CommandRouterCtx) error) TextCommandBuilder
+
+	// Build is used to build the command and insert it into the command router.
+	Build() (*Command, error)
+
+	// MustBuild is used to define when a command must build or panic.
+	MustBuild() *Command
+}
+
+// SubCommandBuilder is similar to TextCommandBuilder but doesn't allow default permissions to be set.
+type SubCommandBuilder interface {
+	// Description is used to define the commands description.
+	Description(string) SubCommandBuilder
+
+	// Option is used to add a command option.
+	Option(*objects.ApplicationCommandOption) SubCommandBuilder
+
+	// AllowedMentions is used to set a command level rule on allowed mentions. If this is not nil, it overrides the last configuration.
+	AllowedMentions(*objects.AllowedMentions) SubCommandBuilder
+
+	// Handler is used to add a command handler.
+	Handler(func(*CommandRouterCtx) error) SubCommandBuilder
 
 	// Build is used to build the command and insert it into the command router.
 	Build() (*Command, error)
@@ -160,7 +191,7 @@ type CommandBuilder interface {
 }
 
 // NewCommandBuilder is used to create a builder for a *Command object.
-func (c CommandGroup) NewCommandBuilder(name string) TextCommandBuilder {
+func (c CommandGroup) NewCommandBuilder(name string) SubCommandBuilder {
 	x := &commandBuilder{name: name, map_: c.Subcommands, cmd: Command{commandType: int(objects.CommandTypeChatInput)}}
-	return x.TextCommand()
+	return subcommandBuilder{x}
 }

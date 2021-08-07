@@ -36,22 +36,29 @@ func (c {{ .Struct }}) DefaultPermission() {{ .BuilderType }}Builder {
 func (c {{ .Struct }}) AllowedMentions(config *objects.AllowedMentions) {{ .BuilderType }}Builder {
 	c.commandBuilder.AllowedMentions(config)
 	return c
-}
+}{{ if not .DoNotHook }}
 
 func (c *commandBuilder) {{ .BuilderType }}() {{ .BuilderType }}Builder {
 	c.cmd.commandType = int({{ .CommandType }})
 	return {{ .Struct }}{c}
-}`
+}{{ end }}`
 
 var types = []struct{
 	Struct      string
 	BuilderType string
 	CommandType string
+	DoNotHook   bool
 }{
 	{
 		Struct:      "textCommandBuilder",
 		BuilderType: "TextCommand",
 		CommandType: "objects.CommandTypeChatInput",
+	},
+	{
+		Struct:      "subcommandBuilder",
+		BuilderType: "SubCommand",
+		CommandType: "objects.CommandTypeChatInput",
+		DoNotHook:   true,
 	},
 	{
 		Struct:      "messageCommandBuilder",

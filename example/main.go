@@ -59,7 +59,6 @@ func main() {
 			ctx.SetContent("loge!")
 			return nil
 		}).
-		DefaultPermission().
 		Build()
 	if err != nil {
 		panic(err)
@@ -74,7 +73,6 @@ func main() {
 			ctx.SetContent("loge!")
 			return nil
 		}).
-		DefaultPermission().
 		Build()
 	if err != nil {
 		panic(err)
@@ -84,7 +82,6 @@ func main() {
 			ctx.SetContent("loge!")
 			return nil
 		}).
-		DefaultPermission().
 		Build()
 	if err != nil {
 		panic(err)
