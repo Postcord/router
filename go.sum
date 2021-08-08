@@ -1,5 +1,7 @@
 git.kelwing.dev/Postcord/objects v0.0.12-0.20210801155222-2154628fdc64 h1:7+cVFzdtzw7/6YLpdXoju6rDmbh0ZNErjMnMcN/i9N0=
 git.kelwing.dev/Postcord/objects v0.0.12-0.20210801155222-2154628fdc64/go.mod h1:DdFNHjas9Xby/YNGwr5XWuD+8kyNvGmtozW4LiF3QF8=
+git.kelwing.dev/Postcord/objects v0.0.12-0.20210808151052-b9bf0e575ac6 h1:rIf8rqe+AVqnRC6SvyLgE0m9hsEeM+5ps/BA+snqCYw=
+git.kelwing.dev/Postcord/objects v0.0.12-0.20210808151052-b9bf0e575ac6/go.mod h1:DdFNHjas9Xby/YNGwr5XWuD+8kyNvGmtozW4LiF3QF8=
 git.kelwing.dev/Postcord/rest v0.0.6-0.20210723081922-d28de31375a1 h1:pCKpGm2rAho2UwVANxArf7j79caEzwduw2VZca/1Nlk=
 git.kelwing.dev/Postcord/rest v0.0.6-0.20210723081922-d28de31375a1/go.mod h1:f62aVxGe93HYu4P2Gig2cGdFKFcb8j8oA4t6HKnO7T8=
 github.com/Postcord/interactions v0.0.13 h1:g9Q3BdU2eaBhdm8wR5YHI7OVE1Ug9NlWdPK7btC5e88=

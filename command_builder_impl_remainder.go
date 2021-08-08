@@ -13,11 +13,6 @@ func (c *commandBuilder) Description(description string) CommandBuilder {
 	return c
 }
 
-func (c *commandBuilder) Option(option *objects.ApplicationCommandOption) CommandBuilder {
-	c.cmd.Options = append(c.cmd.Options, option)
-	return c
-}
-
 func (c *commandBuilder) DefaultPermission() CommandBuilder {
 	c.cmd.DefaultPermission = true
 	return c

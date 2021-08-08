@@ -4,11 +4,10 @@ import "github.com/Postcord/objects"
 
 // TextCommandBuilder is used to define a builder for a Command object where the type is a text command.
 type TextCommandBuilder interface {
+	textCommandOptions
+
 	// Description is used to define the commands description.
 	Description(string) TextCommandBuilder
-
-	// Option is used to add a command option.
-	Option(*objects.ApplicationCommandOption) TextCommandBuilder
 
 	// DefaultPermission is used to define if the command should have default permissions. Note this does nothing if the command is in a group.
 	DefaultPermission() TextCommandBuilder
@@ -28,11 +27,10 @@ type TextCommandBuilder interface {
 
 // SubCommandBuilder is similar to TextCommandBuilder but doesn't allow default permissions to be set.
 type SubCommandBuilder interface {
+	subCommandOptions
+
 	// Description is used to define the commands description.
 	Description(string) SubCommandBuilder
-
-	// Option is used to add a command option.
-	Option(*objects.ApplicationCommandOption) SubCommandBuilder
 
 	// AllowedMentions is used to set a command level rule on allowed mentions. If this is not nil, it overrides the last configuration.
 	AllowedMentions(*objects.AllowedMentions) SubCommandBuilder
@@ -85,6 +83,8 @@ type UserCommandBuilder interface {
 
 // CommandBuilder is used to define a builder for a Command object where the type isn't known.
 type CommandBuilder interface {
+	commandOptions
+
 	// Description is used to define the commands description.
 	Description(string) CommandBuilder
 
@@ -96,9 +96,6 @@ type CommandBuilder interface {
 
 	// UserCommand is used to define that this should be a message command builder.
 	UserCommand() UserCommandBuilder
-
-	// Option is used to add a command option.
-	Option(*objects.ApplicationCommandOption) CommandBuilder
 
 	// DefaultPermission is used to define if the command should have default permissions. Note this does nothing if the command is in a group.
 	DefaultPermission() CommandBuilder
