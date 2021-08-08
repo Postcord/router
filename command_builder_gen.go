@@ -157,7 +157,7 @@ func (c *commandBuilder) UserCommand() UserCommandBuilder {
 	return userCommandBuilder{c}
 }
 
- type commandOptions interface {
+type commandOptions interface {
 	// StringOption is used to define an option of the type string. Note that choices is ignored if it's nil or length 0.
 	// Maps to option type 3 (STRING): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
 	StringOption(name, description string, required bool, choices []StringChoice) CommandBuilder
@@ -191,7 +191,7 @@ func (c *commandBuilder) UserCommand() UserCommandBuilder {
 	DoubleOption(name, description string, required bool, choices []DoubleChoice) CommandBuilder
 }
 
- type subCommandOptions interface {
+type subCommandOptions interface {
 	// StringOption is used to define an option of the type string. Note that choices is ignored if it's nil or length 0.
 	// Maps to option type 3 (STRING): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
 	StringOption(name, description string, required bool, choices []StringChoice) SubCommandBuilder
@@ -225,7 +225,7 @@ func (c *commandBuilder) UserCommand() UserCommandBuilder {
 	DoubleOption(name, description string, required bool, choices []DoubleChoice) SubCommandBuilder
 }
 
- type textCommandOptions interface {
+type textCommandOptions interface {
 	// StringOption is used to define an option of the type string. Note that choices is ignored if it's nil or length 0.
 	// Maps to option type 3 (STRING): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
 	StringOption(name, description string, required bool, choices []StringChoice) TextCommandBuilder

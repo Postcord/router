@@ -78,7 +78,7 @@ func (c *commandBuilder) {{ .BuilderType }}() {{ .BuilderType }}Builder {
 	return {{ .Struct }}{c}
 }{{ end }}`
 
-const optionInterface = ` type {{ .OutputInterface }} interface {
+const optionInterface = `type {{ .OutputInterface }} interface {
 	// StringOption is used to define an option of the type string. Note that choices is ignored if it's nil or length 0.
 	// Maps to option type 3 (STRING): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
 	StringOption(name, description string, required bool, choices []StringChoice) {{ .InterfaceName }}
