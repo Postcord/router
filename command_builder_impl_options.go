@@ -12,9 +12,12 @@ type StringChoice struct {
 }
 
 func (c *commandBuilder) StringOption(name, description string, required bool, choices []StringChoice) CommandBuilder {
-	discordifiedChoices := make([]objects.ApplicationCommandOptionChoice, len(choices))
-	for i, v := range choices {
-		discordifiedChoices[i] = objects.ApplicationCommandOptionChoice{Name: v.Name, Value: v.Value}
+	var discordifiedChoices []objects.ApplicationCommandOptionChoice
+	if choices != nil && len(choices) != 0 {
+		discordifiedChoices = make([]objects.ApplicationCommandOptionChoice, len(choices))
+		for i, v := range choices {
+			discordifiedChoices[i] = objects.ApplicationCommandOptionChoice{Name: v.Name, Value: v.Value}
+		}
 	}
 	c.cmd.Options = append(c.cmd.Options, &objects.ApplicationCommandOption{
 		OptionType:  objects.TypeString,
@@ -36,9 +39,12 @@ type IntChoice struct {
 }
 
 func (c *commandBuilder) IntOption(name, description string, required bool, choices []IntChoice) CommandBuilder {
-	discordifiedChoices := make([]objects.ApplicationCommandOptionChoice, len(choices))
-	for i, v := range choices {
-		discordifiedChoices[i] = objects.ApplicationCommandOptionChoice{Name: v.Name, Value: v.Value}
+	var discordifiedChoices []objects.ApplicationCommandOptionChoice
+	if choices != nil && len(choices) != 0 {
+		discordifiedChoices = make([]objects.ApplicationCommandOptionChoice, len(choices))
+		for i, v := range choices {
+			discordifiedChoices[i] = objects.ApplicationCommandOptionChoice{Name: v.Name, Value: v.Value}
+		}
 	}
 	c.cmd.Options = append(c.cmd.Options, &objects.ApplicationCommandOption{
 		OptionType:  objects.TypeInteger,
@@ -91,9 +97,12 @@ type DoubleChoice struct {
 }
 
 func (c *commandBuilder) DoubleOption(name, description string, required bool, choices []DoubleChoice) CommandBuilder {
-	discordifiedChoices := make([]objects.ApplicationCommandOptionChoice, len(choices))
-	for i, v := range choices {
-		discordifiedChoices[i] = objects.ApplicationCommandOptionChoice{Name: v.Name, Value: v.Value}
+	var discordifiedChoices []objects.ApplicationCommandOptionChoice
+	if choices != nil && len(choices) != 0 {
+		discordifiedChoices = make([]objects.ApplicationCommandOptionChoice, len(choices))
+		for i, v := range choices {
+			discordifiedChoices[i] = objects.ApplicationCommandOptionChoice{Name: v.Name, Value: v.Value}
+		}
 	}
 	c.cmd.Options = append(c.cmd.Options, &objects.ApplicationCommandOption{
 		OptionType:  objects.TypeDouble,
