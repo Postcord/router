@@ -16,6 +16,9 @@ type Command struct {
 	// Defines the parent.
 	parent *CommandGroup
 
+	// Defines any autocomplete options. Interface can be any of the ___AutoCompleteFunc's.
+	autocomplete map[string]interface{}
+
 	// Name is the commands name.
 	Name string `json:"name"`
 
