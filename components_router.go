@@ -36,7 +36,7 @@ type ComponentRouterCtx struct {
 	Params map[string]string `json:"params"`
 
 	// RESTClient is used to define the REST client.
-	RESTClient *rest.Client `json:"rest_client"`
+	RESTClient rest.RESTClient `json:"rest_client"`
 }
 
 // DeferredMessageUpdate sets the response type to DeferredMessageUpdate

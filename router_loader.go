@@ -68,12 +68,12 @@ type HandlerAccepter interface {
 	ComponentHandler(handler interactions.HandlerFunc)
 	CommandHandler(handler interactions.HandlerFunc)
 	AutocompleteHandler(handler interactions.HandlerFunc)
-	Rest() *rest.Client
+	Rest() rest.RESTClient
 }
 
 // Defines the various bits passed through from the loader.
 type loaderPassthrough struct {
-	rest *rest.Client
+	rest rest.RESTClient
 	errHandler func(error) *objects.InteractionResponse
 	globalAllowedMentions *objects.AllowedMentions
 }

@@ -59,7 +59,7 @@ var MismatchedOption = errors.New("mismatched interaction option")
 
 // Defines the options for command execution.
 type commandExecutionOptions struct {
-	restClient       *rest.Client
+	restClient       rest.RESTClient
 	exceptionHandler func(error) *objects.InteractionResponse
 	allowedMentions  *objects.AllowedMentions
 	interaction      *objects.Interaction

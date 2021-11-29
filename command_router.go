@@ -37,7 +37,7 @@ type CommandRouterCtx struct {
 	Options map[string]interface{} `json:"options"`
 
 	// RESTClient is used to define the REST client.
-	RESTClient *rest.Client `json:"rest_client"`
+	RESTClient rest.RESTClient `json:"rest_client"`
 }
 
 // TargetMessage is used to try and get the target message. If this was not targeted at a message, returns nil.

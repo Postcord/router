@@ -94,7 +94,7 @@ func TestComponentRouter_build(t *testing.T) {
 	tests := []struct {
 		name string
 
-		restClient *rest.Client
+		restClient rest.RESTClient
 		globalAllowedMentions *objects.AllowedMentions
 		init func(t *testing.T, r *ComponentRouter)
 
