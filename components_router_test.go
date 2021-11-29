@@ -13,13 +13,13 @@ import (
 
 func TestComponentRouterCtx_DeferredMessageUpdate(t *testing.T) {
 	x := &ComponentRouterCtx{}
-	callBuilderFunction(t, x, "DeferredMessageUpdate")
+	assert.NoError(t, callBuilderFunction(t, x, "DeferredMessageUpdate"))
 	assert.Equal(t, objects.ResponseDeferredMessageUpdate, x.respType)
 }
 
 func TestComponentRouterCtx_UpdateMessage(t *testing.T) {
 	x := &ComponentRouterCtx{}
-	callBuilderFunction(t, x, "UpdateMessage")
+	assert.NoError(t, callBuilderFunction(t, x, "UpdateMessage"))
 	assert.Equal(t, objects.ResponseUpdateMessage, x.respType)
 }
 
@@ -299,7 +299,7 @@ func TestComponentRouter_build(t *testing.T) {
 			if tt.init != nil {
 				tt.init(t, r)
 			}
-			builtFunc := r.build(dummyRestClient, setError, tt.globalAllowedMentions)
+			builtFunc := r.build(loaderPassthrough{dummyRestClient, setError, tt.globalAllowedMentions})
 			resp := builtFunc(tt.interaction)
 
 			// Verify the error.
