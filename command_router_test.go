@@ -1718,6 +1718,7 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 		BoolOption("bool", "A bool option", true, false).
 		BoolOption("bool2", "Another bool option", true, false).
 		ChannelOption("channel", "A channel option", true).
+		DoubleOption("double", "A double option", true, nil).
 		Build()
 
 	opts := map[string]interface{}{
@@ -1733,11 +1734,16 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 	ctx := &CommandRouterCtx{Options: opts, Command: c}
 
 	type x struct {
-		Str     string             `discord:"str"`
-		Int     int                `discord:"int"`
-		Bool    bool               `discord:"bool"`
-		Bool2   bool               `discord:"bool2"`
-		Channel *ResolvableChannel `discord:"channel"`
+		Str        string             `discord:"str"`
+		Int        int                `discord:"int"`
+		Bool       bool               `discord:"bool"`
+		Bool2      bool               `discord:"bool2"`
+		Channel    *ResolvableChannel `discord:"channel"`
+		Double     float64            `discord:"double"`
+		NoTag      string
+		EmptyTag   string `discord:""`
+		unSettable string `discord:"unsettable"`
+		ExtraTag   string `discord:"extra"`
 	}
 
 	var items x
