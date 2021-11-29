@@ -1711,50 +1711,94 @@ func TestCommandRouter_FormulateDiscordCommands(t *testing.T) {
 }
 
 func TestCommandRouterCtx_Bind(t *testing.T) {
-	r := &CommandRouter{}
-	c, _ := r.NewCommandBuilder("test").
-		StringOption("str", "A string option", true, nil).
-		StringOption("str2", "A string option", true, nil).
-		IntOption("int", "An int option", true, nil).
-		BoolOption("bool", "A bool option", true, false).
-		BoolOption("bool2", "Another bool option", true, false).
-		ChannelOption("channel", "A channel option", true).
-		DoubleOption("double", "A double option", true, nil).
-		Build()
-
-	opts := map[string]interface{}{
-		"str":  "str",
-		"int":  1,
-		"bool": true,
-		"channel": &ResolvableChannel{
-			id: "123",
-		},
-		"int2":   2,
-		"double": 3.14,
-	}
-
-	ctx := &CommandRouterCtx{Options: opts, Command: c}
-
 	type x struct {
-		Str        string             `discord:"str"`
-		Int        int                `discord:"int"`
-		Bool       bool               `discord:"bool"`
-		Bool2      bool               `discord:"bool2"`
-		Channel    *ResolvableChannel `discord:"channel"`
-		Double     float64            `discord:"double"`
-		NoTag      string
-		EmptyTag   string `discord:""`
-		unSettable string `discord:"unsettable"`
-		ExtraTag   string `discord:"extra"`
+		Str      string             `discord:"str"`
+		Int      int                `discord:"int"`
+		Bool     bool               `discord:"bool"`
+		Bool2    bool               `discord:"bool2"`
+		Channel  *ResolvableChannel `discord:"channel"`
+		Double   float64            `discord:"double"`
+		NoTag    string
+		EmptyTag string `discord:""`
+		ExtraTag string `discord:"extra"`
 	}
 
-	var items x
+	tests := []struct {
+		name     string
+		init     func() *CommandRouterCtx
+		validate func(*CommandRouterCtx, *x)
+	}{
+		{
+			name: "successful binding",
+			init: func() *CommandRouterCtx {
+				r := &CommandRouter{}
+				c, _ := r.NewCommandBuilder("test").
+					StringOption("str", "A string option", true, nil).
+					StringOption("str2", "A string option", true, nil).
+					IntOption("int", "An int option", true, nil).
+					BoolOption("bool", "A bool option", true, false).
+					BoolOption("bool2", "Another bool option", true, false).
+					ChannelOption("channel", "A channel option", true).
+					DoubleOption("double", "A double option", true, nil).
+					Build()
+				opts := map[string]interface{}{
+					"str":  "str",
+					"int":  1,
+					"bool": true,
+					"channel": &ResolvableChannel{
+						id: "123",
+					},
+					"int2":   2,
+					"double": 3.14,
+				}
+				return &CommandRouterCtx{Options: opts, Command: c}
+			},
+			validate: func(ctx *CommandRouterCtx, items *x) {
+				assert.NoError(t, ctx.Bind(items))
+				assert.Equal(t, "str", items.Str)
+				assert.Equal(t, 1, items.Int)
+				assert.Equal(t, true, items.Bool)
+				assert.Equal(t, false, items.Bool2)
+				assert.Equal(t, "123", items.Channel.id)
+				assert.Equal(t, 3.14, items.Double)
+			},
+		},
+		{
+			name: "non-pointer",
+			init: func() *CommandRouterCtx {
+				r := &CommandRouter{}
+				c, _ := r.NewCommandBuilder("test").
+					StringOption("str", "A string option", true, nil).
+					Build()
+				opts := map[string]interface{}{
+					"str": "str",
+				}
+				return &CommandRouterCtx{Options: opts, Command: c}
+			},
+			validate: func(ctx *CommandRouterCtx, items *x) {
+				assert.Error(t, ctx.Bind(*items))
+			},
+		},
+		{
+			name: "non-struct",
+			init: func() *CommandRouterCtx {
+				r := &CommandRouter{}
+				c, _ := r.NewCommandBuilder("test").Build()
+				opts := map[string]interface{}{}
+				return &CommandRouterCtx{Options: opts, Command: c}
+			},
+			validate: func(ctx *CommandRouterCtx, items *x) {
+				var myStr string
+				assert.Error(t, ctx.Bind(&myStr))
+			},
+		},
+	}
 
-	assert.NoError(t, ctx.Bind(&items))
-	assert.Equal(t, "str", items.Str)
-	assert.Equal(t, 1, items.Int)
-	assert.Equal(t, true, items.Bool)
-	assert.Equal(t, false, items.Bool2)
-	assert.Equal(t, "123", items.Channel.id)
-	assert.Equal(t, 3.14, items.Double)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := tt.init()
+			var items x
+			tt.validate(ctx, &items)
+		})
+	}
 }
