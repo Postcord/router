@@ -1714,6 +1714,7 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 	r := &CommandRouter{}
 	c, _ := r.NewCommandBuilder("test").
 		StringOption("str", "A string option", true, nil).
+		StringOption("str2", "A string option", true, nil).
 		IntOption("int", "An int option", true, nil).
 		BoolOption("bool", "A bool option", true, false).
 		BoolOption("bool2", "Another bool option", true, false).
@@ -1728,7 +1729,8 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 		"channel": &ResolvableChannel{
 			id: "123",
 		},
-		"int2": 2,
+		"int2":   2,
+		"double": 3.14,
 	}
 
 	ctx := &CommandRouterCtx{Options: opts, Command: c}
@@ -1754,4 +1756,5 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 	assert.Equal(t, true, items.Bool)
 	assert.Equal(t, false, items.Bool2)
 	assert.Equal(t, "123", items.Channel.id)
+	assert.Equal(t, 3.14, items.Double)
 }
