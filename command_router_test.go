@@ -19,14 +19,14 @@ func TestCommandRouterCtx_TargetMessage(t *testing.T) {
 			name: "no message",
 		},
 		{
-			name: "message wrong type",
+			name:    "message wrong type",
 			options: map[string]interface{}{"/target": 1},
 		},
 		{
-			name:    "message exists",
+			name: "message exists",
 			options: map[string]interface{}{
 				"/target": &ResolvableMessage{
-					id:   "123",
+					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
 						TargetID: 123,
 						Resolved: objects.ApplicationCommandInteractionDataResolved{
@@ -64,14 +64,14 @@ func TestCommandRouterCtx_TargetMember(t *testing.T) {
 			name: "no member",
 		},
 		{
-			name: "member wrong type",
+			name:    "member wrong type",
 			options: map[string]interface{}{"/target": 1},
 		},
 		{
-			name:    "member exists",
+			name: "member exists",
 			options: map[string]interface{}{
 				"/target": &ResolvableUser{
-					id:   "123",
+					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
 						TargetID: 123,
 						Resolved: objects.ApplicationCommandInteractionDataResolved{
@@ -102,14 +102,14 @@ func Test_messageTargetWrapper(t *testing.T) {
 	tests := []struct {
 		name string
 
-		options map[string]interface{}
+		options    map[string]interface{}
 		expectsErr string
 	}{
 		{
 			name: "successful call",
-			options:  map[string]interface{}{
+			options: map[string]interface{}{
 				"/target": &ResolvableMessage{
-					id:   "123",
+					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
 						TargetID: 123,
 						Resolved: objects.ApplicationCommandInteractionDataResolved{
@@ -125,7 +125,7 @@ func Test_messageTargetWrapper(t *testing.T) {
 		},
 		{
 			name:       "invalid target",
-			options: map[string]interface{}{},
+			options:    map[string]interface{}{},
 			expectsErr: "wrong or no target specified",
 		},
 	}
@@ -171,14 +171,14 @@ func Test_memberTargetWrapper(t *testing.T) {
 	tests := []struct {
 		name string
 
-		options map[string]interface{}
+		options    map[string]interface{}
 		expectsErr string
 	}{
 		{
 			name: "successful call",
-			options:  map[string]interface{}{
+			options: map[string]interface{}{
 				"/target": &ResolvableUser{
-					id:   "123",
+					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
 						TargetID: 123,
 						Resolved: objects.ApplicationCommandInteractionDataResolved{
@@ -194,7 +194,7 @@ func Test_memberTargetWrapper(t *testing.T) {
 		},
 		{
 			name:       "invalid target",
-			options: map[string]interface{}{},
+			options:    map[string]interface{}{},
 			expectsErr: "wrong or no target specified",
 		},
 	}
@@ -240,11 +240,11 @@ func TestCommandGroup_Use(t *testing.T) {
 	tests := []struct {
 		name string
 
-		init func(c *CommandGroup)
+		init       func(c *CommandGroup)
 		expectsLen int
 	}{
 		{
-			name: "no middleware",
+			name:       "no middleware",
 			expectsLen: 0,
 		},
 		{
@@ -276,44 +276,44 @@ var dummyRootCommandGroup = &CommandGroup{}
 var commandGroupTests = []struct {
 	name string
 
-	level uint
-	groupName string
-	description string
+	level             uint
+	groupName         string
+	description       string
 	defaultPermission bool
 
-	expects *CommandGroup
+	expects    *CommandGroup
 	expectsErr string
 }{
 	{
-		name:  "group nested too deep",
-		level: 2,
+		name:       "group nested too deep",
+		level:      2,
 		expectsErr: "sub-command group would be nested too deep",
 	},
 	{
-		name: "root group",
-		groupName: "abc",
-		description: "def",
+		name:              "root group",
+		groupName:         "abc",
+		description:       "def",
 		defaultPermission: true,
 		expects: &CommandGroup{
 			level:             1,
 			parent:            dummyRootCommandGroup,
 			DefaultPermission: true,
 			Description:       "def",
-			Subcommands: map[string]interface{}{},
+			Subcommands:       map[string]interface{}{},
 		},
 	},
 	{
-		name: "sub-group",
-		groupName: "abc",
-		description: "def",
+		name:              "sub-group",
+		groupName:         "abc",
+		description:       "def",
 		defaultPermission: true,
-		level: 1,
+		level:             1,
 		expects: &CommandGroup{
 			level:             2,
 			parent:            dummyRootCommandGroup,
 			DefaultPermission: true,
 			Description:       "def",
-			Subcommands: map[string]interface{}{},
+			Subcommands:       map[string]interface{}{},
 		},
 	},
 }
@@ -363,11 +363,11 @@ func TestCommandRouter_Use(t *testing.T) {
 	tests := []struct {
 		name string
 
-		init func(c *CommandRouter)
+		init       func(c *CommandRouter)
 		expectsLen int
 	}{
 		{
-			name: "no middleware",
+			name:       "no middleware",
 			expectsLen: 0,
 		},
 		{
@@ -445,5 +445,51 @@ func TestCommandRouter_FormulateDiscordCommands(t *testing.T) {
 }
 
 func TestCommandRouterCtx_Bind(t *testing.T) {
-	// TODO
+	r := &CommandRouter{}
+	c, _ := r.NewCommandBuilder("test").
+		StringOption("str", "A string option", true, nil).
+		IntOption("int", "An int option", true, nil).
+		BoolOption("bool", "A bool option", true, false).
+		BoolOption("bool2", "Another bool option", true, false).
+		ChannelOption("channel", "A channel option", true).
+		Build()
+
+	interaction := &objects.Interaction{}
+
+	opts := map[string]interface{}{
+		"str":  "str",
+		"int":  1,
+		"bool": true,
+		"channel": &ResolvableChannel{
+			id: "123",
+		},
+		"int2": 2,
+	}
+
+	rctx := &CommandRouterCtx{
+		globalAllowedMentions: &objects.AllowedMentions{},
+		errorHandler:          nil,
+		Interaction:           interaction,
+		Command:               c,
+		Options:               opts,
+		RESTClient:            nil,
+	}
+
+	data := struct {
+		Str     string             `discord:"str"`
+		Int     int                `discord:"int"`
+		Bool    bool               `discord:"bool"`
+		Bool2   bool               `discord:"bool2"`
+		Channel *ResolvableChannel `discord:"channel"`
+	}{}
+
+	if err := rctx.Bind(&data); err != nil {
+		t.Error(err)
+	}
+
+	assert.Equal(t, "str", data.Str)
+	assert.Equal(t, 1, data.Int)
+	assert.Equal(t, true, data.Bool)
+	assert.Equal(t, false, data.Bool2)
+	assert.Equal(t, "123", data.Channel.id)
 }
