@@ -12,661 +12,923 @@ import (
 )
 
 type restTape struct {
-	tape *tape
+	tape *tapeRecorder
 	rest rest.RESTClient
 }
 
 func (r restTape) AddGuildCommand(a objects.Snowflake, b objects.Snowflake, c *objects.ApplicationCommand) (*objects.ApplicationCommand, error) {
-	r.tape.write("AddGuildCommand", a, b, c)
-	return r.rest.AddGuildCommand(a, b, c)
+	result := r.tape.write("AddGuildCommand", a, b, c)
+	d, e := r.rest.AddGuildCommand(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) AddGuildMember(a objects.Snowflake, b objects.Snowflake, c *rest.AddGuildMemberParams) (*objects.GuildMember, error) {
-	r.tape.write("AddGuildMember", a, b, c)
-	return r.rest.AddGuildMember(a, b, c)
+	result := r.tape.write("AddGuildMember", a, b, c)
+	d, e := r.rest.AddGuildMember(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) AddGuildMemberRole(a objects.Snowflake, b objects.Snowflake, c objects.Snowflake, d string) error {
-	r.tape.write("AddGuildMemberRole", a, b, c, d)
-	return r.rest.AddGuildMemberRole(a, b, c, d)
+	result := r.tape.write("AddGuildMemberRole", a, b, c, d)
+	x := r.rest.AddGuildMemberRole(a, b, c, d)
+	result.end(x)
+	return x
 }
 
 func (r restTape) AddPinnedMessage(a objects.Snowflake, b objects.Snowflake) error {
-	r.tape.write("AddPinnedMessage", a, b)
-	return r.rest.AddPinnedMessage(a, b)
+	result := r.tape.write("AddPinnedMessage", a, b)
+	x := r.rest.AddPinnedMessage(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) AddThreadMember(a objects.Snowflake, b objects.Snowflake) error {
-	r.tape.write("AddThreadMember", a, b)
-	return r.rest.AddThreadMember(a, b)
+	result := r.tape.write("AddThreadMember", a, b)
+	x := r.rest.AddThreadMember(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) BatchEditApplicationCommandPermissions(a objects.Snowflake, b objects.Snowflake, c []*objects.GuildApplicationCommandPermissions) ([]*objects.GuildApplicationCommandPermissions, error) {
-	r.tape.write("BatchEditApplicationCommandPermissions", a, b, c)
-	return r.rest.BatchEditApplicationCommandPermissions(a, b, c)
+	result := r.tape.write("BatchEditApplicationCommandPermissions", a, b, c)
+	d, e := r.rest.BatchEditApplicationCommandPermissions(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) BeginGuildPrune(a objects.Snowflake, b *rest.BeginGuildPruneParams) (int, error) {
-	r.tape.write("BeginGuildPrune", a, b)
-	return r.rest.BeginGuildPrune(a, b)
+	result := r.tape.write("BeginGuildPrune", a, b)
+	c, d := r.rest.BeginGuildPrune(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) BulkDeleteMessages(a objects.Snowflake, b *rest.DeleteMessagesParams) error {
-	r.tape.write("BulkDeleteMessages", a, b)
-	return r.rest.BulkDeleteMessages(a, b)
+	result := r.tape.write("BulkDeleteMessages", a, b)
+	x := r.rest.BulkDeleteMessages(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) BulkOverwriteGlobalCommands(a objects.Snowflake, b []*objects.ApplicationCommand) ([]*objects.ApplicationCommand, error) {
-	r.tape.write("BulkOverwriteGlobalCommands", a, b)
-	return r.rest.BulkOverwriteGlobalCommands(a, b)
+	result := r.tape.write("BulkOverwriteGlobalCommands", a, b)
+	c, d := r.rest.BulkOverwriteGlobalCommands(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) BulkOverwriteGuildCommands(a objects.Snowflake, b objects.Snowflake, c []*objects.ApplicationCommand) ([]*objects.ApplicationCommand, error) {
-	r.tape.write("BulkOverwriteGuildCommands", a, b, c)
-	return r.rest.BulkOverwriteGuildCommands(a, b, c)
+	result := r.tape.write("BulkOverwriteGuildCommands", a, b, c)
+	d, e := r.rest.BulkOverwriteGuildCommands(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) CreateBan(a objects.Snowflake, b objects.Snowflake, c *rest.CreateGuildBanParams) error {
-	r.tape.write("CreateBan", a, b, c)
-	return r.rest.CreateBan(a, b, c)
+	result := r.tape.write("CreateBan", a, b, c)
+	x := r.rest.CreateBan(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) CreateChannelInvite(a objects.Snowflake, b *rest.CreateInviteParams) (*objects.Invite, error) {
-	r.tape.write("CreateChannelInvite", a, b)
-	return r.rest.CreateChannelInvite(a, b)
+	result := r.tape.write("CreateChannelInvite", a, b)
+	c, d := r.rest.CreateChannelInvite(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) CreateCommand(a objects.Snowflake, b *objects.ApplicationCommand) (*objects.ApplicationCommand, error) {
-	r.tape.write("CreateCommand", a, b)
-	return r.rest.CreateCommand(a, b)
+	result := r.tape.write("CreateCommand", a, b)
+	c, d := r.rest.CreateCommand(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) CreateDM(a *rest.CreateDMParams) (*objects.Channel, error) {
-	r.tape.write("CreateDM", a)
-	return r.rest.CreateDM(a)
+	result := r.tape.write("CreateDM", a)
+	b, c := r.rest.CreateDM(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) CreateFollowupMessage(a objects.Snowflake, b string, c *rest.CreateFollowupMessageParams) (*objects.Message, error) {
-	r.tape.write("CreateFollowupMessage", a, b, c)
-	return r.rest.CreateFollowupMessage(a, b, c)
+	result := r.tape.write("CreateFollowupMessage", a, b, c)
+	d, e := r.rest.CreateFollowupMessage(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) CreateGroupDM(a *rest.CreateGroupDMParams) (*objects.Channel, error) {
-	r.tape.write("CreateGroupDM", a)
-	return r.rest.CreateGroupDM(a)
+	result := r.tape.write("CreateGroupDM", a)
+	b, c := r.rest.CreateGroupDM(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) CreateGuild(a *rest.CreateGuildParams) (*objects.Guild, error) {
-	r.tape.write("CreateGuild", a)
-	return r.rest.CreateGuild(a)
+	result := r.tape.write("CreateGuild", a)
+	b, c := r.rest.CreateGuild(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) CreateGuildChannel(a objects.Snowflake, b *rest.ChannelCreateParams) (*objects.Channel, error) {
-	r.tape.write("CreateGuildChannel", a, b)
-	return r.rest.CreateGuildChannel(a, b)
+	result := r.tape.write("CreateGuildChannel", a, b)
+	c, d := r.rest.CreateGuildChannel(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) CreateGuildFromTemplate(a string, b string) (*objects.Guild, error) {
-	r.tape.write("CreateGuildFromTemplate", a, b)
-	return r.rest.CreateGuildFromTemplate(a, b)
+	result := r.tape.write("CreateGuildFromTemplate", a, b)
+	c, d := r.rest.CreateGuildFromTemplate(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) CreateGuildRole(a objects.Snowflake, b *rest.CreateGuildRoleParams) (*objects.Role, error) {
-	r.tape.write("CreateGuildRole", a, b)
-	return r.rest.CreateGuildRole(a, b)
+	result := r.tape.write("CreateGuildRole", a, b)
+	c, d := r.rest.CreateGuildRole(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) CreateGuildTemplate(a objects.Snowflake, b *rest.CreateGuildTemplateParams) (*objects.Template, error) {
-	r.tape.write("CreateGuildTemplate", a, b)
-	return r.rest.CreateGuildTemplate(a, b)
+	result := r.tape.write("CreateGuildTemplate", a, b)
+	c, d := r.rest.CreateGuildTemplate(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) CreateInteractionResponse(a objects.Snowflake, b string, c *objects.InteractionResponse) error {
-	r.tape.write("CreateInteractionResponse", a, b, c)
-	return r.rest.CreateInteractionResponse(a, b, c)
+	result := r.tape.write("CreateInteractionResponse", a, b, c)
+	x := r.rest.CreateInteractionResponse(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) CreateMessage(a objects.Snowflake, b *rest.CreateMessageParams) (*objects.Message, error) {
-	r.tape.write("CreateMessage", a, b)
-	return r.rest.CreateMessage(a, b)
+	result := r.tape.write("CreateMessage", a, b)
+	c, d := r.rest.CreateMessage(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) CreateReaction(a objects.Snowflake, b objects.Snowflake, c interface {}) error {
-	r.tape.write("CreateReaction", a, b, c)
-	return r.rest.CreateReaction(a, b, c)
+	result := r.tape.write("CreateReaction", a, b, c)
+	x := r.rest.CreateReaction(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) CreateWebhook(a objects.Snowflake, b *rest.CreateWebhookParams) (*objects.Webhook, error) {
-	r.tape.write("CreateWebhook", a, b)
-	return r.rest.CreateWebhook(a, b)
+	result := r.tape.write("CreateWebhook", a, b)
+	c, d := r.rest.CreateWebhook(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) CrossPostMessage(a objects.Snowflake, b objects.Snowflake) (*objects.Message, error) {
-	r.tape.write("CrossPostMessage", a, b)
-	return r.rest.CrossPostMessage(a, b)
+	result := r.tape.write("CrossPostMessage", a, b)
+	c, d := r.rest.CrossPostMessage(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) DeleteAllReactions(a objects.Snowflake, b objects.Snowflake) error {
-	r.tape.write("DeleteAllReactions", a, b)
-	return r.rest.DeleteAllReactions(a, b)
+	result := r.tape.write("DeleteAllReactions", a, b)
+	x := r.rest.DeleteAllReactions(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteChannel(a objects.Snowflake, b string) (*objects.Channel, error) {
-	r.tape.write("DeleteChannel", a, b)
-	return r.rest.DeleteChannel(a, b)
+	result := r.tape.write("DeleteChannel", a, b)
+	c, d := r.rest.DeleteChannel(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) DeleteChannelPermission(a objects.Snowflake, b objects.Snowflake, c string) error {
-	r.tape.write("DeleteChannelPermission", a, b, c)
-	return r.rest.DeleteChannelPermission(a, b, c)
+	result := r.tape.write("DeleteChannelPermission", a, b, c)
+	x := r.rest.DeleteChannelPermission(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteCommand(a objects.Snowflake, b objects.Snowflake) error {
-	r.tape.write("DeleteCommand", a, b)
-	return r.rest.DeleteCommand(a, b)
+	result := r.tape.write("DeleteCommand", a, b)
+	x := r.rest.DeleteCommand(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteEmojiReactions(a objects.Snowflake, b objects.Snowflake, c interface {}) error {
-	r.tape.write("DeleteEmojiReactions", a, b, c)
-	return r.rest.DeleteEmojiReactions(a, b, c)
+	result := r.tape.write("DeleteEmojiReactions", a, b, c)
+	x := r.rest.DeleteEmojiReactions(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteFollowupMessage(a objects.Snowflake, b string, c objects.Snowflake) error {
-	r.tape.write("DeleteFollowupMessage", a, b, c)
-	return r.rest.DeleteFollowupMessage(a, b, c)
+	result := r.tape.write("DeleteFollowupMessage", a, b, c)
+	x := r.rest.DeleteFollowupMessage(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteGuild(a objects.Snowflake) error {
-	r.tape.write("DeleteGuild", a)
-	return r.rest.DeleteGuild(a)
+	result := r.tape.write("DeleteGuild", a)
+	x := r.rest.DeleteGuild(a)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteGuildCommand(a objects.Snowflake, b objects.Snowflake, c objects.Snowflake) error {
-	r.tape.write("DeleteGuildCommand", a, b, c)
-	return r.rest.DeleteGuildCommand(a, b, c)
+	result := r.tape.write("DeleteGuildCommand", a, b, c)
+	x := r.rest.DeleteGuildCommand(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteGuildIntegration(a objects.Snowflake, b objects.Snowflake, c string) error {
-	r.tape.write("DeleteGuildIntegration", a, b, c)
-	return r.rest.DeleteGuildIntegration(a, b, c)
+	result := r.tape.write("DeleteGuildIntegration", a, b, c)
+	x := r.rest.DeleteGuildIntegration(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteGuildRole(a objects.Snowflake, b objects.Snowflake, c string) error {
-	r.tape.write("DeleteGuildRole", a, b, c)
-	return r.rest.DeleteGuildRole(a, b, c)
+	result := r.tape.write("DeleteGuildRole", a, b, c)
+	x := r.rest.DeleteGuildRole(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteGuildTemplate(a objects.Snowflake, b string, c string) (*objects.Template, error) {
-	r.tape.write("DeleteGuildTemplate", a, b, c)
-	return r.rest.DeleteGuildTemplate(a, b, c)
+	result := r.tape.write("DeleteGuildTemplate", a, b, c)
+	d, e := r.rest.DeleteGuildTemplate(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) DeleteInvite(a string, b string) (*objects.Invite, error) {
-	r.tape.write("DeleteInvite", a, b)
-	return r.rest.DeleteInvite(a, b)
+	result := r.tape.write("DeleteInvite", a, b)
+	c, d := r.rest.DeleteInvite(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) DeleteMessage(a objects.Snowflake, b objects.Snowflake) error {
-	r.tape.write("DeleteMessage", a, b)
-	return r.rest.DeleteMessage(a, b)
+	result := r.tape.write("DeleteMessage", a, b)
+	x := r.rest.DeleteMessage(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteOriginalInteractionResponse(a objects.Snowflake, b string) error {
-	r.tape.write("DeleteOriginalInteractionResponse", a, b)
-	return r.rest.DeleteOriginalInteractionResponse(a, b)
+	result := r.tape.write("DeleteOriginalInteractionResponse", a, b)
+	x := r.rest.DeleteOriginalInteractionResponse(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteOwnReaction(a objects.Snowflake, b objects.Snowflake, c interface {}) error {
-	r.tape.write("DeleteOwnReaction", a, b, c)
-	return r.rest.DeleteOwnReaction(a, b, c)
+	result := r.tape.write("DeleteOwnReaction", a, b, c)
+	x := r.rest.DeleteOwnReaction(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeletePinnedMessage(a objects.Snowflake, b objects.Snowflake) error {
-	r.tape.write("DeletePinnedMessage", a, b)
-	return r.rest.DeletePinnedMessage(a, b)
+	result := r.tape.write("DeletePinnedMessage", a, b)
+	x := r.rest.DeletePinnedMessage(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteUserReaction(a objects.Snowflake, b objects.Snowflake, c objects.Snowflake, d interface {}) error {
-	r.tape.write("DeleteUserReaction", a, b, c, d)
-	return r.rest.DeleteUserReaction(a, b, c, d)
+	result := r.tape.write("DeleteUserReaction", a, b, c, d)
+	x := r.rest.DeleteUserReaction(a, b, c, d)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteWebhook(a objects.Snowflake) error {
-	r.tape.write("DeleteWebhook", a)
-	return r.rest.DeleteWebhook(a)
+	result := r.tape.write("DeleteWebhook", a)
+	x := r.rest.DeleteWebhook(a)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteWebhookMessage(a objects.Snowflake, b objects.Snowflake, c string) error {
-	r.tape.write("DeleteWebhookMessage", a, b, c)
-	return r.rest.DeleteWebhookMessage(a, b, c)
+	result := r.tape.write("DeleteWebhookMessage", a, b, c)
+	x := r.rest.DeleteWebhookMessage(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) DeleteWebhookWithToken(a objects.Snowflake, b string) error {
-	r.tape.write("DeleteWebhookWithToken", a, b)
-	return r.rest.DeleteWebhookWithToken(a, b)
+	result := r.tape.write("DeleteWebhookWithToken", a, b)
+	x := r.rest.DeleteWebhookWithToken(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) EditApplicationCommandPermissions(a objects.Snowflake, b objects.Snowflake, c objects.Snowflake, d []*objects.ApplicationCommandPermissions) (*objects.GuildApplicationCommandPermissions, error) {
-	r.tape.write("EditApplicationCommandPermissions", a, b, c, d)
-	return r.rest.EditApplicationCommandPermissions(a, b, c, d)
+	result := r.tape.write("EditApplicationCommandPermissions", a, b, c, d)
+	e, f := r.rest.EditApplicationCommandPermissions(a, b, c, d)
+	result.end(e, f)
+	return e, f
 }
 
 func (r restTape) EditChannelPermissions(a objects.Snowflake, b objects.Snowflake, c *rest.EditChannelParams) error {
-	r.tape.write("EditChannelPermissions", a, b, c)
-	return r.rest.EditChannelPermissions(a, b, c)
+	result := r.tape.write("EditChannelPermissions", a, b, c)
+	x := r.rest.EditChannelPermissions(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) EditFollowupMessage(a objects.Snowflake, b string, c objects.Snowflake, d *rest.EditWebhookMessageParams) (*objects.Message, error) {
-	r.tape.write("EditFollowupMessage", a, b, c, d)
-	return r.rest.EditFollowupMessage(a, b, c, d)
+	result := r.tape.write("EditFollowupMessage", a, b, c, d)
+	e, f := r.rest.EditFollowupMessage(a, b, c, d)
+	result.end(e, f)
+	return e, f
 }
 
 func (r restTape) EditMessage(a objects.Snowflake, b objects.Snowflake, c *rest.EditMessageParams) (*objects.Message, error) {
-	r.tape.write("EditMessage", a, b, c)
-	return r.rest.EditMessage(a, b, c)
+	result := r.tape.write("EditMessage", a, b, c)
+	d, e := r.rest.EditMessage(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) EditOriginalInteractionResponse(a objects.Snowflake, b string, c *rest.EditWebhookMessageParams) (*objects.Message, error) {
-	r.tape.write("EditOriginalInteractionResponse", a, b, c)
-	return r.rest.EditOriginalInteractionResponse(a, b, c)
+	result := r.tape.write("EditOriginalInteractionResponse", a, b, c)
+	d, e := r.rest.EditOriginalInteractionResponse(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) EditWebhookMessage(a objects.Snowflake, b objects.Snowflake, c string, d *rest.EditWebhookMessageParams) (*objects.Message, error) {
-	r.tape.write("EditWebhookMessage", a, b, c, d)
-	return r.rest.EditWebhookMessage(a, b, c, d)
+	result := r.tape.write("EditWebhookMessage", a, b, c, d)
+	e, f := r.rest.EditWebhookMessage(a, b, c, d)
+	result.end(e, f)
+	return e, f
 }
 
 func (r restTape) ExecuteWebhook(a objects.Snowflake, b string, c *rest.ExecuteWebhookParams) (*objects.Message, error) {
-	r.tape.write("ExecuteWebhook", a, b, c)
-	return r.rest.ExecuteWebhook(a, b, c)
+	result := r.tape.write("ExecuteWebhook", a, b, c)
+	d, e := r.rest.ExecuteWebhook(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) FollowNewsChannel(a objects.Snowflake) (*objects.FollowedChannel, error) {
-	r.tape.write("FollowNewsChannel", a)
-	return r.rest.FollowNewsChannel(a)
+	result := r.tape.write("FollowNewsChannel", a)
+	b, c := r.rest.FollowNewsChannel(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) Gateway() (*objects.Gateway, error) {
-	r.tape.write("Gateway", )
-	return r.rest.Gateway()
+	result := r.tape.write("Gateway", )
+	a, b := r.rest.Gateway()
+	result.end(a, b)
+	return a, b
 }
 
 func (r restTape) GatewayBot() (*objects.Gateway, error) {
-	r.tape.write("GatewayBot", )
-	return r.rest.GatewayBot()
+	result := r.tape.write("GatewayBot", )
+	a, b := r.rest.GatewayBot()
+	result.end(a, b)
+	return a, b
 }
 
 func (r restTape) GetApplicationCommandPermissions(a objects.Snowflake, b objects.Snowflake, c objects.Snowflake) (*objects.GuildApplicationCommandPermissions, error) {
-	r.tape.write("GetApplicationCommandPermissions", a, b, c)
-	return r.rest.GetApplicationCommandPermissions(a, b, c)
+	result := r.tape.write("GetApplicationCommandPermissions", a, b, c)
+	d, e := r.rest.GetApplicationCommandPermissions(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) GetAuditLogs(a objects.Snowflake, b *rest.GetAuditLogParams) (*objects.AuditLog, error) {
-	r.tape.write("GetAuditLogs", a, b)
-	return r.rest.GetAuditLogs(a, b)
+	result := r.tape.write("GetAuditLogs", a, b)
+	c, d := r.rest.GetAuditLogs(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetChannel(a objects.Snowflake) (*objects.Channel, error) {
-	r.tape.write("GetChannel", a)
-	return r.rest.GetChannel(a)
+	result := r.tape.write("GetChannel", a)
+	b, c := r.rest.GetChannel(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetChannelInvites(a objects.Snowflake) ([]*objects.Invite, error) {
-	r.tape.write("GetChannelInvites", a)
-	return r.rest.GetChannelInvites(a)
+	result := r.tape.write("GetChannelInvites", a)
+	b, c := r.rest.GetChannelInvites(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetChannelMessage(a objects.Snowflake, b objects.Snowflake) (*objects.Message, error) {
-	r.tape.write("GetChannelMessage", a, b)
-	return r.rest.GetChannelMessage(a, b)
+	result := r.tape.write("GetChannelMessage", a, b)
+	c, d := r.rest.GetChannelMessage(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetChannelMessages(a objects.Snowflake, b *rest.GetChannelMessagesParams) ([]*objects.Message, error) {
-	r.tape.write("GetChannelMessages", a, b)
-	return r.rest.GetChannelMessages(a, b)
+	result := r.tape.write("GetChannelMessages", a, b)
+	c, d := r.rest.GetChannelMessages(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetChannelWebhooks(a objects.Snowflake) ([]*objects.Webhook, error) {
-	r.tape.write("GetChannelWebhooks", a)
-	return r.rest.GetChannelWebhooks(a)
+	result := r.tape.write("GetChannelWebhooks", a)
+	b, c := r.rest.GetChannelWebhooks(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetCommand(a objects.Snowflake, b objects.Snowflake) (*objects.ApplicationCommand, error) {
-	r.tape.write("GetCommand", a, b)
-	return r.rest.GetCommand(a, b)
+	result := r.tape.write("GetCommand", a, b)
+	c, d := r.rest.GetCommand(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetCommands(a objects.Snowflake) ([]*objects.ApplicationCommand, error) {
-	r.tape.write("GetCommands", a)
-	return r.rest.GetCommands(a)
+	result := r.tape.write("GetCommands", a)
+	b, c := r.rest.GetCommands(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetCurrentUser() (*objects.User, error) {
-	r.tape.write("GetCurrentUser", )
-	return r.rest.GetCurrentUser()
+	result := r.tape.write("GetCurrentUser", )
+	a, b := r.rest.GetCurrentUser()
+	result.end(a, b)
+	return a, b
 }
 
 func (r restTape) GetCurrentUserGuilds(a *rest.CurrentUserGuildsParams) ([]*objects.Guild, error) {
-	r.tape.write("GetCurrentUserGuilds", a)
-	return r.rest.GetCurrentUserGuilds(a)
+	result := r.tape.write("GetCurrentUserGuilds", a)
+	b, c := r.rest.GetCurrentUserGuilds(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetFollowupMessage(a objects.Snowflake, b string, c objects.Snowflake) (*objects.Message, error) {
-	r.tape.write("GetFollowupMessage", a, b, c)
-	return r.rest.GetFollowupMessage(a, b, c)
+	result := r.tape.write("GetFollowupMessage", a, b, c)
+	d, e := r.rest.GetFollowupMessage(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) GetGuild(a objects.Snowflake) (*objects.Guild, error) {
-	r.tape.write("GetGuild", a)
-	return r.rest.GetGuild(a)
+	result := r.tape.write("GetGuild", a)
+	b, c := r.rest.GetGuild(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildApplicationCommandPermissions(a objects.Snowflake, b objects.Snowflake) ([]*objects.GuildApplicationCommandPermissions, error) {
-	r.tape.write("GetGuildApplicationCommandPermissions", a, b)
-	return r.rest.GetGuildApplicationCommandPermissions(a, b)
+	result := r.tape.write("GetGuildApplicationCommandPermissions", a, b)
+	c, d := r.rest.GetGuildApplicationCommandPermissions(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetGuildBan(a objects.Snowflake, b objects.Snowflake) (*objects.Ban, error) {
-	r.tape.write("GetGuildBan", a, b)
-	return r.rest.GetGuildBan(a, b)
+	result := r.tape.write("GetGuildBan", a, b)
+	c, d := r.rest.GetGuildBan(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetGuildBans(a objects.Snowflake) ([]*objects.Ban, error) {
-	r.tape.write("GetGuildBans", a)
-	return r.rest.GetGuildBans(a)
+	result := r.tape.write("GetGuildBans", a)
+	b, c := r.rest.GetGuildBans(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildChannels(a objects.Snowflake) ([]*objects.Channel, error) {
-	r.tape.write("GetGuildChannels", a)
-	return r.rest.GetGuildChannels(a)
+	result := r.tape.write("GetGuildChannels", a)
+	b, c := r.rest.GetGuildChannels(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildCommand(a objects.Snowflake, b objects.Snowflake, c objects.Snowflake) (*objects.ApplicationCommand, error) {
-	r.tape.write("GetGuildCommand", a, b, c)
-	return r.rest.GetGuildCommand(a, b, c)
+	result := r.tape.write("GetGuildCommand", a, b, c)
+	d, e := r.rest.GetGuildCommand(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) GetGuildCommands(a objects.Snowflake, b objects.Snowflake) ([]*objects.ApplicationCommand, error) {
-	r.tape.write("GetGuildCommands", a, b)
-	return r.rest.GetGuildCommands(a, b)
+	result := r.tape.write("GetGuildCommands", a, b)
+	c, d := r.rest.GetGuildCommands(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetGuildIntegrations(a objects.Snowflake) ([]*objects.Integration, error) {
-	r.tape.write("GetGuildIntegrations", a)
-	return r.rest.GetGuildIntegrations(a)
+	result := r.tape.write("GetGuildIntegrations", a)
+	b, c := r.rest.GetGuildIntegrations(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildInvites(a objects.Snowflake) ([]*objects.Invite, error) {
-	r.tape.write("GetGuildInvites", a)
-	return r.rest.GetGuildInvites(a)
+	result := r.tape.write("GetGuildInvites", a)
+	b, c := r.rest.GetGuildInvites(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildMember(a objects.Snowflake, b objects.Snowflake) (*objects.GuildMember, error) {
-	r.tape.write("GetGuildMember", a, b)
-	return r.rest.GetGuildMember(a, b)
+	result := r.tape.write("GetGuildMember", a, b)
+	c, d := r.rest.GetGuildMember(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetGuildPreview(a objects.Snowflake) (*objects.GuildPreview, error) {
-	r.tape.write("GetGuildPreview", a)
-	return r.rest.GetGuildPreview(a)
+	result := r.tape.write("GetGuildPreview", a)
+	b, c := r.rest.GetGuildPreview(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildPruneCount(a objects.Snowflake, b *rest.GetGuildPruneCountParams) (int, error) {
-	r.tape.write("GetGuildPruneCount", a, b)
-	return r.rest.GetGuildPruneCount(a, b)
+	result := r.tape.write("GetGuildPruneCount", a, b)
+	c, d := r.rest.GetGuildPruneCount(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetGuildRoles(a objects.Snowflake) ([]*objects.Role, error) {
-	r.tape.write("GetGuildRoles", a)
-	return r.rest.GetGuildRoles(a)
+	result := r.tape.write("GetGuildRoles", a)
+	b, c := r.rest.GetGuildRoles(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildTemplates(a objects.Snowflake) ([]*objects.Template, error) {
-	r.tape.write("GetGuildTemplates", a)
-	return r.rest.GetGuildTemplates(a)
+	result := r.tape.write("GetGuildTemplates", a)
+	b, c := r.rest.GetGuildTemplates(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildVanityURL(a objects.Snowflake) (*objects.Invite, error) {
-	r.tape.write("GetGuildVanityURL", a)
-	return r.rest.GetGuildVanityURL(a)
+	result := r.tape.write("GetGuildVanityURL", a)
+	b, c := r.rest.GetGuildVanityURL(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildVoiceRegions(a objects.Snowflake) ([]*objects.VoiceRegion, error) {
-	r.tape.write("GetGuildVoiceRegions", a)
-	return r.rest.GetGuildVoiceRegions(a)
+	result := r.tape.write("GetGuildVoiceRegions", a)
+	b, c := r.rest.GetGuildVoiceRegions(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildWebhooks(a objects.Snowflake) ([]*objects.Webhook, error) {
-	r.tape.write("GetGuildWebhooks", a)
-	return r.rest.GetGuildWebhooks(a)
+	result := r.tape.write("GetGuildWebhooks", a)
+	b, c := r.rest.GetGuildWebhooks(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildWelcomeScreen(a objects.Snowflake) (*objects.MembershipScreening, error) {
-	r.tape.write("GetGuildWelcomeScreen", a)
-	return r.rest.GetGuildWelcomeScreen(a)
+	result := r.tape.write("GetGuildWelcomeScreen", a)
+	b, c := r.rest.GetGuildWelcomeScreen(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildWidget(a objects.Snowflake) (*objects.GuildWidgetJSON, error) {
-	r.tape.write("GetGuildWidget", a)
-	return r.rest.GetGuildWidget(a)
+	result := r.tape.write("GetGuildWidget", a)
+	b, c := r.rest.GetGuildWidget(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetGuildWidgetImage(a objects.Snowflake, b *rest.GuildWidgetImageParams) (image.Image, error) {
-	r.tape.write("GetGuildWidgetImage", a, b)
-	return r.rest.GetGuildWidgetImage(a, b)
+	result := r.tape.write("GetGuildWidgetImage", a, b)
+	c, d := r.rest.GetGuildWidgetImage(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetGuildWidgetSettings(a objects.Snowflake) (*objects.GuildWidget, error) {
-	r.tape.write("GetGuildWidgetSettings", a)
-	return r.rest.GetGuildWidgetSettings(a)
+	result := r.tape.write("GetGuildWidgetSettings", a)
+	b, c := r.rest.GetGuildWidgetSettings(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetInvite(a string, b *rest.GetInviteParams) (*objects.Invite, error) {
-	r.tape.write("GetInvite", a, b)
-	return r.rest.GetInvite(a, b)
+	result := r.tape.write("GetInvite", a, b)
+	c, d := r.rest.GetInvite(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetOriginalInteractionResponse(a objects.Snowflake, b string) (*objects.Message, error) {
-	r.tape.write("GetOriginalInteractionResponse", a, b)
-	return r.rest.GetOriginalInteractionResponse(a, b)
+	result := r.tape.write("GetOriginalInteractionResponse", a, b)
+	c, d := r.rest.GetOriginalInteractionResponse(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) GetPinnedMessages(a objects.Snowflake) ([]*objects.Message, error) {
-	r.tape.write("GetPinnedMessages", a)
-	return r.rest.GetPinnedMessages(a)
+	result := r.tape.write("GetPinnedMessages", a)
+	b, c := r.rest.GetPinnedMessages(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetReactions(a objects.Snowflake, b objects.Snowflake, c interface {}, d *rest.GetReactionsParams) ([]*objects.User, error) {
-	r.tape.write("GetReactions", a, b, c, d)
-	return r.rest.GetReactions(a, b, c, d)
+	result := r.tape.write("GetReactions", a, b, c, d)
+	e, f := r.rest.GetReactions(a, b, c, d)
+	result.end(e, f)
+	return e, f
 }
 
 func (r restTape) GetTemplate(a string) (*objects.Template, error) {
-	r.tape.write("GetTemplate", a)
-	return r.rest.GetTemplate(a)
+	result := r.tape.write("GetTemplate", a)
+	b, c := r.rest.GetTemplate(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetUser(a objects.Snowflake) (*objects.User, error) {
-	r.tape.write("GetUser", a)
-	return r.rest.GetUser(a)
+	result := r.tape.write("GetUser", a)
+	b, c := r.rest.GetUser(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetUserConnections() ([]*objects.Connection, error) {
-	r.tape.write("GetUserConnections", )
-	return r.rest.GetUserConnections()
+	result := r.tape.write("GetUserConnections", )
+	a, b := r.rest.GetUserConnections()
+	result.end(a, b)
+	return a, b
 }
 
 func (r restTape) GetVoiceRegions() ([]*objects.VoiceRegion, error) {
-	r.tape.write("GetVoiceRegions", )
-	return r.rest.GetVoiceRegions()
+	result := r.tape.write("GetVoiceRegions", )
+	a, b := r.rest.GetVoiceRegions()
+	result.end(a, b)
+	return a, b
 }
 
 func (r restTape) GetWebhook(a objects.Snowflake) (*objects.Webhook, error) {
-	r.tape.write("GetWebhook", a)
-	return r.rest.GetWebhook(a)
+	result := r.tape.write("GetWebhook", a)
+	b, c := r.rest.GetWebhook(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) GetWebhookWithToken(a objects.Snowflake, b string) (*objects.Webhook, error) {
-	r.tape.write("GetWebhookWithToken", a, b)
-	return r.rest.GetWebhookWithToken(a, b)
+	result := r.tape.write("GetWebhookWithToken", a, b)
+	c, d := r.rest.GetWebhookWithToken(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) JoinThread(a objects.Snowflake) error {
-	r.tape.write("JoinThread", a)
-	return r.rest.JoinThread(a)
+	result := r.tape.write("JoinThread", a)
+	x := r.rest.JoinThread(a)
+	result.end(x)
+	return x
 }
 
 func (r restTape) LeaveGuild(a objects.Snowflake) error {
-	r.tape.write("LeaveGuild", a)
-	return r.rest.LeaveGuild(a)
+	result := r.tape.write("LeaveGuild", a)
+	x := r.rest.LeaveGuild(a)
+	result.end(x)
+	return x
 }
 
 func (r restTape) LeaveThread(a objects.Snowflake) error {
-	r.tape.write("LeaveThread", a)
-	return r.rest.LeaveThread(a)
+	result := r.tape.write("LeaveThread", a)
+	x := r.rest.LeaveThread(a)
+	result.end(x)
+	return x
 }
 
 func (r restTape) ListActiveThreads(a objects.Snowflake) ([]*rest.ListThreadsResponse, error) {
-	r.tape.write("ListActiveThreads", a)
-	return r.rest.ListActiveThreads(a)
+	result := r.tape.write("ListActiveThreads", a)
+	b, c := r.rest.ListActiveThreads(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) ListGuildMembers(a objects.Snowflake, b *rest.ListGuildMembersParams) ([]*objects.GuildMember, error) {
-	r.tape.write("ListGuildMembers", a, b)
-	return r.rest.ListGuildMembers(a, b)
+	result := r.tape.write("ListGuildMembers", a, b)
+	c, d := r.rest.ListGuildMembers(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ListJoinedPrivateArchivedThreads(a objects.Snowflake, b ...*rest.ListThreadsParams) (*rest.ListThreadsResponse, error) {
-	r.tape.write("ListJoinedPrivateArchivedThreads", a, b)
-	return r.rest.ListJoinedPrivateArchivedThreads(a, b...)
+	result := r.tape.write("ListJoinedPrivateArchivedThreads", a, b)
+	c, d := r.rest.ListJoinedPrivateArchivedThreads(a, b...)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ListPrivateArchivedThreads(a objects.Snowflake, b ...*rest.ListThreadsParams) (*rest.ListThreadsResponse, error) {
-	r.tape.write("ListPrivateArchivedThreads", a, b)
-	return r.rest.ListPrivateArchivedThreads(a, b...)
+	result := r.tape.write("ListPrivateArchivedThreads", a, b)
+	c, d := r.rest.ListPrivateArchivedThreads(a, b...)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ListPublicArchivedThreads(a objects.Snowflake, b ...*rest.ListThreadsParams) (*rest.ListThreadsResponse, error) {
-	r.tape.write("ListPublicArchivedThreads", a, b)
-	return r.rest.ListPublicArchivedThreads(a, b...)
+	result := r.tape.write("ListPublicArchivedThreads", a, b)
+	c, d := r.rest.ListPublicArchivedThreads(a, b...)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ListThreadMembers(a objects.Snowflake) ([]*objects.ThreadMember, error) {
-	r.tape.write("ListThreadMembers", a)
-	return r.rest.ListThreadMembers(a)
+	result := r.tape.write("ListThreadMembers", a)
+	b, c := r.rest.ListThreadMembers(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) ModifyChannel(a objects.Snowflake, b *rest.ModifyChannelParams) (*objects.Channel, error) {
-	r.tape.write("ModifyChannel", a, b)
-	return r.rest.ModifyChannel(a, b)
+	result := r.tape.write("ModifyChannel", a, b)
+	c, d := r.rest.ModifyChannel(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ModifyCurrentUser(a *rest.ModifyCurrentUserParams) (*objects.User, error) {
-	r.tape.write("ModifyCurrentUser", a)
-	return r.rest.ModifyCurrentUser(a)
+	result := r.tape.write("ModifyCurrentUser", a)
+	b, c := r.rest.ModifyCurrentUser(a)
+	result.end(b, c)
+	return b, c
 }
 
 func (r restTape) ModifyCurrentUserNick(a objects.Snowflake, b *rest.ModifyCurrentUserNickParams) (*rest.ModifyCurrentUserNickParams, error) {
-	r.tape.write("ModifyCurrentUserNick", a, b)
-	return r.rest.ModifyCurrentUserNick(a, b)
+	result := r.tape.write("ModifyCurrentUserNick", a, b)
+	c, d := r.rest.ModifyCurrentUserNick(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ModifyGuild(a objects.Snowflake, b *rest.ModifyGuildParams) (*objects.Guild, error) {
-	r.tape.write("ModifyGuild", a, b)
-	return r.rest.ModifyGuild(a, b)
+	result := r.tape.write("ModifyGuild", a, b)
+	c, d := r.rest.ModifyGuild(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ModifyGuildChannelPositions(a objects.Snowflake, b []*rest.ModifyChannelPositionParams, c string) error {
-	r.tape.write("ModifyGuildChannelPositions", a, b, c)
-	return r.rest.ModifyGuildChannelPositions(a, b, c)
+	result := r.tape.write("ModifyGuildChannelPositions", a, b, c)
+	x := r.rest.ModifyGuildChannelPositions(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) ModifyGuildMember(a objects.Snowflake, b objects.Snowflake, c *rest.ModifyGuildMemberParams) (*objects.GuildMember, error) {
-	r.tape.write("ModifyGuildMember", a, b, c)
-	return r.rest.ModifyGuildMember(a, b, c)
+	result := r.tape.write("ModifyGuildMember", a, b, c)
+	d, e := r.rest.ModifyGuildMember(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) ModifyGuildRole(a objects.Snowflake, b objects.Snowflake, c *rest.ModifyGuildRoleParams) (*objects.Role, error) {
-	r.tape.write("ModifyGuildRole", a, b, c)
-	return r.rest.ModifyGuildRole(a, b, c)
+	result := r.tape.write("ModifyGuildRole", a, b, c)
+	d, e := r.rest.ModifyGuildRole(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) ModifyGuildRolePositions(a objects.Snowflake, b []*rest.ModifyGuildRolePositionsParams) ([]*objects.Role, error) {
-	r.tape.write("ModifyGuildRolePositions", a, b)
-	return r.rest.ModifyGuildRolePositions(a, b)
+	result := r.tape.write("ModifyGuildRolePositions", a, b)
+	c, d := r.rest.ModifyGuildRolePositions(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ModifyGuildTemplate(a objects.Snowflake, b string, c *rest.ModifyGuildTemplateParams) (*objects.Template, error) {
-	r.tape.write("ModifyGuildTemplate", a, b, c)
-	return r.rest.ModifyGuildTemplate(a, b, c)
+	result := r.tape.write("ModifyGuildTemplate", a, b, c)
+	d, e := r.rest.ModifyGuildTemplate(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) ModifyGuildWelcomeScreen(a objects.Snowflake, b *rest.ModifyGuildMembershipScreeningParams) (*objects.MembershipScreening, error) {
-	r.tape.write("ModifyGuildWelcomeScreen", a, b)
-	return r.rest.ModifyGuildWelcomeScreen(a, b)
+	result := r.tape.write("ModifyGuildWelcomeScreen", a, b)
+	c, d := r.rest.ModifyGuildWelcomeScreen(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ModifyGuildWidget(a objects.Snowflake, b *rest.GuildWidgetParams) (*objects.GuildWidget, error) {
-	r.tape.write("ModifyGuildWidget", a, b)
-	return r.rest.ModifyGuildWidget(a, b)
+	result := r.tape.write("ModifyGuildWidget", a, b)
+	c, d := r.rest.ModifyGuildWidget(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ModifyWebhook(a objects.Snowflake, b *rest.ModifyWebhookParams) (*objects.Webhook, error) {
-	r.tape.write("ModifyWebhook", a, b)
-	return r.rest.ModifyWebhook(a, b)
+	result := r.tape.write("ModifyWebhook", a, b)
+	c, d := r.rest.ModifyWebhook(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) ModifyWebhookWithToken(a objects.Snowflake, b string, c *rest.ModifyWebhookWithTokenParams) (*objects.Webhook, error) {
-	r.tape.write("ModifyWebhookWithToken", a, b, c)
-	return r.rest.ModifyWebhookWithToken(a, b, c)
+	result := r.tape.write("ModifyWebhookWithToken", a, b, c)
+	d, e := r.rest.ModifyWebhookWithToken(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) RemoveGuildBan(a objects.Snowflake, b objects.Snowflake, c string) error {
-	r.tape.write("RemoveGuildBan", a, b, c)
-	return r.rest.RemoveGuildBan(a, b, c)
+	result := r.tape.write("RemoveGuildBan", a, b, c)
+	x := r.rest.RemoveGuildBan(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) RemoveGuildMember(a objects.Snowflake, b objects.Snowflake, c string) error {
-	r.tape.write("RemoveGuildMember", a, b, c)
-	return r.rest.RemoveGuildMember(a, b, c)
+	result := r.tape.write("RemoveGuildMember", a, b, c)
+	x := r.rest.RemoveGuildMember(a, b, c)
+	result.end(x)
+	return x
 }
 
 func (r restTape) RemoveGuildMemberRole(a objects.Snowflake, b objects.Snowflake, c objects.Snowflake, d string) error {
-	r.tape.write("RemoveGuildMemberRole", a, b, c, d)
-	return r.rest.RemoveGuildMemberRole(a, b, c, d)
+	result := r.tape.write("RemoveGuildMemberRole", a, b, c, d)
+	x := r.rest.RemoveGuildMemberRole(a, b, c, d)
+	result.end(x)
+	return x
 }
 
 func (r restTape) RemoveThreadMember(a objects.Snowflake, b objects.Snowflake) error {
-	r.tape.write("RemoveThreadMember", a, b)
-	return r.rest.RemoveThreadMember(a, b)
+	result := r.tape.write("RemoveThreadMember", a, b)
+	x := r.rest.RemoveThreadMember(a, b)
+	result.end(x)
+	return x
 }
 
 func (r restTape) StartThread(a objects.Snowflake, b *rest.StartThreadParams) (*objects.Channel, error) {
-	r.tape.write("StartThread", a, b)
-	return r.rest.StartThread(a, b)
+	result := r.tape.write("StartThread", a, b)
+	c, d := r.rest.StartThread(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) StartThreadWithMessage(a objects.Snowflake, b objects.Snowflake, c *rest.StartThreadParams) (*objects.Channel, error) {
-	r.tape.write("StartThreadWithMessage", a, b, c)
-	return r.rest.StartThreadWithMessage(a, b, c)
+	result := r.tape.write("StartThreadWithMessage", a, b, c)
+	d, e := r.rest.StartThreadWithMessage(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) StartTyping(a objects.Snowflake) error {
-	r.tape.write("StartTyping", a)
-	return r.rest.StartTyping(a)
+	result := r.tape.write("StartTyping", a)
+	x := r.rest.StartTyping(a)
+	result.end(x)
+	return x
 }
 
 func (r restTape) SyncGuildTemplate(a objects.Snowflake, b string) (*objects.Template, error) {
-	r.tape.write("SyncGuildTemplate", a, b)
-	return r.rest.SyncGuildTemplate(a, b)
+	result := r.tape.write("SyncGuildTemplate", a, b)
+	c, d := r.rest.SyncGuildTemplate(a, b)
+	result.end(c, d)
+	return c, d
 }
 
 func (r restTape) UpdateCommand(a objects.Snowflake, b objects.Snowflake, c *objects.ApplicationCommand) (*objects.ApplicationCommand, error) {
-	r.tape.write("UpdateCommand", a, b, c)
-	return r.rest.UpdateCommand(a, b, c)
+	result := r.tape.write("UpdateCommand", a, b, c)
+	d, e := r.rest.UpdateCommand(a, b, c)
+	result.end(d, e)
+	return d, e
 }
 
 func (r restTape) UpdateGuildCommand(a objects.Snowflake, b objects.Snowflake, c objects.Snowflake, d *objects.ApplicationCommand) (*objects.ApplicationCommand, error) {
-	r.tape.write("UpdateGuildCommand", a, b, c, d)
-	return r.rest.UpdateGuildCommand(a, b, c, d)
+	result := r.tape.write("UpdateGuildCommand", a, b, c, d)
+	e, f := r.rest.UpdateGuildCommand(a, b, c, d)
+	result.end(e, f)
+	return e, f
 }

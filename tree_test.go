@@ -5,6 +5,7 @@
 package router
 
 import (
+	"github.com/Postcord/rest"
 	"strings"
 	"testing"
 
@@ -15,7 +16,7 @@ import (
 var fakeHandlerValue string
 
 func fakeHandler(val string) contextCallback {
-	return func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string) *objects.InteractionResponse {
+	return func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler func(error) *objects.InteractionResponse) *objects.InteractionResponse {
 		fakeHandlerValue = val
 		return nil
 	}
@@ -40,7 +41,7 @@ func checkRequests(t *testing.T, tree *node, requests testRequests) {
 		} else if request.nilHandler {
 			t.Errorf("handle mismatch for route '%s': Expected nil handle", request.path)
 		} else {
-			handler(nil, nil, nil)
+			handler(nil, nil, nil, nil, nil)
 			if fakeHandlerValue != request.route {
 				t.Errorf("handle mismatch for route '%s': Wrong handle (%s != %s)", request.path, fakeHandlerValue, request.route)
 			}

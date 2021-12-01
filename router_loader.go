@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/Postcord/interactions"
 	"github.com/Postcord/objects"
@@ -68,7 +69,7 @@ type HandlerAccepter interface {
 	ComponentHandler(handler interactions.HandlerFunc)
 	CommandHandler(handler interactions.HandlerFunc)
 	AutocompleteHandler(handler interactions.HandlerFunc)
-	Rest() rest.RESTClient
+	Rest() *rest.Client
 }
 
 // Defines the various bits passed through from the loader.
@@ -76,6 +77,7 @@ type loaderPassthrough struct {
 	rest rest.RESTClient
 	errHandler func(error) *objects.InteractionResponse
 	globalAllowedMentions *objects.AllowedMentions
+	generateFrames        bool
 }
 
 func (l *loaderBuilder) Build(app HandlerAccepter) {
@@ -85,15 +87,17 @@ func (l *loaderBuilder) Build(app HandlerAccepter) {
 		cb = genericErrorHandler
 	}
 
+	generateFrames := os.Getenv("POSTCORD_GENERATE_FRAMES") == "1"
+
 	if l.components != nil {
 		// Build and load the components handler.
-		handler := l.components.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions})
+		handler := l.components.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
 		app.ComponentHandler(handler)
 	}
 
 	if l.commands != nil {
 		// Build and load the commands/autocomplete handler.
-		commandHandler, autocompleteHandler := l.commands.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions})
+		commandHandler, autocompleteHandler := l.commands.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
 		app.CommandHandler(commandHandler)
 		app.AutocompleteHandler(autocompleteHandler)
 	}

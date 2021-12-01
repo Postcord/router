@@ -178,7 +178,7 @@ func (f *fakeBuildHandlerAccepter) AutocompleteHandler(handler interactions.Hand
 	f.autocompleteHandler = handler
 }
 
-func (fakeBuildHandlerAccepter) Rest() rest.RESTClient {
+func (fakeBuildHandlerAccepter) Rest() *rest.Client {
 	return nil
 }
 

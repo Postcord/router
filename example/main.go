@@ -78,6 +78,23 @@ func main() {
 		panic(err)
 	}
 
+	// Defines a REST command.
+	commandRouter.NewCommandBuilder("rest").Description("A command to hit the fuck out of rest.").
+		Handler(func(ctx *router.CommandRouterCtx) error {
+			_, _ = ctx.RESTClient.GetChannel(1)
+			_, err := ctx.RESTClient.GetCurrentUser()
+			if err != nil {
+				return err
+			}
+			ctx.SetContent("Hello World!")
+			return nil
+		}).
+		DefaultPermission().
+		MustBuild()
+	if err != nil {
+		panic(err)
+	}
+
 	// Defines a command group.
 	group := commandRouter.MustNewCommandGroup("group", "Defines a command group.", true)
 	_, err = group.NewCommandBuilder("command").Description("Defines a description in a group.").

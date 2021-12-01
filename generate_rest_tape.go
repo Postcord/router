@@ -65,26 +65,37 @@ func generateRestFunctions() string {
 		f += ")"
 		numOut := method.Type.NumOut()
 		startCallSep := ", "
-		retCall := "return "
+		outCall := "x := "
+		inCall := "x"
 		switch numOut {
 		case 0:
 			startCallSep = ""
-			retCall = ""
+			outCall = ""
 		case 1:
 			f += " " + method.Type.Out(0).String()
 		default:
 			f += " ("
+			retOutputs := make([]string, numOut)
 			for j := 0; j < numOut; j++ {
 				if j > 0 {
 					f += ", "
 				}
 				f += method.Type.Out(j).String()
+				retOutputs[j] = letters[j+inNum]
 			}
+			inCall = strings.Join(retOutputs, ", ")
+			outCall = inCall + " := "
 			f += ")"
 		}
+		retCall := ""
+		if inCall != "" {
+			retCall = "return " + inCall
+		}
 		f += ` {
-	r.tape.write("` + method.Name + `"` + startCallSep + tapeParams + `)
-	` + retCall + "r.rest." + method.Name + `(` + params + `)
+	result := r.tape.write("` + method.Name + `"` + startCallSep + tapeParams + `)
+	` + outCall + "r.rest." + method.Name + `(` + params + `)
+	result.end(` + inCall + `)
+	` + retCall + `
 }`
 		funcs[i] = f
 	}
