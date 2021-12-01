@@ -3,17 +3,22 @@ package router
 import (
 	"encoding/json"
 	"github.com/Postcord/rest"
+	"testing"
 )
 
 type tapeItem struct {
 	// Input
-	FuncName string			   `json:"func_name"`
+	FuncName string            `json:"func_name"`
 	Params   []json.RawMessage `json:"params"`
 
 	// Output
-	Results		 []json.RawMessage `json:"results"`
+	Results      []json.RawMessage `json:"results"`
 	GenericError string            `json:"generic_error,omitempty"`
 	RESTError    *rest.ErrorREST   `json:"rest_error,omitempty"`
+}
+
+func (i *tapeItem) match(t *testing.T, inCount int, items ...interface{}) {
+	// TODO
 }
 
 type tape []*tapeItem
@@ -35,7 +40,7 @@ func (t *tape) write(funcName string, params ...interface{}) *tapeItem {
 	return x
 }
 
-func (t *tapeItem) end(items ...interface{}) {
+func (i *tapeItem) end(items ...interface{}) {
 	// Check if the last type is an error and if so split it from the items.
 	var err error
 	var ok bool
@@ -55,14 +60,14 @@ func (t *tapeItem) end(items ...interface{}) {
 		}
 		p[i] = b
 	}
-	t.Results = p
+	i.Results = p
 
 	// Figure out how to process the error.
 	if err != nil {
 		if e, ok := err.(*rest.ErrorREST); ok {
-			t.RESTError = e
+			i.RESTError = e
 		} else {
-			t.GenericError = err.Error()
+			i.GenericError = err.Error()
 		}
 	}
 }
