@@ -15,10 +15,10 @@ type frame struct {
 	Request *objects.Interaction `json:"request"`
 
 	// RESTRequests is the REST requests made during this interaction.
-	RESTRequests tapeRecorder `json:"rest_requests"`
+	RESTRequests tape `json:"rest_requests"`
 
 	// Error is the string of the error that was encountered during this interaction.
-	Error string `json:"error"`
+	Error string `json:"error,omitempty"`
 
 	// Response is the response that was sent back to Discord.
 	Response *objects.InteractionResponse `json:"response"`
@@ -34,7 +34,8 @@ func (f *frame) write(subfolders ...string) {
 		}
 
 		// Defines the filename.
-		filename := filepath.Join(joined, time.Now().In(time.UTC).Format("02012006150405")+"_untitled_frame.frame")
+		// TODO: fix time
+		filename := filepath.Join(joined, time.Now().In(time.UTC).Format("02-01-2006_15-04-03")+"_untitled_frame.frame")
 		b, err := json.MarshalIndent(f, "", "  ")
 		if err != nil {
 			panic(err)

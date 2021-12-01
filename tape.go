@@ -16,9 +16,9 @@ type tapeItem struct {
 	RESTError    *rest.ErrorREST   `json:"rest_error,omitempty"`
 }
 
-type tapeRecorder []*tapeItem
+type tape []*tapeItem
 
-func (t *tapeRecorder) write(funcName string, params ...interface{}) *tapeItem {
+func (t *tape) write(funcName string, params ...interface{}) *tapeItem {
 	p := make([]json.RawMessage, len(params))
 	for i, x := range params {
 		b, err := json.Marshal(x)
@@ -41,7 +41,7 @@ func (t *tapeItem) end(items ...interface{}) {
 	var ok bool
 	if len(items) > 0 {
 		err, ok = items[len(items)-1].(error)
-		if ok {
+		if ok || items[len(items)-1] == nil {
 			items = items[:len(items)-1]
 		}
 	}

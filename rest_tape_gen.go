@@ -12,7 +12,7 @@ import (
 )
 
 type restTape struct {
-	tape *tapeRecorder
+	tape *tape
 	rest rest.RESTClient
 }
 
@@ -395,14 +395,14 @@ func (r restTape) FollowNewsChannel(a objects.Snowflake) (*objects.FollowedChann
 }
 
 func (r restTape) Gateway() (*objects.Gateway, error) {
-	result := r.tape.write("Gateway", )
+	result := r.tape.write("Gateway")
 	a, b := r.rest.Gateway()
 	result.end(a, b)
 	return a, b
 }
 
 func (r restTape) GatewayBot() (*objects.Gateway, error) {
-	result := r.tape.write("GatewayBot", )
+	result := r.tape.write("GatewayBot")
 	a, b := r.rest.GatewayBot()
 	result.end(a, b)
 	return a, b
@@ -472,7 +472,7 @@ func (r restTape) GetCommands(a objects.Snowflake) ([]*objects.ApplicationComman
 }
 
 func (r restTape) GetCurrentUser() (*objects.User, error) {
-	result := r.tape.write("GetCurrentUser", )
+	result := r.tape.write("GetCurrentUser")
 	a, b := r.rest.GetCurrentUser()
 	result.end(a, b)
 	return a, b
@@ -682,14 +682,14 @@ func (r restTape) GetUser(a objects.Snowflake) (*objects.User, error) {
 }
 
 func (r restTape) GetUserConnections() ([]*objects.Connection, error) {
-	result := r.tape.write("GetUserConnections", )
+	result := r.tape.write("GetUserConnections")
 	a, b := r.rest.GetUserConnections()
 	result.end(a, b)
 	return a, b
 }
 
 func (r restTape) GetVoiceRegions() ([]*objects.VoiceRegion, error) {
-	result := r.tape.write("GetVoiceRegions", )
+	result := r.tape.write("GetVoiceRegions")
 	a, b := r.rest.GetVoiceRegions()
 	result.end(a, b)
 	return a, b

@@ -65,6 +65,9 @@ func generateRestFunctions() string {
 		f += ")"
 		numOut := method.Type.NumOut()
 		startCallSep := ", "
+		if inNum == 1 {
+			startCallSep = ""
+		}
 		outCall := "x := "
 		inCall := "x"
 		switch numOut {

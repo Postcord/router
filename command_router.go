@@ -276,7 +276,7 @@ func (c *CommandRouter) autocompleteHandler(loader loaderPassthrough) interactio
 
 		// Create the rest tape if this is wanted.
 		r := loader.rest
-		tape := tapeRecorder{}
+		tape := tape{}
 		var returnedErr string
 		errHandler := loader.errHandler
 		if loader.generateFrames {
@@ -453,7 +453,7 @@ func (c *CommandRouter) commandHandler(loader loaderPassthrough) interactions.Ha
 
 		// Create the rest tape if this is wanted.
 		r := loader.rest
-		tape := tapeRecorder{}
+		tape := tape{}
 		var returnedErr string
 		errHandler := loader.errHandler
 		if loader.generateFrames {

@@ -188,7 +188,7 @@ func (c *ComponentRouter) build(loader loaderPassthrough) interactions.HandlerFu
 	return func(ctx *objects.Interaction) *objects.InteractionResponse {
 		// Create the rest tape if this is wanted.
 		r := loader.rest
-		tape := tapeRecorder{}
+		tape := tape{}
 		var returnedErr string
 		errHandler := loader.errHandler
 		if loader.generateFrames {
