@@ -17,7 +17,7 @@ type tapeItem struct {
 	RESTError    *rest.ErrorREST   `json:"rest_error,omitempty"`
 }
 
-func (i *tapeItem) match(t *testing.T, inCount int, items ...interface{}) {
+func (i *tapeItem) match(t *testing.T, funcName string, inCount int, items ...interface{}) {
 	// TODO
 }
 

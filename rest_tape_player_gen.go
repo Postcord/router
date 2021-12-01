@@ -25,7 +25,7 @@ func (r *restTapePlayer) AddGuildCommand(a objects.Snowflake, b objects.Snowflak
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "AddGuildCommand", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -35,7 +35,7 @@ func (r *restTapePlayer) AddGuildMember(a objects.Snowflake, b objects.Snowflake
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "AddGuildMember", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -45,7 +45,7 @@ func (r *restTapePlayer) AddGuildMemberRole(a objects.Snowflake, b objects.Snowf
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 4, a, b, c, d, &e)
+	action.match(r.t, "AddGuildMemberRole", 4, a, b, c, d, &e)
 	return
 }
 
@@ -55,7 +55,7 @@ func (r *restTapePlayer) AddPinnedMessage(a objects.Snowflake, b objects.Snowfla
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "AddPinnedMessage", 2, a, b, &c)
 	return
 }
 
@@ -65,7 +65,7 @@ func (r *restTapePlayer) AddThreadMember(a objects.Snowflake, b objects.Snowflak
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "AddThreadMember", 2, a, b, &c)
 	return
 }
 
@@ -75,7 +75,7 @@ func (r *restTapePlayer) BatchEditApplicationCommandPermissions(a objects.Snowfl
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "BatchEditApplicationCommandPermissions", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -85,7 +85,7 @@ func (r *restTapePlayer) BeginGuildPrune(a objects.Snowflake, b *rest.BeginGuild
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "BeginGuildPrune", 2, a, b, &c, &d)
 	return
 }
 
@@ -95,7 +95,7 @@ func (r *restTapePlayer) BulkDeleteMessages(a objects.Snowflake, b *rest.DeleteM
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "BulkDeleteMessages", 2, a, b, &c)
 	return
 }
 
@@ -105,7 +105,7 @@ func (r *restTapePlayer) BulkOverwriteGlobalCommands(a objects.Snowflake, b []*o
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "BulkOverwriteGlobalCommands", 2, a, b, &c, &d)
 	return
 }
 
@@ -115,7 +115,7 @@ func (r *restTapePlayer) BulkOverwriteGuildCommands(a objects.Snowflake, b objec
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "BulkOverwriteGuildCommands", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -125,7 +125,7 @@ func (r *restTapePlayer) CreateBan(a objects.Snowflake, b objects.Snowflake, c *
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "CreateBan", 3, a, b, c, &d)
 	return
 }
 
@@ -135,7 +135,7 @@ func (r *restTapePlayer) CreateChannelInvite(a objects.Snowflake, b *rest.Create
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CreateChannelInvite", 2, a, b, &c, &d)
 	return
 }
 
@@ -145,7 +145,7 @@ func (r *restTapePlayer) CreateCommand(a objects.Snowflake, b *objects.Applicati
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CreateCommand", 2, a, b, &c, &d)
 	return
 }
 
@@ -155,7 +155,7 @@ func (r *restTapePlayer) CreateDM(a *rest.CreateDMParams) (b *objects.Channel, c
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "CreateDM", 1, a, &b, &c)
 	return
 }
 
@@ -165,7 +165,7 @@ func (r *restTapePlayer) CreateFollowupMessage(a objects.Snowflake, b string, c 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "CreateFollowupMessage", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -175,7 +175,7 @@ func (r *restTapePlayer) CreateGroupDM(a *rest.CreateGroupDMParams) (b *objects.
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "CreateGroupDM", 1, a, &b, &c)
 	return
 }
 
@@ -185,7 +185,7 @@ func (r *restTapePlayer) CreateGuild(a *rest.CreateGuildParams) (b *objects.Guil
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "CreateGuild", 1, a, &b, &c)
 	return
 }
 
@@ -195,7 +195,7 @@ func (r *restTapePlayer) CreateGuildChannel(a objects.Snowflake, b *rest.Channel
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CreateGuildChannel", 2, a, b, &c, &d)
 	return
 }
 
@@ -205,7 +205,7 @@ func (r *restTapePlayer) CreateGuildFromTemplate(a string, b string) (c *objects
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CreateGuildFromTemplate", 2, a, b, &c, &d)
 	return
 }
 
@@ -215,7 +215,7 @@ func (r *restTapePlayer) CreateGuildRole(a objects.Snowflake, b *rest.CreateGuil
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CreateGuildRole", 2, a, b, &c, &d)
 	return
 }
 
@@ -225,7 +225,7 @@ func (r *restTapePlayer) CreateGuildTemplate(a objects.Snowflake, b *rest.Create
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CreateGuildTemplate", 2, a, b, &c, &d)
 	return
 }
 
@@ -235,7 +235,7 @@ func (r *restTapePlayer) CreateInteractionResponse(a objects.Snowflake, b string
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "CreateInteractionResponse", 3, a, b, c, &d)
 	return
 }
 
@@ -245,7 +245,7 @@ func (r *restTapePlayer) CreateMessage(a objects.Snowflake, b *rest.CreateMessag
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CreateMessage", 2, a, b, &c, &d)
 	return
 }
 
@@ -255,7 +255,7 @@ func (r *restTapePlayer) CreateReaction(a objects.Snowflake, b objects.Snowflake
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "CreateReaction", 3, a, b, c, &d)
 	return
 }
 
@@ -265,7 +265,7 @@ func (r *restTapePlayer) CreateWebhook(a objects.Snowflake, b *rest.CreateWebhoo
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CreateWebhook", 2, a, b, &c, &d)
 	return
 }
 
@@ -275,7 +275,7 @@ func (r *restTapePlayer) CrossPostMessage(a objects.Snowflake, b objects.Snowfla
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "CrossPostMessage", 2, a, b, &c, &d)
 	return
 }
 
@@ -285,7 +285,7 @@ func (r *restTapePlayer) DeleteAllReactions(a objects.Snowflake, b objects.Snowf
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "DeleteAllReactions", 2, a, b, &c)
 	return
 }
 
@@ -295,7 +295,7 @@ func (r *restTapePlayer) DeleteChannel(a objects.Snowflake, b string) (c *object
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "DeleteChannel", 2, a, b, &c, &d)
 	return
 }
 
@@ -305,7 +305,7 @@ func (r *restTapePlayer) DeleteChannelPermission(a objects.Snowflake, b objects.
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "DeleteChannelPermission", 3, a, b, c, &d)
 	return
 }
 
@@ -315,7 +315,7 @@ func (r *restTapePlayer) DeleteCommand(a objects.Snowflake, b objects.Snowflake)
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "DeleteCommand", 2, a, b, &c)
 	return
 }
 
@@ -325,7 +325,7 @@ func (r *restTapePlayer) DeleteEmojiReactions(a objects.Snowflake, b objects.Sno
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "DeleteEmojiReactions", 3, a, b, c, &d)
 	return
 }
 
@@ -335,7 +335,7 @@ func (r *restTapePlayer) DeleteFollowupMessage(a objects.Snowflake, b string, c 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "DeleteFollowupMessage", 3, a, b, c, &d)
 	return
 }
 
@@ -345,7 +345,7 @@ func (r *restTapePlayer) DeleteGuild(a objects.Snowflake) (b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b)
+	action.match(r.t, "DeleteGuild", 1, a, &b)
 	return
 }
 
@@ -355,7 +355,7 @@ func (r *restTapePlayer) DeleteGuildCommand(a objects.Snowflake, b objects.Snowf
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "DeleteGuildCommand", 3, a, b, c, &d)
 	return
 }
 
@@ -365,7 +365,7 @@ func (r *restTapePlayer) DeleteGuildIntegration(a objects.Snowflake, b objects.S
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "DeleteGuildIntegration", 3, a, b, c, &d)
 	return
 }
 
@@ -375,7 +375,7 @@ func (r *restTapePlayer) DeleteGuildRole(a objects.Snowflake, b objects.Snowflak
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "DeleteGuildRole", 3, a, b, c, &d)
 	return
 }
 
@@ -385,7 +385,7 @@ func (r *restTapePlayer) DeleteGuildTemplate(a objects.Snowflake, b string, c st
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "DeleteGuildTemplate", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -395,7 +395,7 @@ func (r *restTapePlayer) DeleteInvite(a string, b string) (c *objects.Invite, d 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "DeleteInvite", 2, a, b, &c, &d)
 	return
 }
 
@@ -405,7 +405,7 @@ func (r *restTapePlayer) DeleteMessage(a objects.Snowflake, b objects.Snowflake)
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "DeleteMessage", 2, a, b, &c)
 	return
 }
 
@@ -415,7 +415,7 @@ func (r *restTapePlayer) DeleteOriginalInteractionResponse(a objects.Snowflake, 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "DeleteOriginalInteractionResponse", 2, a, b, &c)
 	return
 }
 
@@ -425,7 +425,7 @@ func (r *restTapePlayer) DeleteOwnReaction(a objects.Snowflake, b objects.Snowfl
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "DeleteOwnReaction", 3, a, b, c, &d)
 	return
 }
 
@@ -435,7 +435,7 @@ func (r *restTapePlayer) DeletePinnedMessage(a objects.Snowflake, b objects.Snow
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "DeletePinnedMessage", 2, a, b, &c)
 	return
 }
 
@@ -445,7 +445,7 @@ func (r *restTapePlayer) DeleteUserReaction(a objects.Snowflake, b objects.Snowf
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 4, a, b, c, d, &e)
+	action.match(r.t, "DeleteUserReaction", 4, a, b, c, d, &e)
 	return
 }
 
@@ -455,7 +455,7 @@ func (r *restTapePlayer) DeleteWebhook(a objects.Snowflake) (b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b)
+	action.match(r.t, "DeleteWebhook", 1, a, &b)
 	return
 }
 
@@ -465,7 +465,7 @@ func (r *restTapePlayer) DeleteWebhookMessage(a objects.Snowflake, b objects.Sno
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "DeleteWebhookMessage", 3, a, b, c, &d)
 	return
 }
 
@@ -475,7 +475,7 @@ func (r *restTapePlayer) DeleteWebhookWithToken(a objects.Snowflake, b string) (
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "DeleteWebhookWithToken", 2, a, b, &c)
 	return
 }
 
@@ -485,7 +485,7 @@ func (r *restTapePlayer) EditApplicationCommandPermissions(a objects.Snowflake, 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 4, a, b, c, d, &e, &f)
+	action.match(r.t, "EditApplicationCommandPermissions", 4, a, b, c, d, &e, &f)
 	return
 }
 
@@ -495,7 +495,7 @@ func (r *restTapePlayer) EditChannelPermissions(a objects.Snowflake, b objects.S
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "EditChannelPermissions", 3, a, b, c, &d)
 	return
 }
 
@@ -505,7 +505,7 @@ func (r *restTapePlayer) EditFollowupMessage(a objects.Snowflake, b string, c ob
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 4, a, b, c, d, &e, &f)
+	action.match(r.t, "EditFollowupMessage", 4, a, b, c, d, &e, &f)
 	return
 }
 
@@ -515,7 +515,7 @@ func (r *restTapePlayer) EditMessage(a objects.Snowflake, b objects.Snowflake, c
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "EditMessage", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -525,7 +525,7 @@ func (r *restTapePlayer) EditOriginalInteractionResponse(a objects.Snowflake, b 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "EditOriginalInteractionResponse", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -535,7 +535,7 @@ func (r *restTapePlayer) EditWebhookMessage(a objects.Snowflake, b objects.Snowf
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 4, a, b, c, d, &e, &f)
+	action.match(r.t, "EditWebhookMessage", 4, a, b, c, d, &e, &f)
 	return
 }
 
@@ -545,7 +545,7 @@ func (r *restTapePlayer) ExecuteWebhook(a objects.Snowflake, b string, c *rest.E
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "ExecuteWebhook", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -555,7 +555,7 @@ func (r *restTapePlayer) FollowNewsChannel(a objects.Snowflake) (b *objects.Foll
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "FollowNewsChannel", 1, a, &b, &c)
 	return
 }
 
@@ -565,7 +565,7 @@ func (r *restTapePlayer) Gateway() (a *objects.Gateway, b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 0, &a, &b)
+	action.match(r.t, "Gateway", 0, &a, &b)
 	return
 }
 
@@ -575,7 +575,7 @@ func (r *restTapePlayer) GatewayBot() (a *objects.Gateway, b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 0, &a, &b)
+	action.match(r.t, "GatewayBot", 0, &a, &b)
 	return
 }
 
@@ -585,7 +585,7 @@ func (r *restTapePlayer) GetApplicationCommandPermissions(a objects.Snowflake, b
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "GetApplicationCommandPermissions", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -595,7 +595,7 @@ func (r *restTapePlayer) GetAuditLogs(a objects.Snowflake, b *rest.GetAuditLogPa
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetAuditLogs", 2, a, b, &c, &d)
 	return
 }
 
@@ -605,7 +605,7 @@ func (r *restTapePlayer) GetChannel(a objects.Snowflake) (b *objects.Channel, c 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetChannel", 1, a, &b, &c)
 	return
 }
 
@@ -615,7 +615,7 @@ func (r *restTapePlayer) GetChannelInvites(a objects.Snowflake) (b []*objects.In
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetChannelInvites", 1, a, &b, &c)
 	return
 }
 
@@ -625,7 +625,7 @@ func (r *restTapePlayer) GetChannelMessage(a objects.Snowflake, b objects.Snowfl
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetChannelMessage", 2, a, b, &c, &d)
 	return
 }
 
@@ -635,7 +635,7 @@ func (r *restTapePlayer) GetChannelMessages(a objects.Snowflake, b *rest.GetChan
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetChannelMessages", 2, a, b, &c, &d)
 	return
 }
 
@@ -645,7 +645,7 @@ func (r *restTapePlayer) GetChannelWebhooks(a objects.Snowflake) (b []*objects.W
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetChannelWebhooks", 1, a, &b, &c)
 	return
 }
 
@@ -655,7 +655,7 @@ func (r *restTapePlayer) GetCommand(a objects.Snowflake, b objects.Snowflake) (c
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetCommand", 2, a, b, &c, &d)
 	return
 }
 
@@ -665,7 +665,7 @@ func (r *restTapePlayer) GetCommands(a objects.Snowflake) (b []*objects.Applicat
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetCommands", 1, a, &b, &c)
 	return
 }
 
@@ -675,7 +675,7 @@ func (r *restTapePlayer) GetCurrentUser() (a *objects.User, b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 0, &a, &b)
+	action.match(r.t, "GetCurrentUser", 0, &a, &b)
 	return
 }
 
@@ -685,7 +685,7 @@ func (r *restTapePlayer) GetCurrentUserGuilds(a *rest.CurrentUserGuildsParams) (
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetCurrentUserGuilds", 1, a, &b, &c)
 	return
 }
 
@@ -695,7 +695,7 @@ func (r *restTapePlayer) GetFollowupMessage(a objects.Snowflake, b string, c obj
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "GetFollowupMessage", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -705,7 +705,7 @@ func (r *restTapePlayer) GetGuild(a objects.Snowflake) (b *objects.Guild, c erro
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuild", 1, a, &b, &c)
 	return
 }
 
@@ -715,7 +715,7 @@ func (r *restTapePlayer) GetGuildApplicationCommandPermissions(a objects.Snowfla
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetGuildApplicationCommandPermissions", 2, a, b, &c, &d)
 	return
 }
 
@@ -725,7 +725,7 @@ func (r *restTapePlayer) GetGuildBan(a objects.Snowflake, b objects.Snowflake) (
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetGuildBan", 2, a, b, &c, &d)
 	return
 }
 
@@ -735,7 +735,7 @@ func (r *restTapePlayer) GetGuildBans(a objects.Snowflake) (b []*objects.Ban, c 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildBans", 1, a, &b, &c)
 	return
 }
 
@@ -745,7 +745,7 @@ func (r *restTapePlayer) GetGuildChannels(a objects.Snowflake) (b []*objects.Cha
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildChannels", 1, a, &b, &c)
 	return
 }
 
@@ -755,7 +755,7 @@ func (r *restTapePlayer) GetGuildCommand(a objects.Snowflake, b objects.Snowflak
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "GetGuildCommand", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -765,7 +765,7 @@ func (r *restTapePlayer) GetGuildCommands(a objects.Snowflake, b objects.Snowfla
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetGuildCommands", 2, a, b, &c, &d)
 	return
 }
 
@@ -775,7 +775,7 @@ func (r *restTapePlayer) GetGuildIntegrations(a objects.Snowflake) (b []*objects
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildIntegrations", 1, a, &b, &c)
 	return
 }
 
@@ -785,7 +785,7 @@ func (r *restTapePlayer) GetGuildInvites(a objects.Snowflake) (b []*objects.Invi
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildInvites", 1, a, &b, &c)
 	return
 }
 
@@ -795,7 +795,7 @@ func (r *restTapePlayer) GetGuildMember(a objects.Snowflake, b objects.Snowflake
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetGuildMember", 2, a, b, &c, &d)
 	return
 }
 
@@ -805,7 +805,7 @@ func (r *restTapePlayer) GetGuildPreview(a objects.Snowflake) (b *objects.GuildP
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildPreview", 1, a, &b, &c)
 	return
 }
 
@@ -815,7 +815,7 @@ func (r *restTapePlayer) GetGuildPruneCount(a objects.Snowflake, b *rest.GetGuil
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetGuildPruneCount", 2, a, b, &c, &d)
 	return
 }
 
@@ -825,7 +825,7 @@ func (r *restTapePlayer) GetGuildRoles(a objects.Snowflake) (b []*objects.Role, 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildRoles", 1, a, &b, &c)
 	return
 }
 
@@ -835,7 +835,7 @@ func (r *restTapePlayer) GetGuildTemplates(a objects.Snowflake) (b []*objects.Te
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildTemplates", 1, a, &b, &c)
 	return
 }
 
@@ -845,7 +845,7 @@ func (r *restTapePlayer) GetGuildVanityURL(a objects.Snowflake) (b *objects.Invi
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildVanityURL", 1, a, &b, &c)
 	return
 }
 
@@ -855,7 +855,7 @@ func (r *restTapePlayer) GetGuildVoiceRegions(a objects.Snowflake) (b []*objects
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildVoiceRegions", 1, a, &b, &c)
 	return
 }
 
@@ -865,7 +865,7 @@ func (r *restTapePlayer) GetGuildWebhooks(a objects.Snowflake) (b []*objects.Web
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildWebhooks", 1, a, &b, &c)
 	return
 }
 
@@ -875,7 +875,7 @@ func (r *restTapePlayer) GetGuildWelcomeScreen(a objects.Snowflake) (b *objects.
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildWelcomeScreen", 1, a, &b, &c)
 	return
 }
 
@@ -885,7 +885,7 @@ func (r *restTapePlayer) GetGuildWidget(a objects.Snowflake) (b *objects.GuildWi
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildWidget", 1, a, &b, &c)
 	return
 }
 
@@ -895,7 +895,7 @@ func (r *restTapePlayer) GetGuildWidgetImage(a objects.Snowflake, b *rest.GuildW
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetGuildWidgetImage", 2, a, b, &c, &d)
 	return
 }
 
@@ -905,7 +905,7 @@ func (r *restTapePlayer) GetGuildWidgetSettings(a objects.Snowflake) (b *objects
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetGuildWidgetSettings", 1, a, &b, &c)
 	return
 }
 
@@ -915,7 +915,7 @@ func (r *restTapePlayer) GetInvite(a string, b *rest.GetInviteParams) (c *object
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetInvite", 2, a, b, &c, &d)
 	return
 }
 
@@ -925,7 +925,7 @@ func (r *restTapePlayer) GetOriginalInteractionResponse(a objects.Snowflake, b s
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetOriginalInteractionResponse", 2, a, b, &c, &d)
 	return
 }
 
@@ -935,7 +935,7 @@ func (r *restTapePlayer) GetPinnedMessages(a objects.Snowflake) (b []*objects.Me
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetPinnedMessages", 1, a, &b, &c)
 	return
 }
 
@@ -945,7 +945,7 @@ func (r *restTapePlayer) GetReactions(a objects.Snowflake, b objects.Snowflake, 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 4, a, b, c, d, &e, &f)
+	action.match(r.t, "GetReactions", 4, a, b, c, d, &e, &f)
 	return
 }
 
@@ -955,7 +955,7 @@ func (r *restTapePlayer) GetTemplate(a string) (b *objects.Template, c error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetTemplate", 1, a, &b, &c)
 	return
 }
 
@@ -965,7 +965,7 @@ func (r *restTapePlayer) GetUser(a objects.Snowflake) (b *objects.User, c error)
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetUser", 1, a, &b, &c)
 	return
 }
 
@@ -975,7 +975,7 @@ func (r *restTapePlayer) GetUserConnections() (a []*objects.Connection, b error)
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 0, &a, &b)
+	action.match(r.t, "GetUserConnections", 0, &a, &b)
 	return
 }
 
@@ -985,7 +985,7 @@ func (r *restTapePlayer) GetVoiceRegions() (a []*objects.VoiceRegion, b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 0, &a, &b)
+	action.match(r.t, "GetVoiceRegions", 0, &a, &b)
 	return
 }
 
@@ -995,7 +995,7 @@ func (r *restTapePlayer) GetWebhook(a objects.Snowflake) (b *objects.Webhook, c 
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "GetWebhook", 1, a, &b, &c)
 	return
 }
 
@@ -1005,7 +1005,7 @@ func (r *restTapePlayer) GetWebhookWithToken(a objects.Snowflake, b string) (c *
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "GetWebhookWithToken", 2, a, b, &c, &d)
 	return
 }
 
@@ -1015,7 +1015,7 @@ func (r *restTapePlayer) JoinThread(a objects.Snowflake) (b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b)
+	action.match(r.t, "JoinThread", 1, a, &b)
 	return
 }
 
@@ -1025,7 +1025,7 @@ func (r *restTapePlayer) LeaveGuild(a objects.Snowflake) (b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b)
+	action.match(r.t, "LeaveGuild", 1, a, &b)
 	return
 }
 
@@ -1035,7 +1035,7 @@ func (r *restTapePlayer) LeaveThread(a objects.Snowflake) (b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b)
+	action.match(r.t, "LeaveThread", 1, a, &b)
 	return
 }
 
@@ -1045,7 +1045,7 @@ func (r *restTapePlayer) ListActiveThreads(a objects.Snowflake) (b []*rest.ListT
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "ListActiveThreads", 1, a, &b, &c)
 	return
 }
 
@@ -1055,7 +1055,7 @@ func (r *restTapePlayer) ListGuildMembers(a objects.Snowflake, b *rest.ListGuild
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ListGuildMembers", 2, a, b, &c, &d)
 	return
 }
 
@@ -1065,7 +1065,7 @@ func (r *restTapePlayer) ListJoinedPrivateArchivedThreads(a objects.Snowflake, b
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ListJoinedPrivateArchivedThreads", 2, a, b, &c, &d)
 	return
 }
 
@@ -1075,7 +1075,7 @@ func (r *restTapePlayer) ListPrivateArchivedThreads(a objects.Snowflake, b []*re
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ListPrivateArchivedThreads", 2, a, b, &c, &d)
 	return
 }
 
@@ -1085,7 +1085,7 @@ func (r *restTapePlayer) ListPublicArchivedThreads(a objects.Snowflake, b []*res
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ListPublicArchivedThreads", 2, a, b, &c, &d)
 	return
 }
 
@@ -1095,7 +1095,7 @@ func (r *restTapePlayer) ListThreadMembers(a objects.Snowflake) (b []*objects.Th
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "ListThreadMembers", 1, a, &b, &c)
 	return
 }
 
@@ -1105,7 +1105,7 @@ func (r *restTapePlayer) ModifyChannel(a objects.Snowflake, b *rest.ModifyChanne
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ModifyChannel", 2, a, b, &c, &d)
 	return
 }
 
@@ -1115,7 +1115,7 @@ func (r *restTapePlayer) ModifyCurrentUser(a *rest.ModifyCurrentUserParams) (b *
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b, &c)
+	action.match(r.t, "ModifyCurrentUser", 1, a, &b, &c)
 	return
 }
 
@@ -1125,7 +1125,7 @@ func (r *restTapePlayer) ModifyCurrentUserNick(a objects.Snowflake, b *rest.Modi
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ModifyCurrentUserNick", 2, a, b, &c, &d)
 	return
 }
 
@@ -1135,7 +1135,7 @@ func (r *restTapePlayer) ModifyGuild(a objects.Snowflake, b *rest.ModifyGuildPar
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ModifyGuild", 2, a, b, &c, &d)
 	return
 }
 
@@ -1145,7 +1145,7 @@ func (r *restTapePlayer) ModifyGuildChannelPositions(a objects.Snowflake, b []*r
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "ModifyGuildChannelPositions", 3, a, b, c, &d)
 	return
 }
 
@@ -1155,7 +1155,7 @@ func (r *restTapePlayer) ModifyGuildMember(a objects.Snowflake, b objects.Snowfl
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "ModifyGuildMember", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -1165,7 +1165,7 @@ func (r *restTapePlayer) ModifyGuildRole(a objects.Snowflake, b objects.Snowflak
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "ModifyGuildRole", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -1175,7 +1175,7 @@ func (r *restTapePlayer) ModifyGuildRolePositions(a objects.Snowflake, b []*rest
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ModifyGuildRolePositions", 2, a, b, &c, &d)
 	return
 }
 
@@ -1185,7 +1185,7 @@ func (r *restTapePlayer) ModifyGuildTemplate(a objects.Snowflake, b string, c *r
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "ModifyGuildTemplate", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -1195,7 +1195,7 @@ func (r *restTapePlayer) ModifyGuildWelcomeScreen(a objects.Snowflake, b *rest.M
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ModifyGuildWelcomeScreen", 2, a, b, &c, &d)
 	return
 }
 
@@ -1205,7 +1205,7 @@ func (r *restTapePlayer) ModifyGuildWidget(a objects.Snowflake, b *rest.GuildWid
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ModifyGuildWidget", 2, a, b, &c, &d)
 	return
 }
 
@@ -1215,7 +1215,7 @@ func (r *restTapePlayer) ModifyWebhook(a objects.Snowflake, b *rest.ModifyWebhoo
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "ModifyWebhook", 2, a, b, &c, &d)
 	return
 }
 
@@ -1225,7 +1225,7 @@ func (r *restTapePlayer) ModifyWebhookWithToken(a objects.Snowflake, b string, c
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "ModifyWebhookWithToken", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -1235,7 +1235,7 @@ func (r *restTapePlayer) RemoveGuildBan(a objects.Snowflake, b objects.Snowflake
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "RemoveGuildBan", 3, a, b, c, &d)
 	return
 }
 
@@ -1245,7 +1245,7 @@ func (r *restTapePlayer) RemoveGuildMember(a objects.Snowflake, b objects.Snowfl
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d)
+	action.match(r.t, "RemoveGuildMember", 3, a, b, c, &d)
 	return
 }
 
@@ -1255,7 +1255,7 @@ func (r *restTapePlayer) RemoveGuildMemberRole(a objects.Snowflake, b objects.Sn
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 4, a, b, c, d, &e)
+	action.match(r.t, "RemoveGuildMemberRole", 4, a, b, c, d, &e)
 	return
 }
 
@@ -1265,7 +1265,7 @@ func (r *restTapePlayer) RemoveThreadMember(a objects.Snowflake, b objects.Snowf
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c)
+	action.match(r.t, "RemoveThreadMember", 2, a, b, &c)
 	return
 }
 
@@ -1275,7 +1275,7 @@ func (r *restTapePlayer) StartThread(a objects.Snowflake, b *rest.StartThreadPar
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "StartThread", 2, a, b, &c, &d)
 	return
 }
 
@@ -1285,7 +1285,7 @@ func (r *restTapePlayer) StartThreadWithMessage(a objects.Snowflake, b objects.S
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "StartThreadWithMessage", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -1295,7 +1295,7 @@ func (r *restTapePlayer) StartTyping(a objects.Snowflake) (b error) {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 1, a, &b)
+	action.match(r.t, "StartTyping", 1, a, &b)
 	return
 }
 
@@ -1305,7 +1305,7 @@ func (r *restTapePlayer) SyncGuildTemplate(a objects.Snowflake, b string) (c *ob
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 2, a, b, &c, &d)
+	action.match(r.t, "SyncGuildTemplate", 2, a, b, &c, &d)
 	return
 }
 
@@ -1315,7 +1315,7 @@ func (r *restTapePlayer) UpdateCommand(a objects.Snowflake, b objects.Snowflake,
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 3, a, b, c, &d, &e)
+	action.match(r.t, "UpdateCommand", 3, a, b, c, &d, &e)
 	return
 }
 
@@ -1325,6 +1325,6 @@ func (r *restTapePlayer) UpdateGuildCommand(a objects.Snowflake, b objects.Snowf
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, 4, a, b, c, d, &e, &f)
+	action.match(r.t, "UpdateGuildCommand", 4, a, b, c, d, &e, &f)
 	return
 }

@@ -84,7 +84,7 @@ func generateRestFunctions() string {
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, ` + strconv.Itoa(numIn-1) + ", " + inParams + outParams + `)
+	action.match(r.t, "` + method.Name + `", ` + strconv.Itoa(numIn-1) + ", " + inParams + outParams + `)
 `
 		if outParams == "" {
 			f += "}"
