@@ -2,8 +2,9 @@ package router
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/Postcord/rest"
-	"testing"
+	"github.com/stretchr/testify/require"
 )
 
 type tapeItem struct {
@@ -17,8 +18,53 @@ type tapeItem struct {
 	RESTError    *rest.ErrorREST   `json:"rest_error,omitempty"`
 }
 
-func (i *tapeItem) match(t *testing.T, funcName string, inCount int, items ...interface{}) {
-	// TODO
+func mustMarshal(t TestingT, item interface{}) []byte {
+	b, err := json.Marshal(item)
+	require.NoError(t, err)
+	return b
+}
+
+func (i *tapeItem) match(t TestingT, funcName string, inCount int, items ...interface{}) {
+	// Check the right function is called.
+	if funcName == i.FuncName {
+		t.Fatalf("wrong function called: expected %s, got %s", i.FuncName, funcName)
+	}
+
+	// Check the input count is equal to the number of inputs.
+	if inCount != len(i.Params) {
+		t.Fatalf("wrong number of inputs: expected %d, got %d", len(i.Params), inCount)
+	}
+
+	// Check all the params are equal.
+	for x, p := range i.Params {
+		require.JSONEq(t, string(p), string(mustMarshal(t, items[x])))
+	}
+
+	// Get the count of outputs.
+	outCount := len(items) - inCount
+
+	// Check if there is an error on the end.
+	if outCount > 0 {
+		ptr, _ := items[len(items)-1].(*error)
+		if ptr != nil {
+			if i.GenericError == "" {
+				*ptr = errors.New(i.GenericError)
+			} else if i.RESTError != nil {
+				*ptr = i.RESTError
+			}
+			outCount--
+		}
+	}
+
+	// Check the output count is equal to the number of outputs.
+	if outCount != len(i.Results) {
+		t.Fatalf("wrong number of outputs: expected %d, got %d", len(i.Results), outCount)
+	}
+
+	// Handle the remainder of the params.
+	for j, item := range i.Results {
+		require.NoError(t, json.Unmarshal(item, items[inCount+j]))
+	}
 }
 
 type tape []*tapeItem

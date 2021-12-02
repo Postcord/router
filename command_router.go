@@ -15,7 +15,7 @@ import (
 // CommandRouterCtx is used to define the commands context from the router.
 type CommandRouterCtx struct {
 	// Defines the error handler.
-	errorHandler func(error) *objects.InteractionResponse
+	errorHandler ErrorHandler
 
 	// Defines the global allowed mentions configuration.
 	globalAllowedMentions *objects.AllowedMentions
@@ -389,7 +389,7 @@ func (c *CommandRouter) autocompleteHandler(loader loaderPassthrough) interactio
 
 type dataWrapper interface {
 	type_() interface{}
-	name()  string
+	name() string
 }
 
 type rootDataWrapper struct {

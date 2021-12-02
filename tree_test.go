@@ -16,7 +16,7 @@ import (
 var fakeHandlerValue string
 
 func fakeHandler(val string) contextCallback {
-	return func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler func(error) *objects.InteractionResponse) *objects.InteractionResponse {
+	return func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler ErrorHandler) *objects.InteractionResponse {
 		fakeHandlerValue = val
 		return nil
 	}

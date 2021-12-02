@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func main() {
+func builder() (*router.CommandRouter, router.LoaderBuilder) {
 	// Create the response embed and component.
 	createResponse := func(amount uint64) (*objects.Embed, []*objects.Component) {
 		return &objects.Embed{Description: "The value of this is " + strconv.FormatUint(amount, 10)}, []*objects.Component{
@@ -156,7 +156,6 @@ func main() {
 		}).
 		MustBuild()
 
-
 	// Add a user target command.
 	commandRouter.NewCommandBuilder("user-target").
 		UserCommand().
@@ -177,6 +176,11 @@ func main() {
 		}).
 		MustBuild()
 
+	return commandRouter, router.RouterLoader().ComponentRouter(componentRouter).CommandRouter(commandRouter)
+}
+
+func main() {
+
 	// Create the interactions app.
 	app, err := interactions.New(&interactions.Config{
 		PublicKey: os.Getenv("PUBLIC_KEY"),
@@ -187,8 +191,9 @@ func main() {
 	}
 
 	// Dump the Discord commands if specified.
+	commandBuilder, b := builder()
 	if os.Getenv("DUMP") == "1" {
-		commands := commandRouter.FormulateDiscordCommands()
+		commands := commandBuilder.FormulateDiscordCommands()
 		me, err := app.Rest().GetCurrentUser()
 		if err != nil {
 			panic(err)
@@ -201,7 +206,7 @@ func main() {
 	}
 
 	// Create the router builder.
-	router.RouterLoader().ComponentRouter(componentRouter).CommandRouter(commandRouter).Build(app)
+	b.Build(app)
 
 	// Create the interactions router.
 	if err = app.Run(8000); err != nil {

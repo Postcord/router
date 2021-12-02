@@ -19,7 +19,7 @@ type ComponentRouter struct {
 // ComponentRouterCtx is used to define a components router context.
 type ComponentRouterCtx struct {
 	// Defines the error handler.
-	errorHandler func(error) *objects.InteractionResponse
+	errorHandler ErrorHandler
 
 	// Defines the global allowed mentions configuration.
 	globalAllowedMentions *objects.AllowedMentions
@@ -86,7 +86,7 @@ var NotSelectionMenu = errors.New("the data returned is not that of a selection 
 var NotButton = errors.New("the data returned is not that of a button")
 
 // Adds the argument context to the handler.
-type contextCallback func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler func(error) *objects.InteractionResponse) *objects.InteractionResponse
+type contextCallback func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler ErrorHandler) *objects.InteractionResponse
 
 // Defines the data for the context for the route.
 type routeContext struct {
@@ -114,7 +114,7 @@ func (c *ComponentRouter) build(loader loaderPassthrough) interactions.HandlerFu
 	c.prep()
 	root := new(node)
 	root.addRoute("/_postcord/void/:number", &routeContext{
-		cb: func(ctx *objects.Interaction, _ *objects.ApplicationComponentInteractionData, _ map[string]string, _ rest.RESTClient, _ func(error) *objects.InteractionResponse) *objects.InteractionResponse {
+		cb: func(ctx *objects.Interaction, _ *objects.ApplicationComponentInteractionData, _ map[string]string, _ rest.RESTClient, _ ErrorHandler) *objects.InteractionResponse {
 			// The point of this route is to just return the default handler.
 			rctx := &ComponentRouterCtx{
 				globalAllowedMentions: loader.globalAllowedMentions,
@@ -122,13 +122,13 @@ func (c *ComponentRouter) build(loader loaderPassthrough) interactions.HandlerFu
 			}
 			return rctx.buildResponse(true, nil, loader.globalAllowedMentions)
 		},
-		r:  "/_postcord/void/:number",
+		r: "/_postcord/void/:number",
 	})
 	for k, v := range c.routes {
 		var cb contextCallback
 		switch x := v.(type) {
 		case ButtonFunc:
-			cb = func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler func(error) *objects.InteractionResponse) *objects.InteractionResponse {
+			cb = func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler ErrorHandler) *objects.InteractionResponse {
 				if data.ComponentType != objects.ComponentTypeButton {
 					return loader.errHandler(NotButton)
 				}
@@ -151,7 +151,7 @@ func (c *ComponentRouter) build(loader loaderPassthrough) interactions.HandlerFu
 				return rctx.buildResponse(true, loader.errHandler, loader.globalAllowedMentions)
 			}
 		case SelectMenuFunc:
-			cb = func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler func(error) *objects.InteractionResponse) *objects.InteractionResponse {
+			cb = func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler ErrorHandler) *objects.InteractionResponse {
 				values := data.Values
 				if values == nil {
 					// This is a blank result from Discord.

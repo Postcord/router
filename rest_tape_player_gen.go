@@ -6,14 +6,13 @@ package router
 
 import (
 	"image"
-	"testing"
 
 	"github.com/Postcord/objects"
 	"github.com/Postcord/rest"
 )
 
 type restTapePlayer struct {
-	t *testing.T
+	t TestingT
 
 	tape  tape
 	index int
@@ -1059,7 +1058,7 @@ func (r *restTapePlayer) ListGuildMembers(a objects.Snowflake, b *rest.ListGuild
 	return
 }
 
-func (r *restTapePlayer) ListJoinedPrivateArchivedThreads(a objects.Snowflake, b []*rest.ListThreadsParams) (c *rest.ListThreadsResponse, d error) {
+func (r *restTapePlayer) ListJoinedPrivateArchivedThreads(a objects.Snowflake, b ...*rest.ListThreadsParams) (c *rest.ListThreadsResponse, d error) {
 	if r.index == len(r.tape) {
 		r.t.Fatal("unexpected ListJoinedPrivateArchivedThreads at end of tape")
 	}
@@ -1069,7 +1068,7 @@ func (r *restTapePlayer) ListJoinedPrivateArchivedThreads(a objects.Snowflake, b
 	return
 }
 
-func (r *restTapePlayer) ListPrivateArchivedThreads(a objects.Snowflake, b []*rest.ListThreadsParams) (c *rest.ListThreadsResponse, d error) {
+func (r *restTapePlayer) ListPrivateArchivedThreads(a objects.Snowflake, b ...*rest.ListThreadsParams) (c *rest.ListThreadsResponse, d error) {
 	if r.index == len(r.tape) {
 		r.t.Fatal("unexpected ListPrivateArchivedThreads at end of tape")
 	}
@@ -1079,7 +1078,7 @@ func (r *restTapePlayer) ListPrivateArchivedThreads(a objects.Snowflake, b []*re
 	return
 }
 
-func (r *restTapePlayer) ListPublicArchivedThreads(a objects.Snowflake, b []*rest.ListThreadsParams) (c *rest.ListThreadsResponse, d error) {
+func (r *restTapePlayer) ListPublicArchivedThreads(a objects.Snowflake, b ...*rest.ListThreadsParams) (c *rest.ListThreadsResponse, d error) {
 	if r.index == len(r.tape) {
 		r.t.Fatal("unexpected ListPublicArchivedThreads at end of tape")
 	}

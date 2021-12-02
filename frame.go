@@ -34,7 +34,7 @@ func (f *frame) write(subfolders ...string) {
 		}
 
 		// Defines the filename.
-		filename := filepath.Join(joined, time.Now().In(time.UTC).Format("02-01-2006_15-04-03")+"_untitled_frame.frame")
+		filename := filepath.Join(joined, time.Now().In(time.UTC).Format("02-01-2006_15-04-03")+"_untitled_frame.json")
 		b, err := json.MarshalIndent(f, "", "  ")
 		if err != nil {
 			panic(err)

@@ -20,14 +20,13 @@ package router
 
 import (
 	"image"
-	"testing"
 
 	"github.com/Postcord/objects"
 	"github.com/Postcord/rest"
 )
 
 type restTapePlayer struct {
-	t *testing.T
+	t TestingT
 
 	tape  tape
 	index int
@@ -53,7 +52,11 @@ func generateRestFunctions() string {
 				inParams += ", "
 			}
 			l := letters[j]
-			f += l + " " + method.Type.In(j).String()
+			potentialVard := method.Type.In(j).String()
+			if method.Type.IsVariadic() && j == numIn-1 {
+				potentialVard = "..." + method.Type.In(j).Elem().String()
+			}
+			f += l + " " + potentialVard
 			inParams += l
 		}
 		f += ") "
