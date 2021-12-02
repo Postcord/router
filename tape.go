@@ -26,7 +26,7 @@ func mustMarshal(t TestingT, item interface{}) []byte {
 
 func (i *tapeItem) match(t TestingT, funcName string, inCount int, items ...interface{}) {
 	// Check the right function is called.
-	if funcName == i.FuncName {
+	if funcName != i.FuncName {
 		t.Fatalf("wrong function called: expected %s, got %s", i.FuncName, funcName)
 	}
 
@@ -47,7 +47,7 @@ func (i *tapeItem) match(t TestingT, funcName string, inCount int, items ...inte
 	if outCount > 0 {
 		ptr, _ := items[len(items)-1].(*error)
 		if ptr != nil {
-			if i.GenericError == "" {
+			if i.GenericError != "" {
 				*ptr = errors.New(i.GenericError)
 			} else if i.RESTError != nil {
 				*ptr = i.RESTError

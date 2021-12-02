@@ -223,8 +223,12 @@ func (c *CommandRouter) autocompleteHandler(loader loaderPassthrough) interactio
 
 		// Handle the traversal.
 		var cmd *Command
+		route := []string{"testframes", "autocompletes"}
 	cmdFor:
 		for {
+			// Add to the route.
+			route = append(route, data.name())
+
 			// Get the item from the map.
 			cmdOrCat, ok := m[data.name()]
 			if !ok {
@@ -321,7 +325,7 @@ func (c *CommandRouter) autocompleteHandler(loader loaderPassthrough) interactio
 					if loader.generateFrames {
 						// Now we have all the data, we can generate the frame.
 						fr := frame{interaction, tape, returnedErr, resp}
-						fr.write("testframes", "autocompletes", data.name())
+						fr.write(route...)
 					}
 				}()
 
@@ -468,7 +472,11 @@ func (c *CommandRouter) commandHandler(loader loaderPassthrough) interactions.Ha
 		}
 
 		// Find the route.
+		route := []string{"testframes", "commands"}
 		for {
+			// Add to the route.
+			route = append(route, data.name())
+
 			// Get the item from the map.
 			cmdOrCat, ok := m[data.name()]
 			if !ok {
@@ -491,7 +499,7 @@ func (c *CommandRouter) commandHandler(loader loaderPassthrough) interactions.Ha
 				if loader.generateFrames {
 					// Now we have all the data, we can generate the frame.
 					f := frame{interaction, tape, returnedErr, resp}
-					f.write("testframes", "commands", data.name())
+					f.write(route...)
 				}
 				return resp
 			case *CommandGroup:
