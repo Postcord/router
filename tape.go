@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/Postcord/rest"
 	"github.com/stretchr/testify/require"
+	"reflect"
 )
 
 type tapeItem struct {
@@ -24,19 +25,28 @@ func mustMarshal(t TestingT, item interface{}) []byte {
 	return b
 }
 
-func (i *tapeItem) match(t TestingT, funcName string, inCount int, items ...interface{}) {
+func (i *tapeItem) match(t TestingT, funcName string, isVard bool, inCount int, items ...interface{}) {
 	// Check the right function is called.
 	if funcName != i.FuncName {
 		t.Fatalf("wrong function called: expected %s, got %s", i.FuncName, funcName)
 	}
 
-	// Check the input count is equal to the number of inputs.
-	if inCount != len(i.Params) {
+	// If the function is variadic, the params check is special.
+	if isVard {
+		// The error will be different.
+		if inCount-1 > len(i.Params) {
+			t.Fatalf("wrong number of inputs: expected over %d, got %d", inCount-1, len(i.Params))
+		}
+	} else if inCount != len(i.Params) {
 		t.Fatalf("wrong number of inputs: expected %d, got %d", len(i.Params), inCount)
 	}
 
 	// Check all the params are equal.
 	for x, p := range i.Params {
+		end := len(items) - 1
+		if x >= end && isVard {
+			require.JSONEq(t, string(p), string(mustMarshal(t, reflect.ValueOf(items[x]).Field(x-end).Interface())))
+		}
 		require.JSONEq(t, string(p), string(mustMarshal(t, items[x])))
 	}
 

@@ -34,6 +34,13 @@ type restTapePlayer struct {
 
 `
 
+func strbool(b bool) string {
+	if b {
+		return "true"
+	}
+	return "false"
+}
+
 func generateRestFunctions() string {
 	letters := []string{"", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}
 	t := reflect.TypeOf((*rest.Client)(nil))
@@ -84,10 +91,11 @@ func generateRestFunctions() string {
 		f += `{
 	if r.index == len(r.tape) {
 		r.t.Fatal("unexpected ` + method.Name + ` at end of tape")
+		return // Here for unit tests - in production this will never be hit.
 	}
 	action := r.tape[r.index]
 	r.index++
-	action.match(r.t, "` + method.Name + `", ` + strconv.Itoa(numIn-1) + ", " + inParams + outParams + `)
+	action.match(r.t, "` + method.Name + `", ` + strbool(method.Type.IsVariadic()) + `, ` + strconv.Itoa(numIn-1) + ", " + inParams + outParams + `)
 `
 		if outParams == "" {
 			f += "}"
