@@ -19,8 +19,14 @@ type tapeItem struct {
 	RESTError    *rest.ErrorREST   `json:"rest_error,omitempty"`
 }
 
-func mustMarshal(t TestingT, item interface{}) []byte {
-	b, err := json.Marshal(item)
+func mustMarshal(t TestingT, indent bool, item interface{}) []byte {
+	var b []byte
+	var err error
+	if indent {
+		b, err = json.MarshalIndent(item, "", "  ")
+	} else {
+		b, err = json.Marshal(item)
+	}
 	require.NoError(t, err)
 	return b
 }
@@ -29,25 +35,28 @@ func (i *tapeItem) match(t TestingT, funcName string, isVard bool, inCount int, 
 	// Check the right function is called.
 	if funcName != i.FuncName {
 		t.Fatalf("wrong function called: expected %s, got %s", i.FuncName, funcName)
+		return // Here for unit tests - in production this will never be hit.
 	}
 
 	// If the function is variadic, the params check is special.
 	if isVard {
 		// The error will be different.
 		if inCount-1 > len(i.Params) {
-			t.Fatalf("wrong number of inputs: expected over %d, got %d", inCount-1, len(i.Params))
+			t.Fatalf("wrong number of inputs: got %d", (inCount-2)+len(i.Params))
+			return // Here for unit tests - in production this will never be hit.
 		}
 	} else if inCount != len(i.Params) {
 		t.Fatalf("wrong number of inputs: expected %d, got %d", len(i.Params), inCount)
+		return // Here for unit tests - in production this will never be hit.
 	}
 
 	// Check all the params are equal.
 	for x, p := range i.Params {
 		end := len(items) - 1
 		if x >= end && isVard {
-			require.JSONEq(t, string(p), string(mustMarshal(t, reflect.ValueOf(items[x]).Field(x-end).Interface())))
+			require.JSONEq(t, string(p), string(mustMarshal(t, false, reflect.ValueOf(items[x]).Field(x-end).Interface())))
 		}
-		require.JSONEq(t, string(p), string(mustMarshal(t, items[x])))
+		require.JSONEq(t, string(p), string(mustMarshal(t, false, items[x])))
 	}
 
 	// Get the count of outputs.
@@ -69,6 +78,7 @@ func (i *tapeItem) match(t TestingT, funcName string, isVard bool, inCount int, 
 	// Check the output count is equal to the number of outputs.
 	if outCount != len(i.Results) {
 		t.Fatalf("wrong number of outputs: expected %d, got %d", len(i.Results), outCount)
+		return // Here for unit tests - in production this will never be hit.
 	}
 
 	// Handle the remainder of the params.

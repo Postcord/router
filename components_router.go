@@ -216,7 +216,7 @@ func (c *ComponentRouter) build(loader loaderPassthrough) interactions.HandlerFu
 		if loader.generateFrames {
 			// Now we have all the data, we can generate the frame.
 			fr := frame{ctx, tape, returnedErr, resp}
-			fr.write("testframes", "components", strings.ReplaceAll(route.r, "/", "_"))
+			go fr.write("testframes", "components", strings.ReplaceAll(route.r, "/", "_"))
 		}
 		return resp
 	}

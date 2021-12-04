@@ -110,8 +110,12 @@ func (l *loaderBuilder) Build(app HandlerAccepter) LoaderBuilder {
 	return l
 }
 
-func (l *loaderBuilder) CurrentChain() (*ComponentRouter, *CommandRouter, ErrorHandler, *objects.AllowedMentions) {
-	return l.components, l.commands, l.errHandler, l.globalAllowedMentions
+func (l *loaderBuilder) CurrentChain() (*ComponentRouter, *CommandRouter, ErrorHandler, rest.RESTClient, *objects.AllowedMentions) {
+	var restClient rest.RESTClient
+	if l.app != nil {
+		restClient = l.app.Rest()
+	}
+	return l.components, l.commands, l.errHandler, restClient, l.globalAllowedMentions
 }
 
 // LoaderBuilder is the interface for a router loader builder.
@@ -136,7 +140,7 @@ type LoaderBuilder interface {
 
 	// CurrentChain is used to get the current chain of items. Note that for obvious reasons, this is not chainable.
 	// Used internally by Postcord for our testing mechanism.
-	CurrentChain() (componentRouter *ComponentRouter, commandRouter *CommandRouter, errHandler ErrorHandler, allowedMentions *objects.AllowedMentions)
+	CurrentChain() (componentRouter *ComponentRouter, commandRouter *CommandRouter, errHandler ErrorHandler, restClient rest.RESTClient, allowedMentions *objects.AllowedMentions)
 }
 
 // RouterLoader is used to create a new router loader builder.

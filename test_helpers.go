@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/json"
+	"github.com/Postcord/rest"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,6 +19,7 @@ type TestingT interface {
 	Fatal(args ...interface{})
 	Fatalf(format string, args ...interface{})
 	Log(args ...interface{})
+	Helper()
 }
 
 // The more generic runner.
@@ -28,9 +30,18 @@ type genericRunner interface {
 // TestComponent is used to run unit tests against the specified component.
 func TestComponent(t TestingT, b LoaderBuilder, path string) {
 	// Get everything we need from the loader.
-	r, _, errHandler, allowedMentions := b.CurrentChain()
+	r, _, errHandler, restOrigin, allowedMentions := b.CurrentChain()
 
-	// TODO: generation of test files should be done in the test_helpers.go file.
+	// Get the Postcord regen env var.
+	regen := 0
+	switch strings.ToLower(os.Getenv("POSTCORD_REGEN")) {
+	case "all":
+		// 1 | 2
+		regen = 3
+	case "response":
+		regen = 1
+	}
+
 	// Make sure the component router isn't nil.
 	require.NotNil(t, r)
 
@@ -81,15 +92,23 @@ func TestComponent(t TestingT, b LoaderBuilder, path string) {
 
 		// Define the test.
 		test := func(t TestingT) {
-			// Create the rest player.
-			restPlayer := &restTapePlayer{
-				t:    t,
-				tape: frameData.RESTRequests,
+			// Create the rest client.
+			var restClient rest.RESTClient
+			if regen&2 == 0 {
+				restClient = &restTapePlayer{
+					t:    t,
+					tape: frameData.RESTRequests,
+				}
+			} else {
+				restClient = &restTape{
+					rest: restOrigin,
+					tape: &tape{},
+				}
 			}
 
 			// Create the components handler.
 			handler := r.build(loaderPassthrough{
-				rest:                  restPlayer,
+				rest:                  restClient,
 				errHandler:            errHandlerOverride,
 				globalAllowedMentions: allowedMentions,
 				generateFrames:        false,
@@ -98,14 +117,35 @@ func TestComponent(t TestingT, b LoaderBuilder, path string) {
 			// Run the handler.
 			resp := handler(frameData.Request)
 
-			// Handle the data we get back.
-			if frameData.Error == "" {
-				assert.NoError(t, returnedErr)
-			} else {
-				assert.EqualError(t, returnedErr, frameData.Error)
+			// Write the tape.
+			if regen&2 != 0 {
+				frameData.RESTRequests = *restClient.(*restTape).tape
 			}
-			if respExpected {
-				assert.Equal(t, frameData.Response, resp)
+
+			// Handle the response.
+			if regen&1 == 0 {
+				// Compare the data we get back.
+				if frameData.Error == "" {
+					assert.NoError(t, returnedErr)
+				} else {
+					assert.EqualError(t, returnedErr, frameData.Error)
+				}
+				if respExpected {
+					assert.Equal(t, frameData.Response, resp)
+				}
+			} else {
+				// Handle setting the response.
+				frameData.Response = resp
+				frameData.Error = ""
+				if returnedErr != nil {
+					frameData.Error = returnedErr.Error()
+				}
+			}
+
+			// Write the response if it was a regen.
+			if regen != 0 {
+				b := mustMarshal(t, true, frameData)
+				require.NoError(t, os.WriteFile(fp, b, 0644))
 			}
 		}
 
@@ -123,9 +163,18 @@ func TestComponent(t TestingT, b LoaderBuilder, path string) {
 
 func testCommand(t TestingT, b LoaderBuilder, autocomplete bool, commandRoute ...string) {
 	// Get everything we need from the loader.
-	_, r, errHandler, allowedMentions := b.CurrentChain()
+	_, r, errHandler, restOrigin, allowedMentions := b.CurrentChain()
 
-	// TODO: generation of test files should be done in the test_helpers.go file.
+	// Get the Postcord regen env var.
+	regen := 0
+	switch strings.ToLower(os.Getenv("POSTCORD_REGEN")) {
+	case "all":
+		// 1 | 2
+		regen = 3
+	case "response":
+		regen = 1
+	}
+
 	// Make sure the command router isn't nil.
 	require.NotNil(t, r)
 
@@ -178,15 +227,26 @@ func testCommand(t TestingT, b LoaderBuilder, autocomplete bool, commandRoute ..
 
 		// Define the test.
 		test := func(t TestingT) {
-			// Create the rest player.
-			restPlayer := &restTapePlayer{
-				t:    t,
-				tape: frameData.RESTRequests,
+			// Defines the helper.
+			t.Helper()
+
+			// Create the rest client.
+			var restClient rest.RESTClient
+			if regen&2 == 0 {
+				restClient = &restTapePlayer{
+					t:    t,
+					tape: frameData.RESTRequests,
+				}
+			} else {
+				restClient = &restTape{
+					rest: restOrigin,
+					tape: &tape{},
+				}
 			}
 
 			// Create the handler.
 			cmdHandler, autoCompleteHandler := r.build(loaderPassthrough{
-				rest:                  restPlayer,
+				rest:                  restClient,
 				errHandler:            errHandlerOverride,
 				globalAllowedMentions: allowedMentions,
 				generateFrames:        false,
@@ -200,14 +260,35 @@ func testCommand(t TestingT, b LoaderBuilder, autocomplete bool, commandRoute ..
 				resp = cmdHandler(frameData.Request)
 			}
 
-			// Handle the data we get back.
-			if frameData.Error == "" {
-				assert.NoError(t, returnedErr)
-			} else {
-				assert.EqualError(t, returnedErr, frameData.Error)
+			// Write the tape.
+			if regen&2 != 0 {
+				frameData.RESTRequests = *restClient.(*restTape).tape
 			}
-			if respExpected {
-				assert.Equal(t, frameData.Response, resp)
+
+			// Handle the response.
+			if regen&1 == 0 {
+				// Compare the data we get back.
+				if frameData.Error == "" {
+					assert.NoError(t, returnedErr)
+				} else {
+					assert.EqualError(t, returnedErr, frameData.Error)
+				}
+				if respExpected {
+					assert.Equal(t, frameData.Response, resp)
+				}
+			} else {
+				// Handle setting the response.
+				frameData.Response = resp
+				frameData.Error = ""
+				if returnedErr != nil {
+					frameData.Error = returnedErr.Error()
+				}
+			}
+
+			// Write the response if it was a regen.
+			if regen != 0 {
+				b := mustMarshal(t, true, frameData)
+				require.NoError(t, os.WriteFile(fp, b, 0644))
 			}
 		}
 

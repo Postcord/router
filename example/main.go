@@ -9,7 +9,16 @@ import (
 	"strconv"
 )
 
-func builder() (*router.CommandRouter, router.LoaderBuilder) {
+func builder() (*router.CommandRouter, *interactions.App, router.LoaderBuilder) {
+	// Create the interactions app.
+	app, err := interactions.New(&interactions.Config{
+		PublicKey: os.Getenv("PUBLIC_KEY"),
+		Token:     "Bot " + os.Getenv("TOKEN"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
 	// Create the response embed and component.
 	createResponse := func(amount uint64) (*objects.Embed, []*objects.Component) {
 		return &objects.Embed{Description: "The value of this is " + strconv.FormatUint(amount, 10)}, []*objects.Component{
@@ -66,7 +75,7 @@ func builder() (*router.CommandRouter, router.LoaderBuilder) {
 		MustBuild()
 
 	// Defines a single command.
-	_, err := commandRouter.NewCommandBuilder("add").Description("A demo to show adding numbers.").
+	_, err = commandRouter.NewCommandBuilder("add").Description("A demo to show adding numbers.").
 		Handler(func(ctx *router.CommandRouterCtx) error {
 			embed, row := createResponse(0)
 			ctx.Ephemeral().SetEmbed(embed).AddComponentRow(row)
@@ -176,22 +185,12 @@ func builder() (*router.CommandRouter, router.LoaderBuilder) {
 		}).
 		MustBuild()
 
-	return commandRouter, router.RouterLoader().ComponentRouter(componentRouter).CommandRouter(commandRouter)
+	return commandRouter, app, router.RouterLoader().ComponentRouter(componentRouter).CommandRouter(commandRouter).Build(app)
 }
 
 func main() {
-
-	// Create the interactions app.
-	app, err := interactions.New(&interactions.Config{
-		PublicKey: os.Getenv("PUBLIC_KEY"),
-		Token:     "Bot " + os.Getenv("TOKEN"),
-	})
-	if err != nil {
-		panic(err)
-	}
-
 	// Dump the Discord commands if specified.
-	commandBuilder, b := builder()
+	commandBuilder, app, _ := builder()
 	if os.Getenv("DUMP") == "1" {
 		commands := commandBuilder.FormulateDiscordCommands()
 		me, err := app.Rest().GetCurrentUser()
@@ -205,11 +204,8 @@ func main() {
 		return
 	}
 
-	// Create the router builder.
-	b.Build(app)
-
 	// Create the interactions router.
-	if err = app.Run(8000); err != nil {
+	if err := app.Run(8000); err != nil {
 		panic(err)
 	}
 }

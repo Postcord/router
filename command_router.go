@@ -325,7 +325,7 @@ func (c *CommandRouter) autocompleteHandler(loader loaderPassthrough) interactio
 					if loader.generateFrames {
 						// Now we have all the data, we can generate the frame.
 						fr := frame{interaction, tape, returnedErr, resp}
-						fr.write(route...)
+						go fr.write(route...)
 					}
 				}()
 
@@ -499,7 +499,7 @@ func (c *CommandRouter) commandHandler(loader loaderPassthrough) interactions.Ha
 				if loader.generateFrames {
 					// Now we have all the data, we can generate the frame.
 					f := frame{interaction, tape, returnedErr, resp}
-					f.write(route...)
+					go f.write(route...)
 				}
 				return resp
 			case *CommandGroup:

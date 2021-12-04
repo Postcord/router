@@ -26,22 +26,20 @@ type frame struct {
 
 // Used to write the frame.
 func (f *frame) write(subfolders ...string) {
-	go func() {
-		// Ensure the folder exists.
-		joined := filepath.Join(subfolders...)
-		if err := os.MkdirAll(joined, 0777); err != nil {
-			panic(err)
-		}
+	// Ensure the folder exists.
+	joined := filepath.Join(subfolders...)
+	if err := os.MkdirAll(joined, 0777); err != nil {
+		panic(err)
+	}
 
-		// Defines the filename.
-		filename := filepath.Join(joined, time.Now().In(time.UTC).Format("02-01-2006_15-04-03")+"_untitled_frame.json")
-		b, err := json.MarshalIndent(f, "", "  ")
-		if err != nil {
-			panic(err)
-		}
-		err = os.WriteFile(filename, b, 0666)
-		if err != nil {
-			panic(err)
-		}
-	}()
+	// Defines the filename.
+	filename := filepath.Join(joined, time.Now().In(time.UTC).Format("02-01-2006_15-04-03")+"_untitled_frame.json")
+	b, err := json.MarshalIndent(f, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	err = os.WriteFile(filename, b, 0666)
+	if err != nil {
+		panic(err)
+	}
 }
