@@ -79,9 +79,31 @@ func (i *tapeItem) match(t TestingT, funcName string, isVard bool, inCount int, 
 
 type tape []*tapeItem
 
-func (t *tape) write(funcName string, params ...interface{}) *tapeItem {
-	p := make([]json.RawMessage, len(params))
+func (t *tape) write(funcName string, isVard bool, params ...interface{}) *tapeItem {
+	undynamicLen := len(params)
+	if isVard {
+		undynamicLen--
+	}
+	p := make([]json.RawMessage, undynamicLen)
 	for i, x := range params {
+		if i == len(params)-1 && isVard {
+			// Get the item from reflect.
+			r := reflect.ValueOf(x)
+
+			// Get each item from the slice and turn it into JSON.
+			for j := 0; j < r.Len(); j++ {
+				b, err := json.Marshal(r.Index(j).Interface())
+				if err != nil {
+					panic(err)
+				}
+				p = append(p, b)
+			}
+
+			// Break here.
+			break
+		}
+
+		// Otherwise just handle it as standard.
 		b, err := json.Marshal(x)
 		if err != nil {
 			panic(err)

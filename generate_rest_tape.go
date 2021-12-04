@@ -1,3 +1,4 @@
+//go:build ignore
 // +build ignore
 
 package main
@@ -29,6 +30,13 @@ type restTape struct {
 }
 
 `
+
+func strbool(b bool) string {
+	if b {
+		return "true"
+	}
+	return "false"
+}
 
 func generateRestFunctions() string {
 	letters := []string{"", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}
@@ -95,7 +103,7 @@ func generateRestFunctions() string {
 			retCall = "return " + inCall
 		}
 		f += ` {
-	result := r.tape.write("` + method.Name + `"` + startCallSep + tapeParams + `)
+	result := r.tape.write("` + method.Name + `", ` + strbool(method.Type.IsVariadic()) + startCallSep + tapeParams + `)
 	` + outCall + "r.rest." + method.Name + `(` + params + `)
 	result.end(` + inCall + `)
 	` + retCall + `
