@@ -86,11 +86,11 @@ var NotSelectionMenu = errors.New("the data returned is not that of a selection 
 var NotButton = errors.New("the data returned is not that of a button")
 
 // Adds the argument context to the handler.
-type contextCallback func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler ErrorHandler) *objects.InteractionResponse
+type contextCallback = func(ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler ErrorHandler) *objects.InteractionResponse
 
 // Defines the data for the context for the route.
 type routeContext struct {
-	cb contextCallback
+	cb interface{}
 	r  string
 }
 
@@ -212,7 +212,7 @@ func (c *ComponentRouter) build(loader loaderPassthrough) interactions.HandlerFu
 		if route == nil {
 			return nil
 		}
-		resp := route.cb(ctx, &data, params, r, errHandler)
+		resp := route.cb.(contextCallback)(ctx, &data, params, r, errHandler)
 		if loader.generateFrames {
 			// Now we have all the data, we can generate the frame.
 			fr := frame{ctx, tape, returnedErr, resp}

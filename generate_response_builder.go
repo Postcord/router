@@ -1,3 +1,4 @@
+//go:build ignore
 // +build ignore
 
 package main
@@ -125,6 +126,7 @@ func (c *{{ .Type }}) ChannelMessageWithSource() *{{ .Type }} {
 
 var types = []string{
 	"ComponentRouterCtx", "CommandRouterCtx",
+	"ModalRouterCtx",
 }
 
 func main() {

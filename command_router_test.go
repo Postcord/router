@@ -1704,6 +1704,7 @@ func TestCommandRouter_FormulateDiscordCommands(t *testing.T) {
 					break
 				}
 				b, err = json.MarshalIndent(tt.init().FormulateDiscordCommands(), "", "  ")
+				require.NoError(t, err)
 			}
 			assert.JSONEq(t, string(golden.Get(t)), string(b))
 		})

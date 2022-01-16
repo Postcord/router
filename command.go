@@ -3,9 +3,10 @@ package router
 import (
 	"container/list"
 	"errors"
+	"strconv"
+
 	"github.com/Postcord/objects"
 	"github.com/Postcord/rest"
-	"strconv"
 )
 
 // Command is used to define a Discord (sub-)command. DO NOT MAKE YOURSELF! USE CommandGroup.NewCommandBuilder OR CommandRouter.NewCommandBuilder!

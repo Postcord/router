@@ -17,6 +17,7 @@ type loaderBuilder struct {
 	globalAllowedMentions *objects.AllowedMentions
 	components            *ComponentRouter
 	commands              *CommandRouter
+	modals                *ModalRouter
 	errHandler            ErrorHandler
 	app                   HandlerAccepter
 }
@@ -36,20 +37,28 @@ func (l *loaderBuilder) CommandRouter(router *CommandRouter) LoaderBuilder {
 	return l
 }
 
+func (l *loaderBuilder) ModalRouter(router *ModalRouter) LoaderBuilder {
+	l.modals = router
+	return l
+}
+
 // CombinedRouter is an extension of both CommandRouter and ComponentRouter to combine the two.
 // I'm personally not a huge fan of using this, but it might be appealing to some people who wish to treat it as one router.
 type CombinedRouter struct {
 	CommandRouter
 	ComponentRouter
+	ModalRouter
 }
 
 func (l *loaderBuilder) CombinedRouter(router *CombinedRouter) LoaderBuilder {
 	if router == nil {
 		l.components = nil
 		l.commands = nil
+		l.modals = nil
 	} else {
 		l.components = &router.ComponentRouter
 		l.commands = &router.CommandRouter
+		l.modals = &router.ModalRouter
 	}
 	return l
 }
@@ -73,6 +82,7 @@ type HandlerAccepter interface {
 	ComponentHandler(handler interactions.HandlerFunc)
 	CommandHandler(handler interactions.HandlerFunc)
 	AutocompleteHandler(handler interactions.HandlerFunc)
+	ModalHandler(handler interactions.HandlerFunc)
 	Rest() *rest.Client
 }
 
@@ -107,15 +117,21 @@ func (l *loaderBuilder) Build(app HandlerAccepter) LoaderBuilder {
 		app.AutocompleteHandler(autocompleteHandler)
 	}
 
+	if l.modals != nil {
+		// Build and load the modals handler.
+		modals := l.modals.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
+		app.ModalHandler(modals)
+	}
+
 	return l
 }
 
-func (l *loaderBuilder) CurrentChain() (*ComponentRouter, *CommandRouter, ErrorHandler, rest.RESTClient, *objects.AllowedMentions) {
+func (l *loaderBuilder) CurrentChain() (*ComponentRouter, *CommandRouter, *ModalRouter, ErrorHandler, rest.RESTClient, *objects.AllowedMentions) {
 	var restClient rest.RESTClient
 	if l.app != nil {
 		restClient = l.app.Rest()
 	}
-	return l.components, l.commands, l.errHandler, restClient, l.globalAllowedMentions
+	return l.components, l.commands, l.modals, l.errHandler, restClient, l.globalAllowedMentions
 }
 
 // LoaderBuilder is the interface for a router loader builder.
@@ -126,8 +142,11 @@ type LoaderBuilder interface {
 	// CommandRouter is used to add a command router to the load process.
 	CommandRouter(*CommandRouter) LoaderBuilder
 
+	// ModalRouter is used to add a modal router to the load process.
+	ModalRouter(*ModalRouter) LoaderBuilder
+
 	// CombinedRouter is used to add a combined router to the load process.
-	CombinedRouter(router *CombinedRouter) LoaderBuilder
+	CombinedRouter(*CombinedRouter) LoaderBuilder
 
 	// ErrorHandler is used to add an error handler to the load process.
 	ErrorHandler(ErrorHandler) LoaderBuilder
@@ -140,7 +159,7 @@ type LoaderBuilder interface {
 
 	// CurrentChain is used to get the current chain of items. Note that for obvious reasons, this is not chainable.
 	// Used internally by Postcord for our testing mechanism.
-	CurrentChain() (componentRouter *ComponentRouter, commandRouter *CommandRouter, errHandler ErrorHandler, restClient rest.RESTClient, allowedMentions *objects.AllowedMentions)
+	CurrentChain() (componentRouter *ComponentRouter, commandRouter *CommandRouter, modalRouter *ModalRouter, errHandler ErrorHandler, restClient rest.RESTClient, allowedMentions *objects.AllowedMentions)
 }
 
 // RouterLoader is used to create a new router loader builder.

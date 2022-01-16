@@ -313,6 +313,12 @@ func TestCommandRouterCtx_SetEmbed(t *testing.T) {
 	assert.Equal(t, x.responseBuilder.ResponseData().Embeds, []*objects.Embed{{Title: "a"}})
 }
 
+func TestModalRouterCtx_SetEmbed(t *testing.T) {
+	x := &ModalRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "SetEmbed", &objects.Embed{Title: "a"}))
+	assert.Equal(t, x.responseBuilder.ResponseData().Embeds, []*objects.Embed{{Title: "a"}})
+}
+
 func TestComponentRouterCtx_AddEmbed(t *testing.T) {
 	x := &ComponentRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "AddEmbed", &objects.Embed{Title: "a"}))
@@ -321,6 +327,12 @@ func TestComponentRouterCtx_AddEmbed(t *testing.T) {
 
 func TestCommandRouterCtx_AddEmbed(t *testing.T) {
 	x := &CommandRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "AddEmbed", &objects.Embed{Title: "a"}))
+	assert.Equal(t, x.responseBuilder.ResponseData().Embeds, []*objects.Embed{{Title: "a"}})
+}
+
+func TestModalRouterCtx_AddEmbed(t *testing.T) {
+	x := &ModalRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "AddEmbed", &objects.Embed{Title: "a"}))
 	assert.Equal(t, x.responseBuilder.ResponseData().Embeds, []*objects.Embed{{Title: "a"}})
 }
@@ -339,6 +351,13 @@ func TestComponentRouterCtx_AddComponentRow(t *testing.T) {
 
 func TestCommandRouterCtx_AddComponentRow(t *testing.T) {
 	x := &CommandRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "AddComponentRow", []*objects.Component{{Label: "a"}}))
+	assert.NoError(t, callBuilderFunction(t, x, "AddComponentRow", []*objects.Component{{Label: "b"}}))
+	assert.Equal(t, x.responseBuilder.ResponseData().Components, multipleComponentRowsRaw)
+}
+
+func TestModalRouterCtx_AddComponentRow(t *testing.T) {
+	x := &ModalRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "AddComponentRow", []*objects.Component{{Label: "a"}}))
 	assert.NoError(t, callBuilderFunction(t, x, "AddComponentRow", []*objects.Component{{Label: "b"}}))
 	assert.Equal(t, x.responseBuilder.ResponseData().Components, multipleComponentRowsRaw)
@@ -363,6 +382,13 @@ func TestCommandRouterCtx_SetComponentRows(t *testing.T) {
 	assert.Equal(t, x.responseBuilder.ResponseData().Components, multipleComponentRowsRaw)
 }
 
+func TestModalRouterCtx_SetComponentRows(t *testing.T) {
+	x := &ModalRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "AddComponentRow", []*objects.Component{{Label: "c"}}))
+	assert.NoError(t, callBuilderFunction(t, x, "SetComponentRows", multipleComponentRows))
+	assert.Equal(t, x.responseBuilder.ResponseData().Components, multipleComponentRowsRaw)
+}
+
 func TestCommandRouterCtx_ClearComponents(t *testing.T) {
 	x := &CommandRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "AddComponentRow", []*objects.Component{{Label: "a"}}))
@@ -372,6 +398,13 @@ func TestCommandRouterCtx_ClearComponents(t *testing.T) {
 
 func TestComponentRouterCtx_ClearComponents(t *testing.T) {
 	x := &ComponentRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "AddComponentRow", []*objects.Component{{Label: "a"}}))
+	assert.NoError(t, callBuilderFunction(t, x, "ClearComponents"))
+	assert.Equal(t, x.responseBuilder.ResponseData().Components, []*objects.Component{})
+}
+
+func TestModalRouterCtx_ClearComponents(t *testing.T) {
+	x := &ModalRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "AddComponentRow", []*objects.Component{{Label: "a"}}))
 	assert.NoError(t, callBuilderFunction(t, x, "ClearComponents"))
 	assert.Equal(t, x.responseBuilder.ResponseData().Components, []*objects.Component{})
@@ -389,6 +422,12 @@ func TestComponentRouterCtx_SetContent(t *testing.T) {
 	assert.Equal(t, x.responseBuilder.ResponseData().Content, "a")
 }
 
+func TestModalRouterCtx_SetContent(t *testing.T) {
+	x := &ModalRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "SetContent", "a"))
+	assert.Equal(t, x.responseBuilder.ResponseData().Content, "a")
+}
+
 func TestCommandRouterCtx_SetContentf(t *testing.T) {
 	x := &CommandRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "SetContentf", "hello %s", "world"))
@@ -397,6 +436,12 @@ func TestCommandRouterCtx_SetContentf(t *testing.T) {
 
 func TestComponentRouterCtx_SetContentf(t *testing.T) {
 	x := &ComponentRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "SetContentf", "hello %s", "world"))
+	assert.Equal(t, x.responseBuilder.ResponseData().Content, "hello world")
+}
+
+func TestModalRouterCtx_SetContentf(t *testing.T) {
+	x := &ModalRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "SetContentf", "hello %s", "world"))
 	assert.Equal(t, x.responseBuilder.ResponseData().Content, "hello world")
 }
@@ -413,6 +458,12 @@ func TestComponentRouterCtx_SetAllowedMentions(t *testing.T) {
 	assert.Equal(t, x.responseBuilder.ResponseData().AllowedMentions, &objects.AllowedMentions{Parse: []string{"a"}})
 }
 
+func TestModalRouterCtx_SetAllowedMentions(t *testing.T) {
+	x := &ModalRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "SetAllowedMentions", &objects.AllowedMentions{Parse: []string{"a"}}))
+	assert.Equal(t, x.responseBuilder.ResponseData().AllowedMentions, &objects.AllowedMentions{Parse: []string{"a"}})
+}
+
 func TestCommandRouterCtx_SetTTS(t *testing.T) {
 	x := &CommandRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "SetTTS", true))
@@ -421,6 +472,12 @@ func TestCommandRouterCtx_SetTTS(t *testing.T) {
 
 func TestComponentRouterCtx_SetTTS(t *testing.T) {
 	x := &ComponentRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "SetTTS", true))
+	assert.Equal(t, x.responseBuilder.ResponseData().TTS, true)
+}
+
+func TestModalRouterCtx_SetTTS(t *testing.T) {
+	x := &ModalRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "SetTTS", true))
 	assert.Equal(t, x.responseBuilder.ResponseData().TTS, true)
 }
@@ -437,6 +494,12 @@ func TestComponentRouterCtx_Ephemeral(t *testing.T) {
 	assert.Equal(t, (objects.MessageFlag)(64), x.responseBuilder.ResponseData().Flags)
 }
 
+func TestModalRouterCtx_Ephemeral(t *testing.T) {
+	x := &ModalRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "Ephemeral"))
+	assert.Equal(t, (objects.MessageFlag)(64), x.responseBuilder.ResponseData().Flags)
+}
+
 func TestCommandRouterCtx_ChannelMessageWithSource(t *testing.T) {
 	x := &CommandRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "ChannelMessageWithSource"))
@@ -445,6 +508,12 @@ func TestCommandRouterCtx_ChannelMessageWithSource(t *testing.T) {
 
 func TestComponentRouterCtx_ChannelMessageWithSource(t *testing.T) {
 	x := &ComponentRouterCtx{}
+	assert.NoError(t, callBuilderFunction(t, x, "ChannelMessageWithSource"))
+	assert.Equal(t, x.respType, objects.ResponseChannelMessageWithSource)
+}
+
+func TestModalRouterCtx_ChannelMessageWithSource(t *testing.T) {
+	x := &ModalRouterCtx{}
 	assert.NoError(t, callBuilderFunction(t, x, "ChannelMessageWithSource"))
 	assert.Equal(t, x.respType, objects.ResponseChannelMessageWithSource)
 }

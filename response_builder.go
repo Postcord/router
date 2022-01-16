@@ -2,8 +2,9 @@ package router
 
 import (
 	"errors"
-	"github.com/Postcord/objects"
 	"sync"
+
+	"github.com/Postcord/objects"
 )
 
 // Embedded into contexts to build responses.

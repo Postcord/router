@@ -13,6 +13,8 @@ github.com/Postcord/objects v0.0.18 h1:BFxlpJK7/mCcCUPPDz/OPgehpLwr6pym+Mi7fmqkG
 github.com/Postcord/objects v0.0.18/go.mod h1:DdFNHjas9Xby/YNGwr5XWuD+8kyNvGmtozW4LiF3QF8=
 github.com/Postcord/objects v0.0.19-0.20211130075714-2c9980c4d348 h1:aEcjD6fjcgwaYLkUQCjgRTO7mqtfkMJcqHmeG09lqX8=
 github.com/Postcord/objects v0.0.19-0.20211130075714-2c9980c4d348/go.mod h1:DdFNHjas9Xby/YNGwr5XWuD+8kyNvGmtozW4LiF3QF8=
+github.com/Postcord/objects v0.0.20-0.20220114205827-efaeffd21fb5 h1:PVYfr44U9Y5J3e96FL7rGx5icQ0G26vJoN+DI4VsfbM=
+github.com/Postcord/objects v0.0.20-0.20220114205827-efaeffd21fb5/go.mod h1:DdFNHjas9Xby/YNGwr5XWuD+8kyNvGmtozW4LiF3QF8=
 github.com/Postcord/rest v0.0.9/go.mod h1:4ZFtHyQxMqqdE8kw/b1tiv0MrshAs0ikFmA8CDM6h7k=
 github.com/Postcord/rest v0.0.13-0.20211129202545-5da06d04b3ab h1:hORmneLVScnrnsyzdJSuWYC361JfK0DtQYVwI3TDhSM=
 github.com/Postcord/rest v0.0.13-0.20211129202545-5da06d04b3ab/go.mod h1:58OBqvLw374f8Xlxxq8C9vfBT6wLohapLHLBPYr6G58=
