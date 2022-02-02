@@ -177,11 +177,6 @@ func (f *ModalRouter) build(loader loaderPassthrough) interactions.HandlerFunc {
 			if x.CustomID != "" {
 				modalItems[x.CustomID] = x.Value
 			}
-			for _, y := range x.Components {
-				if y.CustomID != "" {
-					modalItems[y.CustomID] = y.Value
-				}
-			}
 		}
 		rctx := &ModalRouterCtx{
 			errorHandler:          loader.errHandler,
