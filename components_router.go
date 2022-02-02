@@ -220,10 +220,8 @@ func (c *ComponentRouter) build(modalRouter *ModalRouter, loader loaderPassthrou
 					RESTClient:            loader.rest,
 				}
 				if err := modalRouter.SendModalResponse(b, data.CustomID); err != nil {
-					if err == ModalPathNotFound {
-						return nil
-					}
-					return errHandler(err)
+					// There is only one error here, and it is when the modal is not found.
+					return nil
 				}
 				return b.buildResponse(false, loader.errHandler, loader.globalAllowedMentions)
 			}
