@@ -119,8 +119,8 @@ func (f *ModalRouter) build(loader loaderPassthrough) interactions.HandlerFunc {
 	tree := node{}
 	for route, form := range f.routes {
 		tree.addRoute(route, &routeContext{
-			cb: form,
-			r:  route,
+			i: form,
+			r: route,
 		})
 	}
 	f.tree = &tree
@@ -191,7 +191,7 @@ func (f *ModalRouter) build(loader loaderPassthrough) interactions.HandlerFunc {
 			ModalItems:            modalItems,
 			RESTClient:            r,
 		}
-		if err := val.cb.(*ModalContent).Function(rctx); err != nil {
+		if err := val.i.(*ModalContent).Function(rctx); err != nil {
 			resp = errHandler(err)
 			return
 		}
@@ -241,7 +241,7 @@ func (f *ModalRouter) SendModalResponse(ctx ResponseDataBuilder, path string) er
 	}
 
 	// Cast the form content from the data.
-	formContent := val.cb.(*ModalContent)
+	formContent := val.i.(*ModalContent)
 
 	// Build the response.
 	data := ctx.ResponseData()

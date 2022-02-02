@@ -90,8 +90,8 @@ type contextCallback = func(ctx *objects.Interaction, data *objects.ApplicationC
 
 // Defines the data for the context for the route.
 type routeContext struct {
-	cb interface{}
-	r  string
+	i interface{}
+	r string
 }
 
 // Used to ungeneric an error.
@@ -109,12 +109,12 @@ func ungenericError(errGeneric interface{}) error {
 }
 
 // Used to build the component router by the parent.
-func (c *ComponentRouter) build(loader loaderPassthrough) interactions.HandlerFunc {
+func (c *ComponentRouter) build(modalRouter *ModalRouter, loader loaderPassthrough) interactions.HandlerFunc {
 	// Build the router tree.
 	c.prep()
 	root := new(node)
 	root.addRoute("/_postcord/void/:number", &routeContext{
-		cb: func(ctx *objects.Interaction, _ *objects.ApplicationComponentInteractionData, _ map[string]string, _ rest.RESTClient, _ ErrorHandler) *objects.InteractionResponse {
+		i: func(ctx *objects.Interaction, _ *objects.ApplicationComponentInteractionData, _ map[string]string, _ rest.RESTClient, _ ErrorHandler) *objects.InteractionResponse {
 			// The point of this route is to just return the default handler.
 			rctx := &ComponentRouterCtx{
 				globalAllowedMentions: loader.globalAllowedMentions,
@@ -210,9 +210,28 @@ func (c *ComponentRouter) build(loader loaderPassthrough) interactions.HandlerFu
 		}
 		route := root.getValue(data.CustomID, params)
 		if route == nil {
+			if modalRouter != nil {
+				// Check the modal router. This will essentially just act as a proxy to the modal dispatcher.
+				b := &ComponentRouterCtx{
+					globalAllowedMentions: loader.globalAllowedMentions,
+					errorHandler:          loader.errHandler,
+					Interaction:           ctx,
+					Params:                params,
+					RESTClient:            loader.rest,
+				}
+				if err := modalRouter.SendModalResponse(b, data.CustomID); err != nil {
+					if err == ModalPathNotFound {
+						return nil
+					}
+					return errHandler(err)
+				}
+				return b.buildResponse(false, loader.errHandler, loader.globalAllowedMentions)
+			}
 			return nil
 		}
-		resp := route.cb.(contextCallback)(ctx, &data, params, r, errHandler)
+
+		// Handle calling the route function.
+		resp := route.i.(contextCallback)(ctx, &data, params, r, errHandler)
 		if loader.generateFrames {
 			// Now we have all the data, we can generate the frame.
 			fr := frame{ctx, tape, returnedErr, resp}

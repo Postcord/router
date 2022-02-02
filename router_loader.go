@@ -104,9 +104,15 @@ func (l *loaderBuilder) Build(app HandlerAccepter) LoaderBuilder {
 
 	generateFrames := os.Getenv("POSTCORD_GENERATE_FRAMES") == "1"
 
+	if l.modals != nil {
+		// Build and load the modals handler.
+		modals := l.modals.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
+		app.ModalHandler(modals)
+	}
+
 	if l.components != nil {
 		// Build and load the components handler.
-		handler := l.components.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
+		handler := l.components.build(l.modals, loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
 		app.ComponentHandler(handler)
 	}
 
@@ -115,12 +121,6 @@ func (l *loaderBuilder) Build(app HandlerAccepter) LoaderBuilder {
 		commandHandler, autocompleteHandler := l.commands.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
 		app.CommandHandler(commandHandler)
 		app.AutocompleteHandler(autocompleteHandler)
-	}
-
-	if l.modals != nil {
-		// Build and load the modals handler.
-		modals := l.modals.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
-		app.ModalHandler(modals)
 	}
 
 	return l

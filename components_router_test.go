@@ -94,9 +94,9 @@ func TestComponentRouter_build(t *testing.T) {
 	tests := []struct {
 		name string
 
-		restClient rest.RESTClient
+		restClient            rest.RESTClient
 		globalAllowedMentions *objects.AllowedMentions
-		init func(t *testing.T, r *ComponentRouter)
+		init                  func(t *testing.T, r *ComponentRouter, m **ModalRouter)
 
 		interaction *objects.Interaction
 
@@ -107,7 +107,7 @@ func TestComponentRouter_build(t *testing.T) {
 			name: "internal void function",
 			interaction: &objects.Interaction{
 				Data: jsonify(t, objects.ApplicationComponentInteractionData{
-					CustomID:      "/_postcord/void/1",
+					CustomID: "/_postcord/void/1",
 				}),
 			},
 			expects: &objects.InteractionResponse{
@@ -118,7 +118,7 @@ func TestComponentRouter_build(t *testing.T) {
 			name: "unset route",
 			interaction: &objects.Interaction{
 				Data: jsonify(t, objects.ApplicationComponentInteractionData{
-					CustomID:      "/a",
+					CustomID: "/a",
 				}),
 			},
 			expects: nil,
@@ -132,7 +132,7 @@ func TestComponentRouter_build(t *testing.T) {
 					ComponentType: objects.ComponentTypeButton,
 				}),
 			},
-			init: func(_ *testing.T, r *ComponentRouter) {
+			init: func(_ *testing.T, r *ComponentRouter, _ **ModalRouter) {
 				r.RegisterButton("/a", func(ctx *ComponentRouterCtx) error {
 					if ctx.RESTClient != dummyRestClient {
 						return errors.New("not dummy rest client")
@@ -144,7 +144,7 @@ func TestComponentRouter_build(t *testing.T) {
 			expects: &objects.InteractionResponse{
 				Type: objects.ResponseUpdateMessage,
 				Data: &objects.InteractionApplicationCommandCallbackData{
-					Content:         "hello world",
+					Content: "hello world",
 				},
 			},
 		},
@@ -156,7 +156,7 @@ func TestComponentRouter_build(t *testing.T) {
 					ComponentType: objects.ComponentTypeButton,
 				}),
 			},
-			init: func(_ *testing.T, r *ComponentRouter) {
+			init: func(_ *testing.T, r *ComponentRouter, _ **ModalRouter) {
 				r.RegisterButton("/a/:content", func(ctx *ComponentRouterCtx) error {
 					ctx.SetContent(ctx.Params["content"])
 					return nil
@@ -165,7 +165,7 @@ func TestComponentRouter_build(t *testing.T) {
 			expects: &objects.InteractionResponse{
 				Type: objects.ResponseUpdateMessage,
 				Data: &objects.InteractionApplicationCommandCallbackData{
-					Content:         "hello",
+					Content: "hello",
 				},
 			},
 		},
@@ -177,7 +177,7 @@ func TestComponentRouter_build(t *testing.T) {
 					ComponentType: objects.ComponentTypeButton,
 				}),
 			},
-			init: func(_ *testing.T, r *ComponentRouter) {
+			init: func(_ *testing.T, r *ComponentRouter, _ **ModalRouter) {
 				r.RegisterButton("/a", func(ctx *ComponentRouterCtx) error {
 					return errors.New("wumpus fled the scene")
 				})
@@ -192,7 +192,7 @@ func TestComponentRouter_build(t *testing.T) {
 					ComponentType: objects.ComponentTypeButton,
 				}),
 			},
-			init: func(_ *testing.T, r *ComponentRouter) {
+			init: func(_ *testing.T, r *ComponentRouter, _ **ModalRouter) {
 				r.RegisterButton("/a", func(ctx *ComponentRouterCtx) error {
 					panic("wumpus fled the scene")
 				})
@@ -209,7 +209,7 @@ func TestComponentRouter_build(t *testing.T) {
 					Values:        []string{"a", "b", "c"},
 				}),
 			},
-			init: func(t *testing.T, r *ComponentRouter) {
+			init: func(t *testing.T, r *ComponentRouter, _ **ModalRouter) {
 				r.RegisterSelectMenu("/a", func(ctx *ComponentRouterCtx, values []string) error {
 					t.Helper()
 					if ctx.RESTClient != dummyRestClient {
@@ -223,7 +223,7 @@ func TestComponentRouter_build(t *testing.T) {
 			expects: &objects.InteractionResponse{
 				Type: objects.ResponseUpdateMessage,
 				Data: &objects.InteractionApplicationCommandCallbackData{
-					Content:         "hello world",
+					Content: "hello world",
 				},
 			},
 		},
@@ -236,7 +236,7 @@ func TestComponentRouter_build(t *testing.T) {
 					Values:        []string{"a", "b", "c"},
 				}),
 			},
-			init: func(t *testing.T, r *ComponentRouter) {
+			init: func(t *testing.T, r *ComponentRouter, _ **ModalRouter) {
 				r.RegisterSelectMenu("/a/:content", func(ctx *ComponentRouterCtx, values []string) error {
 					t.Helper()
 					assert.Equal(t, []string{"a", "b", "c"}, values)
@@ -247,7 +247,7 @@ func TestComponentRouter_build(t *testing.T) {
 			expects: &objects.InteractionResponse{
 				Type: objects.ResponseUpdateMessage,
 				Data: &objects.InteractionApplicationCommandCallbackData{
-					Content:         "hello",
+					Content: "hello",
 				},
 			},
 		},
@@ -259,7 +259,7 @@ func TestComponentRouter_build(t *testing.T) {
 					ComponentType: objects.ComponentTypeSelectMenu,
 				}),
 			},
-			init: func(_ *testing.T, r *ComponentRouter) {
+			init: func(_ *testing.T, r *ComponentRouter, _ **ModalRouter) {
 				r.RegisterSelectMenu("/a", func(ctx *ComponentRouterCtx, _ []string) error {
 					return errors.New("wumpus fled the scene")
 				})
@@ -274,12 +274,110 @@ func TestComponentRouter_build(t *testing.T) {
 					ComponentType: objects.ComponentTypeSelectMenu,
 				}),
 			},
-			init: func(_ *testing.T, r *ComponentRouter) {
+			init: func(_ *testing.T, r *ComponentRouter, _ **ModalRouter) {
 				r.RegisterSelectMenu("/a", func(ctx *ComponentRouterCtx, _ []string) error {
 					panic("wumpus fled the scene")
 				})
 			},
 			expectsErr: "wumpus fled the scene",
+		},
+		{
+			name: "prefer component over modal",
+			interaction: &objects.Interaction{
+				Data: jsonify(t, objects.ApplicationComponentInteractionData{
+					CustomID:      "/a",
+					ComponentType: objects.ComponentTypeButton,
+				}),
+			},
+			init: func(t *testing.T, r *ComponentRouter, mr **ModalRouter) {
+				r.RegisterButton("/a", func(ctx *ComponentRouterCtx) error {
+					t.Helper()
+					assert.Equal(t, dummyRestClient, ctx.RESTClient)
+					ctx.SetContent("hello world")
+					return nil
+				})
+				*mr = &ModalRouter{}
+				(*mr).AddModal(&ModalContent{
+					Path: "/a",
+					Contents: func(ctx *ModalGenerationCtx) (name string, contents []ModalContentItem) {
+						return "hello world", []ModalContentItem{}
+					},
+					Function: func(ctx *ModalRouterCtx) error {
+						return nil
+					},
+				})
+				(*mr).build(loaderPassthrough{})
+			},
+			expects: &objects.InteractionResponse{
+				Type: objects.ResponseUpdateMessage,
+				Data: &objects.InteractionApplicationCommandCallbackData{
+					Content: "hello world",
+				},
+			},
+		},
+		{
+			name: "modal proxy",
+			interaction: &objects.Interaction{
+				Data: jsonify(t, objects.ApplicationComponentInteractionData{
+					CustomID:      "/a",
+					ComponentType: objects.ComponentTypeButton,
+				}),
+			},
+			init: func(t *testing.T, r *ComponentRouter, mr **ModalRouter) {
+				r.RegisterButton("/b", func(ctx *ComponentRouterCtx) error {
+					t.Helper()
+					assert.Equal(t, dummyRestClient, ctx.RESTClient)
+					ctx.SetContent("hello world")
+					return nil
+				})
+				*mr = &ModalRouter{}
+				(*mr).AddModal(&ModalContent{
+					Path: "/a",
+					Contents: func(ctx *ModalGenerationCtx) (name string, contents []ModalContentItem) {
+						return "hello world", []ModalContentItem{
+							{
+								Label: "world",
+							},
+						}
+					},
+					Function: func(ctx *ModalRouterCtx) error {
+						return nil
+					},
+				})
+				(*mr).build(loaderPassthrough{})
+			},
+			expects: &objects.InteractionResponse{
+				Type: objects.ResponseModal,
+				Data: &objects.InteractionApplicationCommandCallbackData{
+					Components: []*objects.Component{
+						{
+							Type: objects.ComponentTypeActionRow,
+							Components: []*objects.Component{
+								{
+									Type:  objects.ComponentTypeInputText,
+									Label: "world",
+									Style: objects.TextStyleParagraph,
+								},
+							},
+						},
+					},
+					CustomID: "/a",
+					Title:    "hello world",
+				},
+			},
+		},
+		{
+			name: "modal proxy not found",
+			interaction: &objects.Interaction{
+				Data: jsonify(t, objects.ApplicationComponentInteractionData{
+					CustomID:      "/a",
+					ComponentType: objects.ComponentTypeButton,
+				}),
+			},
+			init: func(t *testing.T, r *ComponentRouter, mr **ModalRouter) {
+				*mr = &ModalRouter{}
+				(*mr).build(loaderPassthrough{})
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -295,11 +393,12 @@ func TestComponentRouter_build(t *testing.T) {
 			}
 
 			// Call the build function on the router.
+			var m *ModalRouter
 			r := &ComponentRouter{}
 			if tt.init != nil {
-				tt.init(t, r)
+				tt.init(t, r, &m)
 			}
-			builtFunc := r.build(loaderPassthrough{dummyRestClient, setError, tt.globalAllowedMentions, false}) // TODO: test frames!
+			builtFunc := r.build(m, loaderPassthrough{dummyRestClient, setError, tt.globalAllowedMentions, false}) // TODO: test frames!
 			resp := builtFunc(tt.interaction)
 
 			// Verify the error.
