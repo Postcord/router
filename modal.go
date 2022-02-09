@@ -177,9 +177,11 @@ func (f *ModalRouter) build(loader loaderPassthrough) interactions.HandlerFunc {
 
 		// Call the context.
 		modalItems := map[string]string{}
-		for _, x := range data.Components {
-			if x.CustomID != "" {
-				modalItems[x.CustomID] = x.Value
+		for _, row := range data.Components {
+			for _, x := range row.Components {
+				if x.CustomID != "" {
+					modalItems[x.CustomID] = x.Value
+				}
 			}
 		}
 		rctx := &ModalRouterCtx{
