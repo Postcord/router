@@ -145,7 +145,15 @@ func (c *{{ .Type }}) DeferredChannelMessageWithSource(f func(*{{ .Type }}) erro
 func (c *{{ .Type }}) ChannelMessageWithSource() *{{ .Type }} {
 	c.respType = objects.ResponseChannelMessageWithSource
 	return c
-}`
+}{{ if ne .Type "ModalRouterCtx" }}
+
+// WithModalPath is used to set the response to the modal path specified.
+func (c *{{ .Type }}) WithModalPath(path string) error {
+	if c.modalRouter == nil {
+		return UnsetModalRouter
+	}
+	return c.modalRouter.SendModalResponse(c, path)
+}{{ end }}`
 
 var types = []string{
 	"ComponentRouterCtx", "CommandRouterCtx",

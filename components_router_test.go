@@ -400,7 +400,13 @@ func TestComponentRouter_build(t *testing.T) {
 			if tt.init != nil {
 				tt.init(t, r, &m)
 			}
-			builtFunc := r.build(m, loaderPassthrough{dummyRestClient, setError, tt.globalAllowedMentions, false}) // TODO: test frames!
+			builtFunc := r.build(m, loaderPassthrough{
+				rest:                  dummyRestClient,
+				errHandler:            setError,
+				modalRouter:           m,
+				globalAllowedMentions: tt.globalAllowedMentions,
+				generateFrames:        false, // TODO: test frames!
+			})
 			resp := builtFunc(context.Background(), tt.interaction)
 
 			// Verify the error.

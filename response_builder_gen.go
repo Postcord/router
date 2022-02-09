@@ -133,6 +133,14 @@ func (c *ComponentRouterCtx) ChannelMessageWithSource() *ComponentRouterCtx {
 	return c
 }
 
+// WithModalPath is used to set the response to the modal path specified.
+func (c *ComponentRouterCtx) WithModalPath(path string) error {
+	if c.modalRouter == nil {
+		return UnsetModalRouter
+	}
+	return c.modalRouter.SendModalResponse(c, path)
+}
+
 // SetEmbed is used to set the embed, overwriting any previously.
 func (c *CommandRouterCtx) SetEmbed(embed *objects.Embed) *CommandRouterCtx {
 	c.editEmbed(embed, false)
@@ -252,6 +260,14 @@ func (c *CommandRouterCtx) DeferredChannelMessageWithSource(f func(*CommandRoute
 func (c *CommandRouterCtx) ChannelMessageWithSource() *CommandRouterCtx {
 	c.respType = objects.ResponseChannelMessageWithSource
 	return c
+}
+
+// WithModalPath is used to set the response to the modal path specified.
+func (c *CommandRouterCtx) WithModalPath(path string) error {
+	if c.modalRouter == nil {
+		return UnsetModalRouter
+	}
+	return c.modalRouter.SendModalResponse(c, path)
 }
 
 // SetEmbed is used to set the embed, overwriting any previously.

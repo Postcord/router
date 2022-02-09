@@ -25,6 +25,9 @@ type ComponentRouterCtx struct {
 	// Defines the global allowed mentions configuration.
 	globalAllowedMentions *objects.AllowedMentions
 
+	// Defines the modal router.
+	modalRouter *ModalRouter
+
 	// Defines the void ID generator.
 	voidGenerator
 
@@ -145,6 +148,7 @@ func (c *ComponentRouter) build(modalRouter *ModalRouter, loader loaderPassthrou
 				rctx := &ComponentRouterCtx{
 					errorHandler:          loader.errHandler,
 					globalAllowedMentions: loader.globalAllowedMentions,
+					modalRouter:           loader.modalRouter,
 					Interaction:           ctx,
 					Context:               reqCtx,
 					Params:                params,
@@ -174,6 +178,7 @@ func (c *ComponentRouter) build(modalRouter *ModalRouter, loader loaderPassthrou
 				rctx := &ComponentRouterCtx{
 					globalAllowedMentions: loader.globalAllowedMentions,
 					errorHandler:          loader.errHandler,
+					modalRouter:           loader.modalRouter,
 					Interaction:           ctx,
 					Context:               reqCtx,
 					Params:                params,

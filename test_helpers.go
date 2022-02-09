@@ -110,8 +110,9 @@ func TestComponent(t TestingT, b LoaderBuilder, path string) {
 
 			// Create the components handler.
 			handler := r.build(nil, loaderPassthrough{
-				rest:                  restClient,
-				errHandler:            errHandlerOverride,
+				rest:       restClient,
+				errHandler: errHandlerOverride,
+
 				globalAllowedMentions: allowedMentions,
 				generateFrames:        false,
 			})

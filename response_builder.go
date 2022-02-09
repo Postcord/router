@@ -33,6 +33,9 @@ func (r *responseBuilder) ResponseData() *objects.InteractionApplicationCommandC
 // NoCommandResponse is thrown when the application doesn't respond for a command.
 var NoCommandResponse = errors.New("expected data for command response")
 
+// UnsetModalRouter is thrown when the modal router is unset.
+var UnsetModalRouter = errors.New("modal router is unset")
+
 // Builds the response.
 func (r *responseBuilder) buildResponse(component bool, errorHandler ErrorHandler, globalAllowedMentions *objects.AllowedMentions) *objects.InteractionResponse {
 	// Get the content and do not try and create it.

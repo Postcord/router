@@ -90,6 +90,7 @@ type HandlerAccepter interface {
 type loaderPassthrough struct {
 	rest                  rest.RESTClient
 	errHandler            ErrorHandler
+	modalRouter           *ModalRouter
 	globalAllowedMentions *objects.AllowedMentions
 	generateFrames        bool
 }
@@ -104,21 +105,30 @@ func (l *loaderBuilder) Build(app HandlerAccepter) LoaderBuilder {
 
 	generateFrames := os.Getenv("POSTCORD_GENERATE_FRAMES") == "1"
 
+	// Create the passthrough.
+	passthrough := loaderPassthrough{
+		rest:                  app.Rest(),
+		errHandler:            cb,
+		modalRouter:           l.modals,
+		globalAllowedMentions: l.globalAllowedMentions,
+		generateFrames:        generateFrames,
+	}
+
 	if l.modals != nil {
 		// Build and load the modals handler.
-		modals := l.modals.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
+		modals := l.modals.build(passthrough)
 		app.ModalHandler(modals)
 	}
 
 	if l.components != nil {
 		// Build and load the components handler.
-		handler := l.components.build(l.modals, loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
+		handler := l.components.build(l.modals, passthrough)
 		app.ComponentHandler(handler)
 	}
 
 	if l.commands != nil {
 		// Build and load the commands/autocomplete handler.
-		commandHandler, autocompleteHandler := l.commands.build(loaderPassthrough{app.Rest(), cb, l.globalAllowedMentions, generateFrames})
+		commandHandler, autocompleteHandler := l.commands.build(passthrough)
 		app.CommandHandler(commandHandler)
 		app.AutocompleteHandler(autocompleteHandler)
 	}

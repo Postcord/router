@@ -437,7 +437,13 @@ func TestModalRouter_build(t *testing.T) {
 			if tt.init != nil {
 				tt.init(t, r)
 			}
-			builtFunc := r.build(loaderPassthrough{dummyRestClient, setError, tt.globalAllowedMentions, false}) // TODO: test frames!
+			builtFunc := r.build(loaderPassthrough{
+				rest:                  dummyRestClient,
+				errHandler:            setError,
+				modalRouter:           nil,
+				globalAllowedMentions: tt.globalAllowedMentions,
+				generateFrames:        false, // TODO: test frames!
+			})
 			resp := builtFunc(context.Background(), tt.interaction)
 
 			// Verify the error.

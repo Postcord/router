@@ -183,6 +183,9 @@ func (f *ModalRouter) build(loader loaderPassthrough) interactions.HandlerFunc {
 					modalItems[x.CustomID] = x.Value
 				}
 			}
+			if row.CustomID != "" {
+				modalItems[row.CustomID] = row.Value
+			}
 		}
 		rctx := &ModalRouterCtx{
 			errorHandler:          loader.errHandler,
