@@ -34,6 +34,9 @@ type ModalRouterCtx struct {
 	// Defines the response builder.
 	responseBuilder
 
+	// Context is a context.Context passed from the HTTP handler.
+	Context context.Context
+
 	// Defines the interaction which started this.
 	*objects.Interaction
 
@@ -183,6 +186,7 @@ func (f *ModalRouter) build(loader loaderPassthrough) interactions.HandlerFunc {
 			errorHandler:          loader.errHandler,
 			globalAllowedMentions: loader.globalAllowedMentions,
 			Interaction:           ctx,
+			Context:               reqCtx,
 			Params:                params,
 			ModalItems:            modalItems,
 			RESTClient:            r,
