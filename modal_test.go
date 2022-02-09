@@ -1,9 +1,11 @@
 package router
 
 import (
+	"context"
 	"errors"
-	"github.com/Postcord/rest"
 	"testing"
+
+	"github.com/Postcord/rest"
 
 	"github.com/Postcord/objects"
 	"github.com/stretchr/testify/assert"
@@ -134,7 +136,7 @@ func TestModalRouter_SendModalResponse(t *testing.T) {
 									MinLength:   intPtr(1),
 									MaxLength:   intPtr(4),
 									Required:    true,
-									Style:       objects.TextStyleShort,
+									Style:       objects.ButtonStyle(objects.TextStyleShort),
 								},
 							},
 						},
@@ -148,7 +150,7 @@ func TestModalRouter_SendModalResponse(t *testing.T) {
 									Placeholder: "ghi",
 									Value:       "jkl",
 									Required:    true,
-									Style:       objects.TextStyleParagraph,
+									Style:       objects.ButtonStyle(objects.TextStyleParagraph),
 								},
 							},
 						},
@@ -210,7 +212,7 @@ func TestModalRouter_SendModalResponse(t *testing.T) {
 									MinLength:   intPtr(1),
 									MaxLength:   intPtr(4),
 									Required:    true,
-									Style:       objects.TextStyleShort,
+									Style:       objects.ButtonStyle(objects.TextStyleShort),
 								},
 							},
 						},
@@ -224,7 +226,7 @@ func TestModalRouter_SendModalResponse(t *testing.T) {
 									Placeholder: "ghi",
 									Value:       "jkl",
 									Required:    true,
-									Style:       objects.TextStyleParagraph,
+									Style:       objects.ButtonStyle(objects.TextStyleParagraph),
 								},
 							},
 						},
@@ -436,7 +438,7 @@ func TestModalRouter_build(t *testing.T) {
 				tt.init(t, r)
 			}
 			builtFunc := r.build(loaderPassthrough{dummyRestClient, setError, tt.globalAllowedMentions, false}) // TODO: test frames!
-			resp := builtFunc(tt.interaction)
+			resp := builtFunc(context.Background(), tt.interaction)
 
 			// Verify the error.
 			if tt.expectsErr == "" {

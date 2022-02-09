@@ -1,11 +1,13 @@
 package router
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
-	"github.com/Postcord/rest"
 	"reflect"
 	"testing"
+
+	"github.com/Postcord/rest"
 
 	"github.com/Postcord/objects"
 	"github.com/stretchr/testify/assert"
@@ -356,7 +358,7 @@ func TestComponentRouter_build(t *testing.T) {
 								{
 									Type:  objects.ComponentTypeInputText,
 									Label: "world",
-									Style: objects.TextStyleParagraph,
+									Style: objects.ButtonStyle(objects.TextStyleParagraph),
 								},
 							},
 						},
@@ -399,7 +401,7 @@ func TestComponentRouter_build(t *testing.T) {
 				tt.init(t, r, &m)
 			}
 			builtFunc := r.build(m, loaderPassthrough{dummyRestClient, setError, tt.globalAllowedMentions, false}) // TODO: test frames!
-			resp := builtFunc(tt.interaction)
+			resp := builtFunc(context.Background(), tt.interaction)
 
 			// Verify the error.
 			if tt.expectsErr == "" {

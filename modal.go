@@ -1,6 +1,7 @@
 package router
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"strings"
@@ -126,7 +127,7 @@ func (f *ModalRouter) build(loader loaderPassthrough) interactions.HandlerFunc {
 	f.tree = &tree
 
 	// Return the handler.
-	return func(ctx *objects.Interaction) (resp *objects.InteractionResponse) {
+	return func(reqCtx context.Context, ctx *objects.Interaction) (resp *objects.InteractionResponse) {
 		// Get the value from the tree.
 		var data objects.ApplicationModalInteractionData
 		if err := json.Unmarshal(ctx.Data, &data); err != nil {
@@ -258,7 +259,7 @@ func (f *ModalRouter) SendModalResponse(ctx ResponseDataBuilder, path string) er
 				{
 					Type:        objects.ComponentTypeInputText,
 					Label:       modalContent.Label,
-					Style:       objects.Style(style),
+					Style:       objects.ButtonStyle(style),
 					CustomID:    modalContent.Key,
 					Placeholder: modalContent.Placeholder,
 					Value:       modalContent.Value,

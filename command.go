@@ -2,6 +2,7 @@ package router
 
 import (
 	"container/list"
+	"context"
 	"errors"
 	"strconv"
 
@@ -127,7 +128,7 @@ func (c *Command) mapOptions(autocomplete bool, data *objects.ApplicationCommand
 }
 
 // Execute the command.
-func (c *Command) execute(opts commandExecutionOptions, middlewareList *list.List) (resp *objects.InteractionResponse) {
+func (c *Command) execute(reqCtx context.Context, opts commandExecutionOptions, middlewareList *list.List) (resp *objects.InteractionResponse) {
 	// Process the options.
 	var mappedOptions map[string]interface{}
 	if opts.data.TargetID != 0 {
@@ -170,6 +171,7 @@ func (c *Command) execute(opts commandExecutionOptions, middlewareList *list.Lis
 		globalAllowedMentions: opts.allowedMentions,
 		errorHandler:          opts.exceptionHandler,
 		Interaction:           opts.interaction,
+		Context:               reqCtx,
 		Command:               c,
 		Options:               mappedOptions,
 		RESTClient:            opts.restClient,

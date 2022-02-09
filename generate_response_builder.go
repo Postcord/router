@@ -17,6 +17,8 @@ package router
 //go:generate go run generate_response_builder.go
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 
 	"github.com/Postcord/objects"
@@ -90,6 +92,25 @@ func (c *{{ .Type }}) Ephemeral() *{{ .Type }} {
 	return c
 }
 
+// AttachBytes adds a file attachment to the response from a byte array
+func (c *{{ .Type }}) AttachBytes(data []byte, filename, description string) *{{ .Type }} {
+	file := &objects.DiscordFile{
+		Buffer:			bytes.NewBuffer(data),
+		Filename:   	filename,
+		Description: 	description,
+	}
+	response := c.ResponseData()
+	response.Files = append(response.Files, file)
+	return c
+}
+
+// AttachFile adds a file attachment to the response from an *objects.DiscordFile
+func (c *{{ .Type }}) AttachFile(file *objects.DiscordFile) *{{ .Type }} {
+	response := c.ResponseData()
+	response.Files = append(response.Files, file)
+	return c
+}
+
 // UpdateLater is used to spawn the function specified in a goroutine. When the function is returned, the result is set as a message update.
 func (c *{{ .Type }}) UpdateLater(f func(*{{ .Type }}) error) *{{ .Type }} {
 	cpy := *c
@@ -106,7 +127,9 @@ func (c *{{ .Type }}) UpdateLater(f func(*{{ .Type }}) error) *{{ .Type }} {
 		} else {
 			response = cpy.errorHandler(err)
 		}
-		processUpdateLaterResponse(cpy.RESTClient, cpy.ApplicationID, cpy.Token, response)
+		// Need a better way to handle this context - the one on the RouterCtx will have been cancelled already
+		// and can't be used
+		processUpdateLaterResponse(context.Background(), cpy.RESTClient, cpy.ApplicationID, cpy.Token, response)
 	}()
 	return c
 }
