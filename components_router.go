@@ -90,7 +90,7 @@ var NotSelectionMenu = errors.New("the data returned is not that of a selection 
 var NotButton = errors.New("the data returned is not that of a button")
 
 // Adds the argument context to the handler.
-type contextCallback func(reqCtx context.Context, ctx *objects.Interaction, data *objects.ApplicationComponentInteractionData, params map[string]string, rest rest.RESTClient, errHandler ErrorHandler) *objects.InteractionResponse
+type contextCallback = func(context.Context, *objects.Interaction, *objects.ApplicationComponentInteractionData, map[string]string, rest.RESTClient, ErrorHandler) *objects.InteractionResponse
 
 // Defines the data for the context for the route.
 type routeContext struct {
