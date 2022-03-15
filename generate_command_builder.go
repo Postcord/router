@@ -144,44 +144,6 @@ func (c *commandBuilder) {{ .BuilderType }}() {{ .BuilderType }}Builder {
 	return {{ .Struct }}{c}
 }{{ end }}`
 
-const optionInterface = `type {{ .OutputInterface }} interface {
-	// StringOption is used to define an option of the type string. Note that choices is ignored if it's nil or length 0.
-	// Maps to option type 3 (STRING): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	StringOption(name, description string, required bool, choiceBuilder StringChoiceBuilder) {{ .InterfaceName }}
-
-	// IntOption is used to define an option of the type int. Note that choices is ignored if it's nil or length 0.
-	// Maps to option type 4 (INTEGER): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	IntOption(name, description string, required bool, choiceBuilder IntChoiceBuilder) {{ .InterfaceName }}
-
-	// IntOption is used to define an option of the type bool.
-	// Maps to option type 5 (BOOLEAN): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	BoolOption(name, description string, required bool) {{ .InterfaceName }}
-
-	// IntOption is used to define an option of the type user.
-	// Maps to option type 6 (USER): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	UserOption(name, description string, required bool) {{ .InterfaceName }}
-
-	// ChannelOption is used to define an option of the type channel.
-	// Maps to option type 7 (CHANNEL): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	ChannelOption(name, description string, required bool) {{ .InterfaceName }}
-
-	// RoleOption is used to define an option of the type role.
-	// Maps to option type 8 (ROLE): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	RoleOption(name, description string, required bool) {{ .InterfaceName }}
-
-	// MentionableOption is used to define an option of the type mentionable.
-	// Maps to option type 9 (MENTIONABLE): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	MentionableOption(name, description string, required bool) {{ .InterfaceName }}
-
-	// DoubleOption is used to define an option of the type double. Note that choices is ignored if it's nil or length 0.
-	// Maps to option type 10 (INTEGER): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	DoubleOption(name, description string, required bool, choiceBuilder DoubleChoiceBuilder) {{ .InterfaceName }}
-
-	// AttachmentOption is used to define an option of the type attachment.
-	// Maps to option type 11 (ATTACHMENT): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
-	AttachmentOption(name, description string, required bool) {{ .InterfaceName }}
-}`
-
 var choiceTypes = []struct {
 	TypeName             string
 	InteractionsTypeName string
@@ -236,18 +198,9 @@ var builderTypes = []struct {
 	},
 }
 
-var interfaceTypes = []struct {
-	InterfaceName   string
-	OutputInterface string
-}{
-	{InterfaceName: "CommandBuilder", OutputInterface: "commandOptions"},
-	{InterfaceName: "SubCommandBuilder", OutputInterface: "subCommandOptions"},
-	{InterfaceName: "TextCommandBuilder", OutputInterface: "textCommandOptions"},
-}
-
 func main() {
 	file := start
-	parts := make([]string, len(choiceTypes)+len(builderTypes)+len(interfaceTypes))
+	parts := make([]string, len(choiceTypes)+len(builderTypes))
 	t, err := template.New("_").Parse(choiceBuilder)
 	if err != nil {
 		panic(err)
@@ -269,17 +222,6 @@ func main() {
 			panic(err)
 		}
 		parts[i+len(choiceTypes)] = buf.String()
-	}
-	t, err = template.New("_").Parse(optionInterface)
-	if err != nil {
-		panic(err)
-	}
-	for i, v := range interfaceTypes {
-		buf := &bytes.Buffer{}
-		if err := t.Execute(buf, v); err != nil {
-			panic(err)
-		}
-		parts[i+len(choiceTypes)+len(builderTypes)] = buf.String()
 	}
 	file += strings.Join(parts, "\n\n") + "\n"
 	if err := ioutil.WriteFile("command_builder_gen.go", []byte(file), 0666); err != nil {
