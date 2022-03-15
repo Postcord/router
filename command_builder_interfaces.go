@@ -2,8 +2,8 @@ package router
 
 import "github.com/Postcord/objects"
 
-// CommandOptions is a struct that contains the options for a command.
-type CommandOptions[T any] interface {
+// commandOptions is a struct that contains the options for a command.
+type commandOptions[T any] interface {
 	// StringOption is used to define an option of the type string. Note that choices is ignored if it's nil or length 0.
 	// Maps to option type 3 (STRING): https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-option-type
 	StringOption(name, description string, required bool, choiceBuilder StringChoiceBuilder) T
@@ -43,7 +43,7 @@ type CommandOptions[T any] interface {
 
 // TextCommandBuilder is used to define a builder for a Command object where the type is a text command.
 type TextCommandBuilder interface {
-	CommandOptions[TextCommandBuilder]
+	commandOptions[TextCommandBuilder]
 
 	// Description is used to define the commands description.
 	Description(string) TextCommandBuilder
@@ -66,7 +66,7 @@ type TextCommandBuilder interface {
 
 // SubCommandBuilder is similar to TextCommandBuilder but doesn't allow default permissions to be set.
 type SubCommandBuilder interface {
-	CommandOptions[SubCommandBuilder]
+	commandOptions[SubCommandBuilder]
 
 	// Description is used to define the commands description.
 	Description(string) SubCommandBuilder
@@ -122,7 +122,7 @@ type UserCommandBuilder interface {
 
 // CommandBuilder is used to define a builder for a Command object where the type isn't known.
 type CommandBuilder interface {
-	CommandOptions[CommandBuilder]
+	commandOptions[CommandBuilder]
 
 	// Description is used to define the commands description.
 	Description(string) CommandBuilder
