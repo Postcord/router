@@ -4,7 +4,11 @@ package router
 
 //go:generate go run generate_command_builder.go
 
-import "github.com/Postcord/objects"
+import (
+	"fmt"
+
+	"github.com/Postcord/objects"
+)
 
 // StringAutoCompleteFunc is used to define the auto-complete function for StringChoice.
 // Note that the command context is a special case in that the response is not used.
@@ -29,7 +33,7 @@ func StringAutoCompleteFuncBuilder(f StringAutoCompleteFunc) StringChoiceBuilder
 	}
 }
 
-func (c *commandBuilder) StringOption(name, description string, required bool, choiceBuilder StringChoiceBuilder) CommandBuilder {
+func (c *commandBuilder[T]) StringOption(name, description string, required bool, choiceBuilder StringChoiceBuilder) T {
 	var discordifiedChoices []objects.ApplicationCommandOptionChoice
 	var f StringAutoCompleteFunc
 	if choiceBuilder != nil {
@@ -63,7 +67,7 @@ func (c *commandBuilder) StringOption(name, description string, required bool, c
 		}
 		c.cmd.autocomplete[name] = f
 	}
-	return c
+	return builderWrapify(c)
 }
 
 // IntAutoCompleteFunc is used to define the auto-complete function for IntChoice.
@@ -89,7 +93,7 @@ func IntAutoCompleteFuncBuilder(f IntAutoCompleteFunc) IntChoiceBuilder {
 	}
 }
 
-func (c *commandBuilder) IntOption(name, description string, required bool, choiceBuilder IntChoiceBuilder) CommandBuilder {
+func (c *commandBuilder[T]) IntOption(name, description string, required bool, choiceBuilder IntChoiceBuilder) T {
 	var discordifiedChoices []objects.ApplicationCommandOptionChoice
 	var f IntAutoCompleteFunc
 	if choiceBuilder != nil {
@@ -123,7 +127,7 @@ func (c *commandBuilder) IntOption(name, description string, required bool, choi
 		}
 		c.cmd.autocomplete[name] = f
 	}
-	return c
+	return builderWrapify(c)
 }
 
 // DoubleAutoCompleteFunc is used to define the auto-complete function for DoubleChoice.
@@ -149,7 +153,7 @@ func DoubleAutoCompleteFuncBuilder(f DoubleAutoCompleteFunc) DoubleChoiceBuilder
 	}
 }
 
-func (c *commandBuilder) DoubleOption(name, description string, required bool, choiceBuilder DoubleChoiceBuilder) CommandBuilder {
+func (c *commandBuilder[T]) DoubleOption(name, description string, required bool, choiceBuilder DoubleChoiceBuilder) T {
 	var discordifiedChoices []objects.ApplicationCommandOptionChoice
 	var f DoubleAutoCompleteFunc
 	if choiceBuilder != nil {
@@ -183,166 +187,54 @@ func (c *commandBuilder) DoubleOption(name, description string, required bool, c
 		}
 		c.cmd.autocomplete[name] = f
 	}
-	return c
+	return builderWrapify(c)
 }
 
 type textCommandBuilder struct {
-	*commandBuilder
+	*commandBuilder[TextCommandBuilder]
 }
 
-func (c textCommandBuilder) StringOption(name, description string, required bool, choiceBuilder StringChoiceBuilder) TextCommandBuilder {
-	c.commandBuilder.StringOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c textCommandBuilder) IntOption(name, description string, required bool, choiceBuilder IntChoiceBuilder) TextCommandBuilder {
-	c.commandBuilder.IntOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c textCommandBuilder) BoolOption(name, description string, required bool) TextCommandBuilder {
-	c.commandBuilder.BoolOption(name, description, required)
-	return c
-}
-
-func (c textCommandBuilder) UserOption(name, description string, required bool) TextCommandBuilder {
-	c.commandBuilder.UserOption(name, description, required)
-	return c
-}
-
-func (c textCommandBuilder) ChannelOption(name, description string, required bool) TextCommandBuilder {
-	c.commandBuilder.ChannelOption(name, description, required)
-	return c
-}
-
-func (c textCommandBuilder) RoleOption(name, description string, required bool) TextCommandBuilder {
-	c.commandBuilder.RoleOption(name, description, required)
-	return c
-}
-
-func (c textCommandBuilder) MentionableOption(name, description string, required bool) TextCommandBuilder {
-	c.commandBuilder.MentionableOption(name, description, required)
-	return c
-}
-
-func (c textCommandBuilder) DoubleOption(name, description string, required bool, choiceBuilder DoubleChoiceBuilder) TextCommandBuilder {
-	c.commandBuilder.DoubleOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c textCommandBuilder) AttachmentOption(name, description string, required bool) TextCommandBuilder {
-	c.commandBuilder.AttachmentOption(name, description, required)
-	return c
-}
-
-func (c textCommandBuilder) DefaultPermission() TextCommandBuilder {
-	c.commandBuilder.DefaultPermission()
-	return c
-}
-
-func (c textCommandBuilder) AllowedMentions(config *objects.AllowedMentions) TextCommandBuilder {
-	c.commandBuilder.AllowedMentions(config)
-	return c
-}
-
-func (c *commandBuilder) TextCommand() TextCommandBuilder {
+func (c *commandBuilder[T]) TextCommand() TextCommandBuilder {
 	c.cmd.commandType = int(objects.CommandTypeChatInput)
-	return textCommandBuilder{c}
+	return textCommandBuilder{(*commandBuilder[TextCommandBuilder])(c)}
 }
 
 type subcommandBuilder struct {
-	*commandBuilder
-}
-
-func (c subcommandBuilder) StringOption(name, description string, required bool, choiceBuilder StringChoiceBuilder) SubCommandBuilder {
-	c.commandBuilder.StringOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c subcommandBuilder) IntOption(name, description string, required bool, choiceBuilder IntChoiceBuilder) SubCommandBuilder {
-	c.commandBuilder.IntOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c subcommandBuilder) BoolOption(name, description string, required bool) SubCommandBuilder {
-	c.commandBuilder.BoolOption(name, description, required)
-	return c
-}
-
-func (c subcommandBuilder) UserOption(name, description string, required bool) SubCommandBuilder {
-	c.commandBuilder.UserOption(name, description, required)
-	return c
-}
-
-func (c subcommandBuilder) ChannelOption(name, description string, required bool) SubCommandBuilder {
-	c.commandBuilder.ChannelOption(name, description, required)
-	return c
-}
-
-func (c subcommandBuilder) RoleOption(name, description string, required bool) SubCommandBuilder {
-	c.commandBuilder.RoleOption(name, description, required)
-	return c
-}
-
-func (c subcommandBuilder) MentionableOption(name, description string, required bool) SubCommandBuilder {
-	c.commandBuilder.MentionableOption(name, description, required)
-	return c
-}
-
-func (c subcommandBuilder) DoubleOption(name, description string, required bool, choiceBuilder DoubleChoiceBuilder) SubCommandBuilder {
-	c.commandBuilder.DoubleOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c subcommandBuilder) AttachmentOption(name, description string, required bool) SubCommandBuilder {
-	c.commandBuilder.AttachmentOption(name, description, required)
-	return c
-}
-
-func (c subcommandBuilder) DefaultPermission() SubCommandBuilder {
-	c.commandBuilder.DefaultPermission()
-	return c
-}
-
-func (c subcommandBuilder) AllowedMentions(config *objects.AllowedMentions) SubCommandBuilder {
-	c.commandBuilder.AllowedMentions(config)
-	return c
+	*commandBuilder[SubCommandBuilder]
 }
 
 type messageCommandBuilder struct {
-	*commandBuilder
+	*commandBuilder[MessageCommandBuilder]
 }
 
-func (c messageCommandBuilder) DefaultPermission() MessageCommandBuilder {
-	c.commandBuilder.DefaultPermission()
-	return c
-}
-
-func (c messageCommandBuilder) AllowedMentions(config *objects.AllowedMentions) MessageCommandBuilder {
-	c.commandBuilder.AllowedMentions(config)
-	return c
-}
-
-func (c *commandBuilder) MessageCommand() MessageCommandBuilder {
+func (c *commandBuilder[T]) MessageCommand() MessageCommandBuilder {
 	c.cmd.commandType = int(objects.CommandTypeMessage)
-	return messageCommandBuilder{c}
+	return messageCommandBuilder{(*commandBuilder[MessageCommandBuilder])(c)}
 }
 
 type userCommandBuilder struct {
-	*commandBuilder
+	*commandBuilder[UserCommandBuilder]
 }
 
-func (c userCommandBuilder) DefaultPermission() UserCommandBuilder {
-	c.commandBuilder.DefaultPermission()
-	return c
-}
-
-func (c userCommandBuilder) AllowedMentions(config *objects.AllowedMentions) UserCommandBuilder {
-	c.commandBuilder.AllowedMentions(config)
-	return c
-}
-
-func (c *commandBuilder) UserCommand() UserCommandBuilder {
+func (c *commandBuilder[T]) UserCommand() UserCommandBuilder {
 	c.cmd.commandType = int(objects.CommandTypeUser)
-	return userCommandBuilder{c}
+	return userCommandBuilder{(*commandBuilder[UserCommandBuilder])(c)}
+}
+
+func builderWrapify[T any](c *commandBuilder[T]) T {
+	var ptr *T
+	switch (any)(ptr).(type) {
+		case *CommandBuilder:
+			return (any)(c).(T)
+		case *TextCommandBuilder:
+			return (any)(textCommandBuilder{(any)(c).(*commandBuilder[TextCommandBuilder])}).(T)
+		case *SubCommandBuilder:
+			return (any)(subcommandBuilder{(any)(c).(*commandBuilder[SubCommandBuilder])}).(T)
+		case *MessageCommandBuilder:
+			return (any)(messageCommandBuilder{(any)(c).(*commandBuilder[MessageCommandBuilder])}).(T)
+		case *UserCommandBuilder:
+			return (any)(userCommandBuilder{(any)(c).(*commandBuilder[UserCommandBuilder])}).(T)
+		default:
+			panic(fmt.Errorf("unknown handler: %T", ptr))
+	}
 }

@@ -210,7 +210,7 @@ func (c *CommandRouter) NewCommandBuilder(name string) CommandBuilder {
 	if c.roots.Subcommands == nil {
 		c.roots.Subcommands = map[string]interface{}{}
 	}
-	return &commandBuilder{cmd: Command{Name: name}, map_: c.roots.Subcommands}
+	return &commandBuilder[CommandBuilder]{cmd: Command{Name: name}, map_: c.roots.Subcommands}
 }
 
 // MarshalJSON implements the json.Marshaler interface.

@@ -427,7 +427,7 @@ func TestCommandRouter_NewCommandBuilder(t *testing.T) {
 	r := &CommandRouter{}
 	builder := r.NewCommandBuilder("abc")
 	assert.NotNil(t, r.roots.Subcommands)
-	assert.Equal(t, &commandBuilder{
+	assert.Equal(t, &commandBuilder[CommandBuilder]{
 		map_: r.roots.Subcommands,
 		cmd:  Command{Name: "abc"},
 	}, builder)

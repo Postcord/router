@@ -6,8 +6,9 @@ package router
 
 import (
 	"encoding/json"
-	"github.com/Postcord/objects"
 	"strconv"
+
+	"github.com/Postcord/objects"
 )
 
 // ResolvableUser is used to define a User in a command option that is potentially resolvable.

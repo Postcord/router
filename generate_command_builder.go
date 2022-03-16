@@ -16,7 +16,11 @@ package router
 
 //go:generate go run generate_command_builder.go
 
-import "github.com/Postcord/objects"
+import (
+	"fmt"
+
+	"github.com/Postcord/objects"
+)
 
 `
 
@@ -43,7 +47,7 @@ func {{ .TypeName }}AutoCompleteFuncBuilder(f {{ .TypeName }}AutoCompleteFunc) {
 	}
 }
 
-func (c *commandBuilder) {{ .TypeName }}Option(name, description string, required bool, choiceBuilder {{ .TypeName }}ChoiceBuilder) CommandBuilder {
+func (c *commandBuilder[T]) {{ .TypeName }}Option(name, description string, required bool, choiceBuilder {{ .TypeName }}ChoiceBuilder) T {
 	var discordifiedChoices []objects.ApplicationCommandOptionChoice
 	var f {{ .TypeName }}AutoCompleteFunc
 	if choiceBuilder != nil {
@@ -77,72 +81,29 @@ func (c *commandBuilder) {{ .TypeName }}Option(name, description string, require
 		}
 		c.cmd.autocomplete[name] = f
 	}
-	return c
+	return builderWrapify(c)
 }`
 
 const builderShared = `type {{ .Struct }} struct {
-	*commandBuilder
-}{{ if .AddOptions }}
-
-func (c {{ .Struct }}) StringOption(name, description string, required bool, choiceBuilder StringChoiceBuilder) {{ .BuilderType }}Builder {
-	c.commandBuilder.StringOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c {{ .Struct }}) IntOption(name, description string, required bool, choiceBuilder IntChoiceBuilder) {{ .BuilderType }}Builder {
-	c.commandBuilder.IntOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c {{ .Struct }}) BoolOption(name, description string, required bool) {{ .BuilderType }}Builder {
-	c.commandBuilder.BoolOption(name, description, required)
-	return c
-}
-
-func (c {{ .Struct }}) UserOption(name, description string, required bool) {{ .BuilderType }}Builder {
-	c.commandBuilder.UserOption(name, description, required)
-	return c
-}
-
-func (c {{ .Struct }}) ChannelOption(name, description string, required bool) {{ .BuilderType }}Builder {
-	c.commandBuilder.ChannelOption(name, description, required)
-	return c
-}
-
-func (c {{ .Struct }}) RoleOption(name, description string, required bool) {{ .BuilderType }}Builder {
-	c.commandBuilder.RoleOption(name, description, required)
-	return c
-}
-
-func (c {{ .Struct }}) MentionableOption(name, description string, required bool) {{ .BuilderType }}Builder {
-	c.commandBuilder.MentionableOption(name, description, required)
-	return c
-}
-
-func (c {{ .Struct }}) DoubleOption(name, description string, required bool, choiceBuilder DoubleChoiceBuilder) {{ .BuilderType }}Builder {
-	c.commandBuilder.DoubleOption(name, description, required, choiceBuilder)
-	return c
-}
-
-func (c {{ .Struct }}) AttachmentOption(name, description string, required bool) {{ .BuilderType }}Builder {
-	c.commandBuilder.AttachmentOption(name, description, required)
-	return c
-}{{ end }}
-
-func (c {{ .Struct }}) DefaultPermission() {{ .BuilderType }}Builder {
-	c.commandBuilder.DefaultPermission()
-	return c
-}
-
-func (c {{ .Struct }}) AllowedMentions(config *objects.AllowedMentions) {{ .BuilderType }}Builder {
-	c.commandBuilder.AllowedMentions(config)
-	return c
+	*commandBuilder[{{ .BuilderType }}Builder]
 }{{ if not .DoNotHook }}
 
-func (c *commandBuilder) {{ .BuilderType }}() {{ .BuilderType }}Builder {
+func (c *commandBuilder[T]) {{ .BuilderType }}() {{ .BuilderType }}Builder {
 	c.cmd.commandType = int({{ .CommandType }})
-	return {{ .Struct }}{c}
+	return {{ .Struct }}{(*commandBuilder[{{ .BuilderType }}Builder])(c)}
 }{{ end }}`
+
+const builderWrapify = `func builderWrapify[T any](c *commandBuilder[T]) T {
+	var ptr *T
+	switch (any)(ptr).(type) {
+		case *CommandBuilder:
+			return (any)(c).(T){{range $val := .}}{{ if ne $val.BuilderType "CommandBuilder" }}
+		case *{{ $val.BuilderType }}Builder:
+			return (any)({{ $val.Struct }}{(any)(c).(*commandBuilder[{{ $val.BuilderType }}Builder])}).(T){{ end }}{{ end }}
+		default:
+			panic(fmt.Errorf("unknown handler: %T", ptr))
+	}
+}`
 
 var choiceTypes = []struct {
 	TypeName             string
@@ -171,20 +132,17 @@ var builderTypes = []struct {
 	BuilderType string
 	CommandType string
 	DoNotHook   bool
-	AddOptions  bool
 }{
 	{
 		Struct:      "textCommandBuilder",
 		BuilderType: "TextCommand",
 		CommandType: "objects.CommandTypeChatInput",
-		AddOptions:  true,
 	},
 	{
 		Struct:      "subcommandBuilder",
 		BuilderType: "SubCommand",
 		CommandType: "objects.CommandTypeChatInput",
 		DoNotHook:   true,
-		AddOptions:  true,
 	},
 	{
 		Struct:      "messageCommandBuilder",
@@ -200,7 +158,7 @@ var builderTypes = []struct {
 
 func main() {
 	file := start
-	parts := make([]string, len(choiceTypes)+len(builderTypes))
+	parts := make([]string, len(choiceTypes)+len(builderTypes)+1)
 	t, err := template.New("_").Parse(choiceBuilder)
 	if err != nil {
 		panic(err)
@@ -223,6 +181,15 @@ func main() {
 		}
 		parts[i+len(choiceTypes)] = buf.String()
 	}
+	t, err = template.New("_").Parse(builderWrapify)
+	if err != nil {
+		panic(err)
+	}
+	buf := &bytes.Buffer{}
+	if err := t.Execute(buf, builderTypes); err != nil {
+		panic(err)
+	}
+	parts[len(builderTypes)+len(choiceTypes)] = buf.String()
 	file += strings.Join(parts, "\n\n") + "\n"
 	if err := ioutil.WriteFile("command_builder_gen.go", []byte(file), 0666); err != nil {
 		panic(err)
