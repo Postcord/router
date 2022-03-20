@@ -16,6 +16,10 @@ import (
 
 // CommandRouterCtx is used to define the commands context from the router.
 type CommandRouterCtx struct {
+	// Defines the response builder. THIS MUST ALWAYS BE THE FIRST FIELD IN THE STRUCT.
+	// SEE THE RESPONSE BUILDER FOR MORE INFORMATION.
+	publicResponseBuilder[*CommandRouterCtx]
+
 	// Defines the error handler.
 	errorHandler ErrorHandler
 
@@ -27,9 +31,6 @@ type CommandRouterCtx struct {
 
 	// Defines the void ID generator.
 	voidGenerator
-
-	// Defines the response builder.
-	responseBuilder
 
 	// Defines the interaction which started this.
 	*objects.Interaction
