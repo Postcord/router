@@ -9,13 +9,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func setUnexportedField(field reflect.Value, value interface{}) {
+func setUnexportedField(field reflect.Value, value any) {
 	reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).
 		Elem().
 		Set(reflect.ValueOf(value))
 }
 
-func testSnowflake(t *testing.T, resolvable interface{}) {
+func testSnowflake(t *testing.T, resolvable any) {
 	t.Helper()
 	tests := []struct {
 		name string
@@ -73,7 +73,7 @@ func TestResolvableAttachment_Snowflake(t *testing.T) {
 	testSnowflake(t, &resolvable[objects.Attachment]{})
 }
 
-func testMarshalJSON(t *testing.T, resolvable interface{}) {
+func testMarshalJSON(t *testing.T, resolvable any) {
 	t.Helper()
 	setUnexportedField(reflect.Indirect(reflect.ValueOf(resolvable)).FieldByName("id"), "testing")
 	r := reflect.ValueOf(resolvable).MethodByName("MarshalJSON")
@@ -111,7 +111,7 @@ func TestResolvableAttachment_MarshalJSON(t *testing.T) {
 	testMarshalJSON(t, &resolvable[objects.Attachment]{})
 }
 
-func testString(t *testing.T, resolvable interface{}) {
+func testString(t *testing.T, resolvable any) {
 	t.Helper()
 	setUnexportedField(reflect.Indirect(reflect.ValueOf(resolvable)).FieldByName("id"), "testing")
 	r := reflect.ValueOf(resolvable).MethodByName("String")
@@ -325,7 +325,7 @@ func TestResolvableMentionable_Resolve(t *testing.T) {
 		name string
 
 		data     *objects.ApplicationCommandInteractionData
-		expected interface{}
+		expected any
 	}{
 		{
 			name: "nil result",

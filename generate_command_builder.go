@@ -77,7 +77,7 @@ func (c *commandBuilder[T]) {{ .TypeName }}Option(name, description string, requ
 	})
 	if f != nil {
 		if c.cmd.autocomplete == nil {
-			c.cmd.autocomplete = map[string]interface{}{}
+			c.cmd.autocomplete = map[string]any{}
 		}
 		c.cmd.autocomplete[name] = f
 	}

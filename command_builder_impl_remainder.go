@@ -6,7 +6,7 @@ import (
 )
 
 type commandBuilder[T any] struct {
-	map_ map[string]interface{}
+	map_ map[string]any
 	cmd  Command
 }
 

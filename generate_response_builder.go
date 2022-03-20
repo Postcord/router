@@ -76,7 +76,7 @@ func main() {
 	}
 	for i, v := range types {
 		buf := &bytes.Buffer{}
-		if err := t.Execute(buf, map[string]interface{}{"Type": v}); err != nil {
+		if err := t.Execute(buf, map[string]any{"Type": v}); err != nil {
 			panic(err)
 		}
 		parts[i] = buf.String()

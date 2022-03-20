@@ -14,7 +14,7 @@ import (
 
 // ComponentRouter is used to route components.
 type ComponentRouter struct {
-	routes map[string]interface{}
+	routes map[string]any
 }
 
 // ComponentRouterCtx is used to define a components router context.
@@ -68,7 +68,7 @@ type SelectMenuFunc func(ctx *ComponentRouterCtx, values []string) error
 // Prepares the object for usage.
 func (c *ComponentRouter) prep() {
 	if c.routes == nil {
-		c.routes = map[string]interface{}{}
+		c.routes = map[string]any{}
 	}
 }
 
@@ -98,12 +98,12 @@ type contextCallback = func(context.Context, *objects.Interaction, *objects.Appl
 
 // Defines the data for the context for the route.
 type routeContext struct {
-	i interface{}
+	i any
 	r string
 }
 
 // Used to ungeneric an error.
-func ungenericError(errGeneric interface{}) error {
+func ungenericError(errGeneric any) error {
 	var err error
 	switch x := errGeneric.(type) {
 	case string:

@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/Postcord/objects"
+	"github.com/Postcord/objects/permissions"
 	"github.com/jimeh/go-golden"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -17,7 +18,7 @@ func TestCommandRouterCtx_TargetMessage(t *testing.T) {
 	tests := []struct {
 		name string
 
-		options map[string]interface{}
+		options map[string]any
 		expects *objects.Message
 	}{
 		{
@@ -25,11 +26,11 @@ func TestCommandRouterCtx_TargetMessage(t *testing.T) {
 		},
 		{
 			name:    "message wrong type",
-			options: map[string]interface{}{"/target": 1},
+			options: map[string]any{"/target": 1},
 		},
 		{
 			name: "message exists",
-			options: map[string]interface{}{
+			options: map[string]any{
 				"/target": (ResolvableMessage)(resolvable[objects.Message]{
 					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
@@ -50,7 +51,7 @@ func TestCommandRouterCtx_TargetMessage(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.options == nil {
-				tt.options = map[string]interface{}{}
+				tt.options = map[string]any{}
 			}
 			ctx := CommandRouterCtx{Options: tt.options}
 			assert.Equal(t, tt.expects, ctx.TargetMessage())
@@ -62,7 +63,7 @@ func TestCommandRouterCtx_TargetMember(t *testing.T) {
 	tests := []struct {
 		name string
 
-		options map[string]interface{}
+		options map[string]any
 		expects *objects.GuildMember
 	}{
 		{
@@ -70,11 +71,11 @@ func TestCommandRouterCtx_TargetMember(t *testing.T) {
 		},
 		{
 			name:    "member wrong type",
-			options: map[string]interface{}{"/target": 1},
+			options: map[string]any{"/target": 1},
 		},
 		{
 			name: "member exists",
-			options: map[string]interface{}{
+			options: map[string]any{
 				"/target": (ResolvableUser)(resolvableUser{resolvable[objects.User]{
 					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
@@ -95,7 +96,7 @@ func TestCommandRouterCtx_TargetMember(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.options == nil {
-				tt.options = map[string]interface{}{}
+				tt.options = map[string]any{}
 			}
 			ctx := CommandRouterCtx{Options: tt.options}
 			assert.Equal(t, tt.expects, ctx.TargetMember())
@@ -107,12 +108,12 @@ func Test_messageTargetWrapper(t *testing.T) {
 	tests := []struct {
 		name string
 
-		options    map[string]interface{}
+		options    map[string]any
 		expectsErr string
 	}{
 		{
 			name: "successful call",
-			options: map[string]interface{}{
+			options: map[string]any{
 				"/target": (ResolvableMessage)(resolvable[objects.Message]{
 					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
@@ -130,7 +131,7 @@ func Test_messageTargetWrapper(t *testing.T) {
 		},
 		{
 			name:       "invalid target",
-			options:    map[string]interface{}{},
+			options:    map[string]any{},
 			expectsErr: "wrong or no target specified",
 		},
 	}
@@ -176,12 +177,12 @@ func Test_memberTargetWrapper(t *testing.T) {
 	tests := []struct {
 		name string
 
-		options    map[string]interface{}
+		options    map[string]any
 		expectsErr string
 	}{
 		{
 			name: "successful call",
-			options: map[string]interface{}{
+			options: map[string]any{
 				"/target": ResolvableUser(resolvableUser{
 					resolvable: resolvable[objects.User]{
 						id: "123",
@@ -201,7 +202,7 @@ func Test_memberTargetWrapper(t *testing.T) {
 		},
 		{
 			name:       "invalid target",
-			options:    map[string]interface{}{},
+			options:    map[string]any{},
 			expectsErr: "wrong or no target specified",
 		},
 	}
@@ -280,13 +281,18 @@ func TestCommandGroup_Use(t *testing.T) {
 
 var dummyRootCommandGroup = &CommandGroup{}
 
+var groupOpts = &CommandGroupOptions{
+	DefaultPermissions: 69,
+	UseInDMs:           true,
+}
+
 var commandGroupTests = []struct {
 	name string
 
-	level             uint
-	groupName         string
-	description       string
-	defaultPermission bool
+	level            uint
+	groupName        string
+	description      string
+	commandGroupOpts *CommandGroupOptions
 
 	expects    *CommandGroup
 	expectsErr string
@@ -297,30 +303,32 @@ var commandGroupTests = []struct {
 		expectsErr: "sub-command group would be nested too deep",
 	},
 	{
-		name:              "root group",
-		groupName:         "abc",
-		description:       "def",
-		defaultPermission: true,
+		name:             "root group",
+		groupName:        "abc",
+		description:      "def",
+		commandGroupOpts: groupOpts,
 		expects: &CommandGroup{
-			level:             1,
-			parent:            dummyRootCommandGroup,
-			DefaultPermission: true,
-			Description:       "def",
-			Subcommands:       map[string]interface{}{},
+			level:              1,
+			parent:             dummyRootCommandGroup,
+			UseInDMs:           &groupOpts.UseInDMs,
+			DefaultPermissions: &groupOpts.DefaultPermissions,
+			Description:        "def",
+			Subcommands:        map[string]any{},
 		},
 	},
 	{
-		name:              "sub-group",
-		groupName:         "abc",
-		description:       "def",
-		defaultPermission: true,
-		level:             1,
+		name:             "sub-group",
+		groupName:        "abc",
+		description:      "def",
+		commandGroupOpts: groupOpts,
+		level:            1,
 		expects: &CommandGroup{
-			level:             2,
-			parent:            dummyRootCommandGroup,
-			DefaultPermission: true,
-			Description:       "def",
-			Subcommands:       map[string]interface{}{},
+			level:              2,
+			parent:             dummyRootCommandGroup,
+			UseInDMs:           &groupOpts.UseInDMs,
+			DefaultPermissions: &groupOpts.DefaultPermissions,
+			Description:        "def",
+			Subcommands:        map[string]any{},
 		},
 	},
 }
@@ -328,8 +336,8 @@ var commandGroupTests = []struct {
 func TestCommandGroup_NewCommandGroup(t *testing.T) {
 	for _, tt := range commandGroupTests {
 		t.Run(tt.name, func(t *testing.T) {
-			dummyRootCommandGroup.Subcommands, dummyRootCommandGroup.level = map[string]interface{}{}, tt.level
-			group, err := dummyRootCommandGroup.NewCommandGroup(tt.groupName, tt.description, nil)
+			dummyRootCommandGroup.Subcommands, dummyRootCommandGroup.level = map[string]any{}, tt.level
+			group, err := dummyRootCommandGroup.NewCommandGroup(tt.groupName, tt.description, tt.commandGroupOpts)
 			if tt.expectsErr == "" {
 				assert.NoError(t, err)
 			} else {
@@ -345,21 +353,21 @@ type mustNewCommandGroup interface {
 	MustNewCommandGroup(name, description string, opts *CommandGroupOptions) *CommandGroup
 }
 
-func unpanicCommandGroup(x mustNewCommandGroup, name, description string, default_ bool) (group *CommandGroup, returnedErr string) {
+func unpanicCommandGroup(x mustNewCommandGroup, name, description string, opts *CommandGroupOptions) (group *CommandGroup, returnedErr string) {
 	defer func() {
 		if r := recover(); r != nil {
 			returnedErr = fmt.Sprint(r)
 		}
 	}()
-	group = x.MustNewCommandGroup(name, description, nil)
+	group = x.MustNewCommandGroup(name, description, opts)
 	return
 }
 
 func TestCommandGroup_MustNewCommandGroup(t *testing.T) {
 	for _, tt := range commandGroupTests {
 		t.Run(tt.name, func(t *testing.T) {
-			dummyRootCommandGroup.Subcommands, dummyRootCommandGroup.level = map[string]interface{}{}, tt.level
-			group, errResult := unpanicCommandGroup(dummyRootCommandGroup, tt.groupName, tt.description, tt.defaultPermission)
+			dummyRootCommandGroup.Subcommands, dummyRootCommandGroup.level = map[string]any{}, tt.level
+			group, errResult := unpanicCommandGroup(dummyRootCommandGroup, tt.groupName, tt.description, tt.commandGroupOpts)
 			assert.Equal(t, errResult, tt.expectsErr)
 			assert.Equal(t, tt.expects, group)
 		})
@@ -403,27 +411,38 @@ func TestCommandRouter_Use(t *testing.T) {
 
 func TestCommandRouter_NewCommandGroup(t *testing.T) {
 	r := &CommandRouter{}
-	group, err := r.NewCommandGroup("abc", "def", nil)
+	group, err := r.NewCommandGroup("abc", "def", &CommandGroupOptions{
+		DefaultPermissions: 1,
+		UseInDMs:           true,
+	})
 	assert.NoError(t, err)
+	pbit := permissions.PermissionBit(1)
+	tr := true
 	assert.Equal(t, &CommandGroup{
-		level:             1,
-		DefaultPermission: true,
-		Description:       "def",
-		Subcommands:       map[string]interface{}{},
+		level:              1,
+		Description:        "def",
+		Subcommands:        map[string]any{},
+		DefaultPermissions: &pbit,
+		UseInDMs:           &tr,
 	}, group)
 }
 
-// func TestCommandRouter_MustNewCommandGroup(t *testing.T) {
-// 	r := &CommandRouter{}
-// 	group, errResult := unpanicCommandGroup(r, "abc", "def", true)
-// 	assert.Equal(t, "", errResult)
-// 	assert.Equal(t, &CommandGroup{
-// 		level:             1,
-// 		DefaultPermission: true,
-// 		Description:       "def",
-// 		Subcommands:       map[string]interface{}{},
-// 	}, group)
-// }
+func TestCommandRouter_MustNewCommandGroup(t *testing.T) {
+	r := &CommandRouter{}
+	opts := &CommandGroupOptions{
+		DefaultPermissions: 69,
+		UseInDMs:           true,
+	}
+	group, errResult := unpanicCommandGroup(r, "abc", "def", opts)
+	assert.Equal(t, "", errResult)
+	assert.Equal(t, &CommandGroup{
+		level:              1,
+		UseInDMs:           &opts.UseInDMs,
+		DefaultPermissions: &opts.DefaultPermissions,
+		Description:        "def",
+		Subcommands:        map[string]any{},
+	}, group)
+}
 
 func TestCommandRouter_NewCommandBuilder(t *testing.T) {
 	r := &CommandRouter{}
@@ -437,7 +456,7 @@ func TestCommandRouter_NewCommandBuilder(t *testing.T) {
 
 // Returns the mock command runner. This is used to check everything in the context is as expected.
 func mockCommandFunction(t *testing.T, expectedCmd *Command,
-	expectedInteraction *objects.Interaction, paramsCheck func(*testing.T, map[string]interface{}),
+	expectedInteraction *objects.Interaction, paramsCheck func(*testing.T, map[string]any),
 	wantsErr string) func(ctx *CommandRouterCtx) error {
 	// Return the generated command.
 	return func(ctx *CommandRouterCtx) error {
@@ -538,7 +557,7 @@ func makeMockFullCommandRouter(injectAllowedMentions *objects.AllowedMentions) (
 	return r, cmds
 }
 
-func mockInteraction(data interface{}) *objects.Interaction {
+func mockInteraction(data any) *objects.Interaction {
 	b, err := json.Marshal(data)
 	if err != nil {
 		panic(err)
@@ -594,7 +613,7 @@ func TestCommandRouter_build(t *testing.T) {
 		cmdInteraction          *objects.Interaction
 		autocompleteInteraction *objects.Interaction
 
-		paramsCheck           func(*testing.T, map[string]interface{})
+		paramsCheck           func(*testing.T, map[string]any)
 		throwsCmdErr          string
 		throwsAutocompleteErr string
 
@@ -710,7 +729,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "hello", m["string"])
 				assert.Equal(t, 69, m["int"])
@@ -768,7 +787,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "hello", m["string"])
 				assert.Equal(t, 69, m["int"])
@@ -837,7 +856,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "hello", m["string"])
 				assert.Equal(t, 69, m["int"])
@@ -995,7 +1014,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "123", m["autocompletetest"])
 			},
@@ -1051,7 +1070,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "hello", m["string"])
 				assert.Equal(t, 69, m["int"])
@@ -1109,7 +1128,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "123", m["autocompletetest"])
 			},
@@ -1193,7 +1212,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "123", m["autocompletetest"])
 			},
@@ -1261,7 +1280,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "123", m["autocompletetest"])
 			},
@@ -1359,7 +1378,7 @@ func TestCommandRouter_build(t *testing.T) {
 				},
 				Resolved: objects.ApplicationCommandInteractionDataResolved{},
 			}),
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, "123", m["autocompletetest"])
 			},
@@ -1549,7 +1568,7 @@ func TestCommandRouter_build(t *testing.T) {
 
 				// Set the handler for the command if it exists.
 				if tt.paramsCheck == nil {
-					tt.paramsCheck = func(t *testing.T, m map[string]interface{}) {}
+					tt.paramsCheck = func(t *testing.T, m map[string]any) {}
 				}
 				cmd.Function = mockCommandFunction(t, cmd, tt.cmdInteraction, tt.paramsCheck, tt.throwsCmdErr)
 			}
@@ -1578,7 +1597,7 @@ func TestCommandRouter_build(t *testing.T) {
 					Autocomplete: true,
 				})
 				if cmd.autocomplete == nil {
-					cmd.autocomplete = map[string]interface{}{}
+					cmd.autocomplete = map[string]any{}
 				}
 				cmd.autocomplete["autocompletetest"] = mockAutocompleteFunction(t, cmd, tt.autocompleteInteraction, tt.throwsAutocompleteErr)
 			}
@@ -1745,7 +1764,7 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 					ChannelOption("channel", "A channel option", true).
 					DoubleOption("double", "A double option", true, nil).
 					Build()
-				opts := map[string]interface{}{
+				opts := map[string]any{
 					"str":  "str",
 					"int":  1,
 					"bool": true,
@@ -1774,7 +1793,7 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 				c, _ := r.NewCommandBuilder("test").
 					StringOption("str", "A string option", true, nil).
 					Build()
-				opts := map[string]interface{}{
+				opts := map[string]any{
 					"str": "str",
 				}
 				return &CommandRouterCtx{Options: opts, Command: c}
@@ -1788,7 +1807,7 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 			init: func() *CommandRouterCtx {
 				r := &CommandRouter{}
 				c, _ := r.NewCommandBuilder("test").Build()
-				opts := map[string]interface{}{}
+				opts := map[string]any{}
 				return &CommandRouterCtx{Options: opts, Command: c}
 			},
 			validate: func(ctx *CommandRouterCtx, _ *x) {

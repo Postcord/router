@@ -72,7 +72,7 @@ func TestCommand_mapOptions(t *testing.T) {
 		retOptions   []*objects.ApplicationCommandInteractionDataOption
 
 		expectsErr string
-		expects    map[string]interface{}
+		expects    map[string]any
 	}{
 		{
 			name: "option not in command",
@@ -111,7 +111,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: "123",
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": "123",
 			},
 		},
@@ -148,7 +148,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: "123",
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": (ResolvableChannel)(resolvable[objects.Channel]{
 					id:   "123",
 					data: &objects.ApplicationCommandInteractionData{DiscordBaseObject: objects.DiscordBaseObject{ID: 6921}},
@@ -171,7 +171,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: "123",
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": (ResolvableRole)(resolvable[objects.Role]{
 					id:   "123",
 					data: &objects.ApplicationCommandInteractionData{DiscordBaseObject: objects.DiscordBaseObject{ID: 6921}},
@@ -194,7 +194,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: "123",
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": (ResolvableUser)(resolvableUser{resolvable[objects.User]{
 					id:   "123",
 					data: &objects.ApplicationCommandInteractionData{DiscordBaseObject: objects.DiscordBaseObject{ID: 6921}},
@@ -216,7 +216,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: "123",
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": "123",
 			},
 		},
@@ -235,7 +235,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: (float64)(69),
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": 69,
 			},
 		},
@@ -254,7 +254,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: true,
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": true,
 			},
 		},
@@ -274,7 +274,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: "123",
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": (ResolvableMentionable)(resolvableMentionable{
 					resolvable: resolvable[any]{
 						id:   "123",
@@ -298,7 +298,7 @@ func TestCommand_mapOptions(t *testing.T) {
 					Value: (float64)(69),
 				},
 			},
-			expects: map[string]interface{}{
+			expects: map[string]any{
 				"opt1": (float64)(69),
 			},
 		},
@@ -364,7 +364,7 @@ func TestCommand_execute(t *testing.T) {
 	tests := []struct {
 		name string
 
-		paramsCheck  func(*testing.T, map[string]interface{})
+		paramsCheck  func(*testing.T, map[string]any)
 		data         *objects.ApplicationCommandInteractionData
 		retOptions   []*objects.ApplicationCommandInteractionDataOption
 		cmdOptions   []*objects.ApplicationCommandOption
@@ -379,7 +379,7 @@ func TestCommand_execute(t *testing.T) {
 		{
 			name: "message target",
 			data: messageTargetData,
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, resolvable[objects.Message]{
 					id:   "1",
@@ -390,7 +390,7 @@ func TestCommand_execute(t *testing.T) {
 		{
 			name: "user target",
 			data: userTargetData,
-			paramsCheck: func(t *testing.T, m map[string]interface{}) {
+			paramsCheck: func(t *testing.T, m map[string]any) {
 				t.Helper()
 				assert.Equal(t, (ResolvableUser)(resolvableUser{resolvable[objects.User]{
 					id:   "2",

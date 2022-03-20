@@ -63,7 +63,7 @@ func (c *commandBuilder[T]) StringOption(name, description string, required bool
 	})
 	if f != nil {
 		if c.cmd.autocomplete == nil {
-			c.cmd.autocomplete = map[string]interface{}{}
+			c.cmd.autocomplete = map[string]any{}
 		}
 		c.cmd.autocomplete[name] = f
 	}
@@ -123,7 +123,7 @@ func (c *commandBuilder[T]) IntOption(name, description string, required bool, c
 	})
 	if f != nil {
 		if c.cmd.autocomplete == nil {
-			c.cmd.autocomplete = map[string]interface{}{}
+			c.cmd.autocomplete = map[string]any{}
 		}
 		c.cmd.autocomplete[name] = f
 	}
@@ -183,7 +183,7 @@ func (c *commandBuilder[T]) DoubleOption(name, description string, required bool
 	})
 	if f != nil {
 		if c.cmd.autocomplete == nil {
-			c.cmd.autocomplete = map[string]interface{}{}
+			c.cmd.autocomplete = map[string]any{}
 		}
 		c.cmd.autocomplete[name] = f
 	}

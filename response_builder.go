@@ -176,7 +176,7 @@ func (c *publicResponseBuilder[T]) SetContent(content string) T {
 }
 
 // SetContentf is used to set the content of a response using fmt.Sprintf.
-func (c *publicResponseBuilder[T]) SetContentf(content string, args ...interface{}) T {
+func (c *publicResponseBuilder[T]) SetContentf(content string, args ...any) T {
 	c.ResponseData().Content = fmt.Sprintf(content, args...)
 	return c.getOrigin()
 }
