@@ -149,10 +149,10 @@ func TestCommand_mapOptions(t *testing.T) {
 				},
 			},
 			expects: map[string]interface{}{
-				"opt1": &ResolvableChannel{
+				"opt1": (ResolvableChannel)(resolvable[objects.Channel]{
 					id:   "123",
 					data: &objects.ApplicationCommandInteractionData{DiscordBaseObject: objects.DiscordBaseObject{ID: 6921}},
-				},
+				}),
 			},
 		},
 		{
@@ -172,10 +172,10 @@ func TestCommand_mapOptions(t *testing.T) {
 				},
 			},
 			expects: map[string]interface{}{
-				"opt1": &ResolvableRole{
+				"opt1": (ResolvableRole)(resolvable[objects.Role]{
 					id:   "123",
 					data: &objects.ApplicationCommandInteractionData{DiscordBaseObject: objects.DiscordBaseObject{ID: 6921}},
-				},
+				}),
 			},
 		},
 		{
@@ -195,10 +195,10 @@ func TestCommand_mapOptions(t *testing.T) {
 				},
 			},
 			expects: map[string]interface{}{
-				"opt1": &ResolvableUser{
+				"opt1": (ResolvableUser)(resolvableUser{resolvable[objects.User]{
 					id:   "123",
 					data: &objects.ApplicationCommandInteractionData{DiscordBaseObject: objects.DiscordBaseObject{ID: 6921}},
-				},
+				}}),
 			},
 		},
 		{
@@ -379,7 +379,7 @@ func TestCommand_execute(t *testing.T) {
 			data: messageTargetData,
 			paramsCheck: func(t *testing.T, m map[string]interface{}) {
 				t.Helper()
-				assert.Equal(t, &ResolvableMessage{
+				assert.Equal(t, resolvable[objects.Message]{
 					id:   "1",
 					data: messageTargetData,
 				}, m["/target"])
@@ -390,10 +390,10 @@ func TestCommand_execute(t *testing.T) {
 			data: userTargetData,
 			paramsCheck: func(t *testing.T, m map[string]interface{}) {
 				t.Helper()
-				assert.Equal(t, &ResolvableUser{
+				assert.Equal(t, (ResolvableUser)(resolvableUser{resolvable[objects.User]{
 					id:   "2",
 					data: userTargetData,
-				}, m["/target"])
+				}}), m["/target"])
 			},
 		},
 		{

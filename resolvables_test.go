@@ -54,23 +54,23 @@ func testSnowflake(t *testing.T, resolvable interface{}) {
 }
 
 func TestResolvableUser_Snowflake(t *testing.T) {
-	testSnowflake(t, &ResolvableUser{})
+	testSnowflake(t, &resolvableUser{})
 }
 
 func TestResolvableChannel_Snowflake(t *testing.T) {
-	testSnowflake(t, &ResolvableChannel{})
+	testSnowflake(t, &resolvable[objects.Channel]{})
 }
 
 func TestResolvableRole_Snowflake(t *testing.T) {
-	testSnowflake(t, &ResolvableRole{})
+	testSnowflake(t, &resolvable[objects.Role]{})
 }
 
 func TestResolvableMessage_Snowflake(t *testing.T) {
-	testSnowflake(t, &ResolvableMessage{})
+	testSnowflake(t, &resolvable[objects.Message]{})
 }
 
 func TestResolvableAttachment_Snowflake(t *testing.T) {
-	testSnowflake(t, &ResolvableAttachment{})
+	testSnowflake(t, &resolvable[objects.Attachment]{})
 }
 
 func testMarshalJSON(t *testing.T, resolvable interface{}) {
@@ -92,23 +92,23 @@ func testMarshalJSON(t *testing.T, resolvable interface{}) {
 }
 
 func TestResolvableUser_MarshalJSON(t *testing.T) {
-	testMarshalJSON(t, &ResolvableUser{})
+	testMarshalJSON(t, &resolvableUser{})
 }
 
 func TestResolvableChannel_MarshalJSON(t *testing.T) {
-	testMarshalJSON(t, &ResolvableChannel{})
+	testMarshalJSON(t, &resolvable[objects.Channel]{})
 }
 
 func TestResolvableRole_MarshalJSON(t *testing.T) {
-	testMarshalJSON(t, &ResolvableRole{})
+	testMarshalJSON(t, &resolvable[objects.Role]{})
 }
 
 func TestResolvableMessage_MarshalJSON(t *testing.T) {
-	testMarshalJSON(t, &ResolvableMessage{})
+	testMarshalJSON(t, &resolvable[objects.Message]{})
 }
 
 func TestResolvableAttachment_MarshalJSON(t *testing.T) {
-	testMarshalJSON(t, &ResolvableAttachment{})
+	testMarshalJSON(t, &resolvable[objects.Attachment]{})
 }
 
 func testString(t *testing.T, resolvable interface{}) {
@@ -129,23 +129,23 @@ func testString(t *testing.T, resolvable interface{}) {
 }
 
 func TestResolvableUser_String(t *testing.T) {
-	testString(t, &ResolvableUser{})
+	testString(t, &resolvableUser{})
 }
 
 func TestResolvableChannel_String(t *testing.T) {
-	testString(t, &ResolvableChannel{})
+	testString(t, &resolvable[objects.Channel]{})
 }
 
 func TestResolvableRole_String(t *testing.T) {
-	testString(t, &ResolvableRole{})
+	testString(t, &resolvable[objects.Role]{})
 }
 
 func TestResolvableMessage_String(t *testing.T) {
-	testString(t, &ResolvableMessage{})
+	testString(t, &resolvable[objects.Message]{})
 }
 
 func TestResolvableAttachment_String(t *testing.T) {
-	testString(t, &ResolvableAttachment{})
+	testString(t, &resolvable[objects.Attachment]{})
 }
 
 func TestResolvableUser_Resolve(t *testing.T) {
@@ -174,7 +174,7 @@ func TestResolvableUser_Resolve(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := ResolvableUser{id: "1", data: tt.data}
+			r := resolvable[objects.User]{id: "1", data: tt.data}
 			assert.Equal(t, tt.expected, r.Resolve())
 		})
 	}
@@ -206,7 +206,7 @@ func TestResolvableChannel_Resolve(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := ResolvableChannel{id: "1", data: tt.data}
+			r := resolvable[objects.Channel]{id: "1", data: tt.data}
 			assert.Equal(t, tt.expected, r.Resolve())
 		})
 	}
@@ -238,7 +238,7 @@ func TestResolvableRole_Resolve(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := ResolvableRole{id: "1", data: tt.data}
+			r := resolvable[objects.Role]{id: "1", data: tt.data}
 			assert.Equal(t, tt.expected, r.Resolve())
 		})
 	}
@@ -270,7 +270,7 @@ func TestResolvableMessage_Resolve(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := ResolvableMessage{id: "1", data: tt.data}
+			r := resolvable[objects.Message]{id: "1", data: tt.data}
 			assert.Equal(t, tt.expected, r.Resolve())
 		})
 	}
@@ -302,7 +302,7 @@ func TestResolvableAttachment_Resolve(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := ResolvableAttachment{id: "1", data: tt.data}
+			r := resolvable[objects.Attachment]{id: "1", data: tt.data}
 			assert.Equal(t, tt.expected, r.Resolve())
 		})
 	}

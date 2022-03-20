@@ -30,7 +30,7 @@ func TestCommandRouterCtx_TargetMessage(t *testing.T) {
 		{
 			name: "message exists",
 			options: map[string]interface{}{
-				"/target": &ResolvableMessage{
+				"/target": (ResolvableMessage)(resolvable[objects.Message]{
 					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
 						TargetID: 123,
@@ -42,7 +42,7 @@ func TestCommandRouterCtx_TargetMessage(t *testing.T) {
 							},
 						},
 					},
-				},
+				}),
 			},
 			expects: &objects.Message{Content: "hello world"},
 		},
@@ -75,7 +75,7 @@ func TestCommandRouterCtx_TargetMember(t *testing.T) {
 		{
 			name: "member exists",
 			options: map[string]interface{}{
-				"/target": &ResolvableUser{
+				"/target": (ResolvableUser)(resolvableUser{resolvable[objects.User]{
 					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
 						TargetID: 123,
@@ -87,7 +87,7 @@ func TestCommandRouterCtx_TargetMember(t *testing.T) {
 							},
 						},
 					},
-				},
+				}}),
 			},
 			expects: &objects.GuildMember{Deaf: true},
 		},
@@ -113,7 +113,7 @@ func Test_messageTargetWrapper(t *testing.T) {
 		{
 			name: "successful call",
 			options: map[string]interface{}{
-				"/target": &ResolvableMessage{
+				"/target": (ResolvableMessage)(resolvable[objects.Message]{
 					id: "123",
 					data: &objects.ApplicationCommandInteractionData{
 						TargetID: 123,
@@ -125,7 +125,7 @@ func Test_messageTargetWrapper(t *testing.T) {
 							},
 						},
 					},
-				},
+				}),
 			},
 		},
 		{
@@ -182,19 +182,21 @@ func Test_memberTargetWrapper(t *testing.T) {
 		{
 			name: "successful call",
 			options: map[string]interface{}{
-				"/target": &ResolvableUser{
-					id: "123",
-					data: &objects.ApplicationCommandInteractionData{
-						TargetID: 123,
-						Resolved: objects.ApplicationCommandInteractionDataResolved{
-							Members: map[objects.Snowflake]objects.GuildMember{
-								123: {
-									Nick: "hello world",
+				"/target": ResolvableUser(resolvableUser{
+					resolvable: resolvable[objects.User]{
+						id: "123",
+						data: &objects.ApplicationCommandInteractionData{
+							TargetID: 123,
+							Resolved: objects.ApplicationCommandInteractionDataResolved{
+								Members: map[objects.Snowflake]objects.GuildMember{
+									123: {
+										Nick: "hello world",
+									},
 								},
 							},
 						},
 					},
-				},
+				}),
 			},
 		},
 		{
@@ -1714,12 +1716,12 @@ func TestCommandRouter_FormulateDiscordCommands(t *testing.T) {
 
 func TestCommandRouterCtx_Bind(t *testing.T) {
 	type x struct {
-		Str      string             `discord:"str"`
-		Int      int                `discord:"int"`
-		Bool     bool               `discord:"bool"`
-		Bool2    bool               `discord:"bool2"`
-		Channel  *ResolvableChannel `discord:"channel"`
-		Double   float64            `discord:"double"`
+		Str      string            `discord:"str"`
+		Int      int               `discord:"int"`
+		Bool     bool              `discord:"bool"`
+		Bool2    bool              `discord:"bool2"`
+		Channel  ResolvableChannel `discord:"channel"`
+		Double   float64           `discord:"double"`
 		NoTag    string
 		EmptyTag string `discord:""`
 		ExtraTag string `discord:"extra"`
@@ -1747,9 +1749,9 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 					"str":  "str",
 					"int":  1,
 					"bool": true,
-					"channel": &ResolvableChannel{
+					"channel": (ResolvableChannel)(resolvable[objects.Channel]{
 						id: "123",
-					},
+					}),
 					"int2":   2,
 					"double": 3.14,
 				}
@@ -1761,7 +1763,7 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 				assert.Equal(t, 1, items.Int)
 				assert.Equal(t, true, items.Bool)
 				assert.Equal(t, false, items.Bool2)
-				assert.Equal(t, "123", items.Channel.id)
+				assert.Equal(t, "123", items.Channel.String())
 				assert.Equal(t, 3.14, items.Double)
 			},
 		},
@@ -1789,7 +1791,7 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 				opts := map[string]interface{}{}
 				return &CommandRouterCtx{Options: opts, Command: c}
 			},
-			validate: func(ctx *CommandRouterCtx, items *x) {
+			validate: func(ctx *CommandRouterCtx, _ *x) {
 				var myStr string
 				assert.Error(t, ctx.Bind(&myStr))
 			},
@@ -1797,7 +1799,7 @@ func TestCommandRouterCtx_Bind(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			ctx := tt.init()
 			var items x
 			tt.validate(ctx, &items)

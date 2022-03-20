@@ -99,20 +99,20 @@ func (c *Command) mapOptions(autocomplete bool, data *objects.ApplicationCommand
 		// Check what the type is.
 		switch option.OptionType {
 		case objects.TypeChannel:
-			mappedOptions[option.Name] = &ResolvableChannel{
+			mappedOptions[option.Name] = (ResolvableChannel)(resolvable[objects.Channel]{
 				id:   v.Value.(string),
 				data: data,
-			}
+			})
 		case objects.TypeRole:
-			mappedOptions[option.Name] = &ResolvableRole{
+			mappedOptions[option.Name] = (ResolvableRole)(resolvable[objects.Role]{
 				id:   v.Value.(string),
 				data: data,
-			}
+			})
 		case objects.TypeUser:
-			mappedOptions[option.Name] = &ResolvableUser{
+			mappedOptions[option.Name] = (ResolvableUser)(resolvableUser{resolvable[objects.User]{
 				id:   v.Value.(string),
 				data: data,
-			}
+			}})
 		case objects.TypeString:
 			mappedOptions[option.Name] = v.Value.(string)
 		case objects.TypeInteger:
@@ -144,15 +144,17 @@ func (c *Command) execute(reqCtx context.Context, opts commandExecutionOptions, 
 		// Add a special case for "/target". The slash is there as a keyword.
 		mappedOptions = map[string]interface{}{}
 		if _, ok := opts.data.Resolved.Messages[opts.data.TargetID]; ok {
-			mappedOptions["/target"] = &ResolvableMessage{
+			mappedOptions["/target"] = (ResolvableMessage)(resolvable[objects.Message]{
 				id:   strconv.FormatUint(uint64(opts.data.TargetID), 10),
 				data: opts.data,
-			}
+			})
 		} else if _, ok = opts.data.Resolved.Users[opts.data.TargetID]; ok {
-			mappedOptions["/target"] = &ResolvableUser{
-				id:   strconv.FormatUint(uint64(opts.data.TargetID), 10),
-				data: opts.data,
-			}
+			mappedOptions["/target"] = (ResolvableUser)(resolvableUser{
+				resolvable: resolvable[objects.User]{
+					id:   strconv.FormatUint(uint64(opts.data.TargetID), 10),
+					data: opts.data,
+				},
+			})
 		}
 	} else {
 		// Call the function to map options.

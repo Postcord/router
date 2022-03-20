@@ -50,7 +50,7 @@ type CommandRouterCtx struct {
 
 // TargetMessage is used to try and get the target message. If this was not targeted at a message, returns nil.
 func (c *CommandRouterCtx) TargetMessage() *objects.Message {
-	message, _ := c.Options["/target"].(*ResolvableMessage)
+	message, _ := c.Options["/target"].(ResolvableMessage)
 	if message == nil {
 		return nil
 	}
@@ -59,7 +59,7 @@ func (c *CommandRouterCtx) TargetMessage() *objects.Message {
 
 // TargetMember is used to try and get the target member. If this was not targeted at a member, returns nil.
 func (c *CommandRouterCtx) TargetMember() *objects.GuildMember {
-	member, _ := c.Options["/target"].(*ResolvableUser)
+	member, _ := c.Options["/target"].(ResolvableUser)
 	if member == nil {
 		return nil
 	}
@@ -791,18 +791,16 @@ func (c *CommandRouterCtx) Bind(data interface{}) error {
 			fmt.Printf("setting %s to %t\n", field.Name, optionVal.Bool())
 			fieldPointer.Set(optionVal)
 		case objects.TypeChannel, objects.TypeRole, objects.TypeUser, objects.TypeMentionable:
-			if kind != reflect.Ptr {
-				return fmt.Errorf("option %s is a Resolvable type, but the struct type is not a pointer to a Resolvable", tagValue)
+			if kind != reflect.Interface {
+				return fmt.Errorf("option %s is a Resolvable type, but the interface type is not a Resolvable", tagValue)
 			}
 
-			resElem := optionVal.Elem()
-			if resElem.Kind() != reflect.Struct {
-				return fmt.Errorf("option %s is a Resolvable type, but the struct type is not a pointer to a Resolvable", tagValue)
+			if optionVal.Kind() == reflect.Ptr && optionVal.IsNil() {
+				return fmt.Errorf("option %s is a Resolvable type, but the value is nil", tagValue)
 			}
 
-			resField := resElem.FieldByName("id")
-			if resField.IsZero() {
-				return fmt.Errorf("option %s is a Resolvable type, but the struct type is not a pointer to a Resolvable", tagValue)
+			if optionVal.IsZero() {
+				return fmt.Errorf("option %s is a Resolvable type, but the type is not a Resolvable", tagValue)
 			}
 
 			fmt.Printf("setting %s to %s\n", field.Name, optionVal.String())
