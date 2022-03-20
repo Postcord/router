@@ -25,6 +25,25 @@ type Resolvable[T any] interface {
 	Resolve() *T
 }
 
+// ResolvableMentionable is a special type that *mostly* implements the Resolvable interface but
+// does not return a pointer for resolve.
+type ResolvableMentionable interface {
+	// Snowflake is used to return the ID as a snowflake.
+	Snowflake() objects.Snowflake
+
+	// MarshalJSON implements the json.Marshaler interface.
+	MarshalJSON() ([]byte, error)
+
+	// String is used to return the ID as a string.
+	String() string
+
+	// RawData exposes the underlying data.
+	RawData() *objects.ApplicationCommandInteractionData
+
+	// Resolve is used to try and resolve the ID into an any type. Nil is returned if it wasn't resolved, or a *objects.<type> if it was.
+	Resolve() any
+}
+
 type resolvable[T any] struct {
 	id   string
 	data *objects.ApplicationCommandInteractionData
@@ -78,6 +97,34 @@ func (r resolvable[T]) String() string {
 
 func (r resolvable[T]) RawData() *objects.ApplicationCommandInteractionData {
 	return r.data
+}
+
+// Used to define a Mentionable in a command option that is potentially resolvable.
+type resolvableMentionable struct {
+	resolvable[any]
+}
+
+// Resolve is used to try and resolve the ID into an any type. Nil is returned if it wasn't resolved, or a *objects.<type> if it was.
+func (r resolvableMentionable) Resolve() any {
+	snowflake := r.Snowflake()
+	data := r.data.Resolved
+
+	if c, ok := data.Channels[snowflake]; ok {
+		return &c
+	}
+	if role, ok := data.Roles[snowflake]; ok {
+		return &role
+	}
+	if m, ok := data.Members[snowflake]; ok {
+		if u, ok := data.Users[snowflake]; ok {
+			m.User = &u
+		}
+		return &m
+	}
+	if u, ok := data.Users[snowflake]; ok {
+		return &u
+	}
+	return nil
 }
 
 // ResolvableChannel is used to define a channel in a command option that is potentially resolvable.

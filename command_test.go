@@ -275,10 +275,12 @@ func TestCommand_mapOptions(t *testing.T) {
 				},
 			},
 			expects: map[string]interface{}{
-				"opt1": &ResolvableMentionable{
-					id:   "123",
-					data: &objects.ApplicationCommandInteractionData{DiscordBaseObject: objects.DiscordBaseObject{ID: 6921}},
-				},
+				"opt1": (ResolvableMentionable)(resolvableMentionable{
+					resolvable: resolvable[any]{
+						id:   "123",
+						data: &objects.ApplicationCommandInteractionData{DiscordBaseObject: objects.DiscordBaseObject{ID: 6921}},
+					},
+				}),
 			},
 		},
 		{

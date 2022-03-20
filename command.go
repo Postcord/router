@@ -125,10 +125,12 @@ func (c *Command) mapOptions(autocomplete bool, data *objects.ApplicationCommand
 		case objects.TypeBoolean:
 			mappedOptions[option.Name] = v.Value.(bool)
 		case objects.TypeMentionable:
-			mappedOptions[option.Name] = &ResolvableMentionable{
-				id:   v.Value.(string),
-				data: data,
-			}
+			mappedOptions[option.Name] = (ResolvableMentionable)(resolvableMentionable{
+				resolvable: resolvable[any]{
+					id:   v.Value.(string),
+					data: data,
+				},
+			})
 		case objects.TypeNumber:
 			mappedOptions[option.Name] = v.Value
 		}
